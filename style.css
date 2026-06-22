@@ -1,0 +1,135 @@
+:root {
+  --primary: #3d7a5e;
+  --primary-light: #f0faf4;
+  --primary-mid: #c6ebd5;
+  --primary-dark: #275040;
+  --amber: #c87f1a;
+  --amber-light: #fff8ed;
+  --amber-mid: #fde8bb;
+  --red: #c53030;
+  --red-light: #fff1f1;
+  --red-mid: #fdd0d0;
+  --blue: #1a5fc8;
+  --blue-light: #f0f4ff;
+  --blue-mid: #c6d5f5;
+  --purple: #6b3dbe;
+  --purple-light: #f5f0ff;
+  --purple-mid: #d5c6f5;
+  --gray-50: #f8f8f6;
+  --gray-100: #ededea;
+  --gray-200: #d8d8d4;
+  --gray-400: #a0a09a;
+  --gray-500: #7a7a74;
+  --gray-700: #3f3f3b;
+  --gray-900: #1a1a18;
+  --text: #1a1a18;
+  --text-muted: #6b6b65;
+  --bg: #ffffff;
+  --surface: #f8f8f6;
+  --radius: 12px;
+  --radius-sm: 7px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;}
+
+/* ── NAV ── */
+.site-nav{background:var(--primary);padding:0 1.5rem;display:flex;align-items:center;gap:1rem;height:54px;position:sticky;top:0;z-index:100;}
+.site-nav .logo{color:#fff;font-weight:800;font-size:15px;text-decoration:none;white-space:nowrap;}
+.site-nav .logo span{opacity:.65;font-weight:400;}
+.site-nav .back-btn{color:rgba(255,255,255,.8);font-size:13px;text-decoration:none;display:flex;align-items:center;gap:4px;}
+.site-nav .back-btn:hover{color:#fff;}
+.nav-spacer{flex:1;}
+
+/* ── PAGE HEADER ── */
+.page-hero{background:var(--primary);color:#fff;padding:2.5rem 1.5rem 3rem;text-align:center;}
+.page-hero .eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;opacity:.65;text-transform:uppercase;margin-bottom:.5rem;}
+.page-hero h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:800;line-height:1.2;margin-bottom:.6rem;}
+.page-hero p{font-size:14px;opacity:.85;max-width:500px;margin:0 auto;}
+
+/* ── TOOL HERO (smaller) ── */
+.tool-hero{background:var(--primary);color:#fff;padding:2rem 1.5rem 2.5rem;text-align:center;}
+.tool-hero .cat-tag{display:inline-block;background:rgba(255,255,255,.18);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:99px;margin-bottom:.6rem;}
+.tool-hero h1{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:800;line-height:1.25;margin-bottom:.4rem;}
+.tool-hero p{font-size:13px;opacity:.85;max-width:480px;margin:0 auto;}
+
+/* ── MAIN LAYOUT ── */
+main{max-width:740px;margin:0 auto;padding:0 1rem 5rem;}
+.card{background:var(--bg);border:1px solid var(--gray-100);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);}
+.card-raised{background:var(--bg);border:1px solid var(--gray-100);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-top:-1.5rem;box-shadow:var(--shadow);}
+.section-gap{margin-top:1.75rem;}
+
+/* ── TYPOGRAPHY ── */
+.label{font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem;display:block;}
+h2.block-title{font-size:15px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem;display:flex;align-items:center;gap:8px;}
+h2.block-title::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);}
+h3.sub-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:.5rem;}
+
+/* ── FORM ELEMENTS ── */
+.btn-group{display:flex;flex-wrap:wrap;gap:8px;}
+.pill-btn{padding:7px 15px;border-radius:999px;border:1.5px solid var(--gray-200);background:var(--bg);color:var(--gray-700);font-size:13px;font-weight:500;cursor:pointer;transition:.15s;font-family:inherit;}
+.pill-btn:hover{border-color:var(--primary);color:var(--primary);}
+.pill-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+input[type=number],input[type=text],select{width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;color:var(--text);background:var(--bg);transition:.15s;-webkit-appearance:none;}
+input[type=number]:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(61,122,94,.12);}
+input[type=range]{width:100%;accent-color:var(--primary);}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.input-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:5px;}
+.calc-btn{display:block;width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:1rem;transition:.15s;}
+.calc-btn:hover{background:var(--primary-dark);}
+.calc-btn:active{transform:scale(.98);}
+
+/* ── RESULT BLOCKS ── */
+.result-box{background:var(--primary-light);border-left:4px solid var(--primary);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1.1rem 1.25rem;margin-top:1.25rem;}
+.result-box.amber{background:var(--amber-light);border-color:var(--amber);}
+.result-box.red{background:var(--red-light);border-color:var(--red);}
+.result-box.blue{background:var(--blue-light);border-color:var(--blue);}
+.result-box .result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);margin-bottom:4px;}
+.result-box.amber .result-label{color:var(--amber);}
+.result-box.red .result-label{color:var(--red);}
+.result-box.blue .result-label{color:var(--blue);}
+.result-box .result-value{font-size:1.6rem;font-weight:800;color:var(--primary-dark);line-height:1.2;}
+.result-box.amber .result-value{color:#7a4d0a;}
+.result-box.red .result-value{color:#7a1010;}
+.result-box.blue .result-value{color:#0a2d7a;}
+.result-box .result-sub{font-size:13px;color:var(--text-muted);margin-top:4px;}
+
+/* ── CHIPS ── */
+.chip-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:.5rem;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:500;}
+.chip-green{background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary-mid);}
+.chip-amber{background:var(--amber-light);color:#7a4d0a;border:1px solid var(--amber-mid);}
+.chip-red{background:var(--red-light);color:#7a1010;border:1px solid var(--red-mid);}
+.chip-gray{background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-100);}
+.chip-blue{background:var(--blue-light);color:#0a2d7a;border:1px solid var(--blue-mid);}
+
+/* ── INFO BOXES ── */
+.info-box{background:var(--surface);border-radius:var(--radius-sm);padding:1rem 1.1rem;margin-top:1rem;}
+.info-box p{font-size:13px;color:var(--text-muted);line-height:1.65;}
+.warn-box{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin-top:1rem;font-size:13px;color:#7a4d0a;line-height:1.6;}
+.danger-box{background:var(--red-light);border:1px solid var(--red-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin-top:1rem;font-size:13px;color:#7a1010;line-height:1.6;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:.75rem;}
+.data-table th{text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);padding:6px 10px;border-bottom:1.5px solid var(--gray-100);}
+.data-table td{padding:9px 10px;border-bottom:1px solid var(--gray-100);color:var(--text);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:var(--gray-50);}
+
+/* ── DISCLAIMER ── */
+.disclaimer{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--gray-100);font-size:12px;color:var(--text-muted);line-height:1.7;}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);border-top:1px solid var(--gray-100);}
+footer a{color:var(--primary);text-decoration:none;}
+
+/* ── HIDDEN ── */
+.hidden{display:none!important;}
+
+@media(max-width:480px){
+  .input-row{grid-template-columns:1fr;}
+  .tool-hero{padding:1.5rem 1rem 2rem;}
+  .card-raised{margin:-.75rem .25rem 0;}
+}

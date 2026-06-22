@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아기도구함 — 육아 필수 계산기 & 체커 모음</title>
+<meta name="description" content="수면 계산기, 이유식 재료 체커, 성장 백분위, 해열제 용량, 아동수당 계산기 등 육아에 필요한 모든 도구를 한 곳에서.">
+<meta property="og:title" content="아기도구함 — 육아 필수 계산기 모음">
+<meta property="og:description" content="수면·이유식·성장·해열제·지원금까지. 부모를 위한 스마트 육아 도구 모음.">
+<meta name="theme-color" content="#3d7a5e">
+<link rel="stylesheet" href="style.css">
+<style>
+.home-hero{background:var(--primary);color:#fff;padding:3rem 1.5rem 3rem;text-align:center;}
+.home-hero .tagline{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.6;text-transform:uppercase;margin-bottom:.75rem;}
+.home-hero h1{font-size:clamp(1.8rem,6vw,3rem);font-weight:900;line-height:1.1;margin-bottom:.75rem;}
+.home-hero h1 em{font-style:normal;opacity:.65;}
+.home-hero .sub{font-size:15px;opacity:.8;max-width:440px;margin:0 auto;}
+.tool-count{display:inline-block;background:rgba(255,255,255,.15);border-radius:99px;padding:4px 14px;font-size:12px;font-weight:600;margin-top:1rem;}
+
+.hub-main{max-width:760px;margin:0 auto;padding:0 1rem 5rem;}
+.cat-section{margin-top:0;}
+.cat-block{margin-bottom:2.5rem;}
+.cat-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-top:2rem;}
+.cat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.cat-header h2{font-size:17px;font-weight:800;color:var(--text);}
+.cat-header .cat-desc{font-size:12px;color:var(--text-muted);margin-top:1px;}
+
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.tool-card{background:var(--bg);border:1px solid var(--gray-100);border-radius:var(--radius);padding:1.1rem 1.25rem;text-decoration:none;color:var(--text);transition:.18s;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.tool-card:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(61,122,94,.12);transform:translateY(-2px);}
+.tool-card .tc-emoji{font-size:22px;margin-bottom:2px;}
+.tool-card .tc-name{font-size:14px;font-weight:700;color:var(--text);line-height:1.3;}
+.tool-card .tc-desc{font-size:12px;color:var(--text-muted);line-height:1.5;}
+.tool-card .tc-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:2px;align-self:flex-start;}
+.badge-hot{background:#fff1f0;color:#c53030;}
+.badge-new{background:var(--blue-light);color:var(--blue);}
+.badge-popular{background:#fff8ed;color:var(--amber);}
+
+.search-bar-wrap{padding:1.5rem 1rem 1.5rem;max-width:760px;margin:0 auto;}
+.search-bar{width:100%;padding:11px 16px 11px 40px;border:1.5px solid var(--gray-200);border-radius:99px;font-size:14px;font-family:inherit;color:var(--text);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7a74' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 14px center;}
+.search-bar:focus{outline:none;border-color:var(--primary);}
+
+footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--text-muted);border-top:1px solid var(--gray-100);}
+footer a{color:var(--primary);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="logo">아기도구함 <span>· 육아 계산기 모음</span></a>
+</nav>
+
+<div class="home-hero">
+  <div class="tagline">Korean Parenting Tools</div>
+  <h1>우리 아이를 위한<br><em>모든 계산기</em></h1>
+  <p class="sub">수면부터 이유식, 성장, 건강, 지원금까지.<br>부모가 매일 찾는 도구를 한 곳에서.</p>
+  <span class="tool-count">✦ 도구 12개 무료 제공</span>
+</div>
+
+<div class="search-bar-wrap">
+  <input type="text" class="search-bar" placeholder="도구 검색 (예: 수면, 해열제, 이유식)" id="searchInput" oninput="filterTools()">
+</div>
+
+<div class="hub-main">
+  <div class="cat-section" id="toolHub">
+
+    <!-- 카테고리 1: 수유·수면 -->
+    <div class="cat-block" data-cat="수면수유">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:#f0faf4;">🌙</div>
+        <div>
+          <h2>수유 · 수면</h2>
+          <div class="cat-desc">하루 몇 번 먹고, 몇 시간 자야 할까</div>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a href="tools/sleep-calculator.html" class="tool-card" data-name="아기 수면 사이클 계산기 취침 기상 낮잠">
+          <span class="tc-emoji">😴</span>
+          <span class="tc-name">아기 수면 사이클 계산기</span>
+          <span class="tc-desc">취침 시간 → 최적 기상 시간과 낮잠 스케줄 계산</span>
+          <span class="tc-badge badge-hot">인기</span>
+        </a>
+        <a href="tools/feeding-tracker.html" class="tool-card" data-name="수유 간격 타이머 모유 분유 기록">
+          <span class="tc-emoji">🍼</span>
+          <span class="tc-name">수유 간격 타이머 & 일지</span>
+          <span class="tc-desc">수유 시간 기록·평균 간격 계산, CSV 내보내기</span>
+          <span class="tc-badge badge-hot">인기</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 카테고리 2: 이유식·영양 -->
+    <div class="cat-block" data-cat="이유식영양">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:#fff8ed;">🥣</div>
+        <div>
+          <h2>이유식 · 영양</h2>
+          <div class="cat-desc">월령에 맞는 재료와 영양 가이드</div>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a href="tools/weaning-checker.html" class="tool-card" data-name="이유식 재료 월령 체커 알레르기 초기 중기 후기">
+          <span class="tc-emoji">🥦</span>
+          <span class="tc-name">이유식 재료 월령 체커</span>
+          <span class="tc-desc">월령별 먹을 수 있는 재료 / 알레르기 주의 재료 분류</span>
+          <span class="tc-badge badge-popular">추천</span>
+        </a>
+        <a href="tools/milk-calculator.html" class="tool-card" data-name="분유 모유 수유량 계산기 하루 권장량">
+          <span class="tc-emoji">🥛</span>
+          <span class="tc-name">분유 · 수유량 계산기</span>
+          <span class="tc-desc">월령·체중 기반 하루 권장 수유량 자동 계산</span>
+          <span class="tc-badge badge-new">NEW</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 카테고리 3: 성장·발달 -->
+    <div class="cat-block" data-cat="성장발달">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:#f0f4ff;">📏</div>
+        <div>
+          <h2>성장 · 발달</h2>
+          <div class="cat-desc">키, 몸무게, 발달 마일스톤 확인</div>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a href="tools/growth-percentile.html" class="tool-card" data-name="성장 백분위수 키 몸무게 머리둘레 WHO">
+          <span class="tc-emoji">📊</span>
+          <span class="tc-name">아이 성장 백분위수 계산기</span>
+          <span class="tc-desc">키·몸무게 입력 → WHO 기준 백분위 그래프 시각화</span>
+          <span class="tc-badge badge-hot">인기</span>
+        </a>
+        <a href="tools/milestone-checker.html" class="tool-card" data-name="발달 마일스톤 체크리스트 월령 언어 운동">
+          <span class="tc-emoji">✅</span>
+          <span class="tc-name">발달 마일스톤 체크리스트</span>
+          <span class="tc-desc">월령별 운동·언어·사회성 발달 항목 체크</span>
+          <span class="tc-badge badge-popular">추천</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 카테고리 4: 건강·응급 -->
+    <div class="cat-block" data-cat="건강응급">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:#fff1f1;">💊</div>
+        <div>
+          <h2>건강 · 응급</h2>
+          <div class="cat-desc">새벽에 열날 때 바로 쓰는 도구</div>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a href="tools/fever-medicine.html" class="tool-card" data-name="소아 해열제 용량 계산기 타이레놀 부루펜 체중">
+          <span class="tc-emoji">🌡️</span>
+          <span class="tc-name">소아 해열제 용량 계산기</span>
+          <span class="tc-desc">체중 입력 → 타이레놀·부루펜 정확한 ml 용량 즉시 계산</span>
+          <span class="tc-badge badge-hot">인기</span>
+        </a>
+        <a href="tools/fever-tracker.html" class="tool-card" data-name="체온 기록 열 추이 그래프 해열제 교차">
+          <span class="tc-emoji">📋</span>
+          <span class="tc-name">체온 기록 & 해열제 교차 타이머</span>
+          <span class="tc-desc">체온 변화 기록, 타이레놀↔부루펜 교차 복용 타이머</span>
+          <span class="tc-badge badge-new">NEW</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 카테고리 5: 입학·지원금 -->
+    <div class="cat-block" data-cat="입학지원금">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:#f5f0ff;">🏫</div>
+        <div>
+          <h2>입학 · 지원금</h2>
+          <div class="cat-desc">어린이집·유치원 입소와 정부 혜택</div>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a href="tools/school-date.html" class="tool-card" data-name="어린이집 유치원 입소 날짜 초등학교 입학 연도">
+          <span class="tc-emoji">🎒</span>
+          <span class="tc-name">입소·입학 날짜 계산기</span>
+          <span class="tc-desc">생년월일 → 어린이집·유치원·초등학교 입학 연도 자동 계산</span>
+          <span class="tc-badge badge-popular">추천</span>
+        </a>
+        <a href="tools/subsidy-calculator.html" class="tool-card" data-name="아동수당 부모급여 육아지원금 계산기 첫만남이용권">
+          <span class="tc-emoji">💰</span>
+          <span class="tc-name">육아 지원금 총정리 계산기</span>
+          <span class="tc-desc">부모급여·아동수당·첫만남이용권 등 받을 수 있는 금액 합산</span>
+          <span class="tc-badge badge-hot">인기</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 카테고리 6: 임신·준비 -->
+    <div class="cat-block" data-cat="임신준비">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:#fef0f5;">🤰</div>
+        <div>
+          <h2>임신 · 준비</h2>
+          <div class="cat-desc">출산 준비와 이름 짓기</div>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a href="tools/pregnancy-week.html" class="tool-card" data-name="임신 주수 계산기 출산 예정일 태아 크기">
+          <span class="tc-emoji">🤰</span>
+          <span class="tc-name">임신 주수 & 출산 예정일 계산기</span>
+          <span class="tc-desc">생리일·초음파 날짜 → 현재 주수, 예정일, 주차별 발달</span>
+          <span class="tc-badge badge-hot">인기</span>
+        </a>
+        <a href="tools/baby-name.html" class="tool-card" data-name="아기 이름 짓기 한자 획수 뜻 태명">
+          <span class="tc-emoji">✨</span>
+          <span class="tc-name">아기 이름 짓기 도우미</span>
+          <span class="tc-desc">성씨 + 원하는 느낌 선택 → 획수별 이름 후보 추천</span>
+          <span class="tc-badge badge-popular">추천</span>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- end toolHub -->
+
+  <footer>
+    <p>© 2024 아기도구함 &nbsp;·&nbsp; 모든 정보는 참고용이며 의료적 조언을 대체하지 않습니다.</p>
+    <p style="margin-top:4px;"><a href="#">개인정보처리방침</a> &nbsp;·&nbsp; <a href="#">문의하기</a></p>
+  </footer>
+</div>
+
+<script>
+function filterTools(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  document.querySelectorAll('.cat-block').forEach(block => {
+    let blockVisible = false;
+    block.querySelectorAll('.tool-card').forEach(card => {
+      const text = (card.dataset.name + card.querySelector('.tc-name').textContent + card.querySelector('.tc-desc').textContent).toLowerCase();
+      const match = !q || text.includes(q);
+      card.style.display = match ? '' : 'none';
+      if(match) blockVisible = true;
+    });
+    block.style.display = (!q || blockVisible) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

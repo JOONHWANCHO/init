@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어린이집·유치원·초등학교 입소 날짜 계산기 | 아기도구함</title>
+<meta name="description" content="아이 생년월일을 입력하면 어린이집·유치원 입소 가능 날짜와 초등학교 입학 연도를 자동 계산해드려요.">
+<link rel="stylesheet" href="../style.css">
+<style>
+.date-result-card{background:var(--bg);border:1.5px solid var(--gray-100);border-radius:var(--radius);padding:1.25rem;margin-bottom:10px;}
+.date-result-card.highlight{border-color:var(--primary);background:var(--primary-light);}
+.drc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px;}
+.drc-label.green{color:var(--primary-dark);}
+.drc-value{font-size:1.4rem;font-weight:900;color:var(--text);margin-bottom:2px;}
+.drc-sub{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.dday-badge{display:inline-block;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:700;margin-top:6px;}
+.badge-future{background:var(--primary-light);color:var(--primary-dark);}
+.badge-past{background:var(--gray-100);color:var(--gray-500);}
+.badge-now{background:var(--primary);color:#fff;}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">입학 · 지원금</div>
+  <h1>입소·입학 날짜 계산기</h1>
+  <p>생년월일을 입력하면 어린이집·유치원·초등학교<br>입소/입학 가능 날짜를 자동으로 계산해드려요.</p>
+</div>
+<main>
+  <div class="card-raised card">
+    <div class="input-group">
+      <label>아이 생년월일</label>
+      <input type="date" id="birthDate" max="">
+    </div>
+    <button class="calc-btn" onclick="calculate()">🎒 날짜 계산하기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div id="currentAge" class="result-box" style="margin-bottom:1rem;"></div>
+
+    <div id="dateCards"></div>
+
+    <div class="section-gap card">
+      <h2 class="block-title">알아두면 좋은 입소 정보</h2>
+      <table class="data-table">
+        <thead><tr><th>구분</th><th>신청 시기</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>국공립 어린이집</td><td>출생 직후부터 대기 신청 가능</td><td>임신 중에도 신청 가능, 경쟁률 높음</td></tr>
+          <tr><td>민간·가정 어린이집</td><td>입소 2~3개월 전</td><td>복지로(www.bokjiro.go.kr)에서 신청</td></tr>
+          <tr><td>유치원</td><td>전년도 10~11월 추첨</td><td>처음학교로(처음학교로.kr)에서 신청</td></tr>
+          <tr><td>초등학교</td><td>전년도 11~12월</td><td>거주지 학군 자동 배정</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warn-box section-gap">
+      💡 <strong>국공립 어린이집</strong>은 대기 기간이 평균 1~2년이에요. 임신 중이라도 복지로 사이트에서 미리 대기 신청을 해두세요!
+    </div>
+  </div>
+
+  <div class="disclaimer section-gap">
+    입소 가능 날짜는 법령 기준이며, 실제 입소 여부는 정원·지역·운영 방침에 따라 다를 수 있어요. 정확한 정보는 해당 기관에 문의하세요.
+  </div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+document.getElementById('birthDate').max = new Date().toISOString().split('T')[0];
+
+function diffDays(a, b){ return Math.round((b-a)/(1000*60*60*24)); }
+function addMonths(d, m){ const r=new Date(d); r.setMonth(r.getMonth()+m); return r; }
+function fmtDate(d){ return d.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'}); }
+function fmtYM(d){ const now=new Date(); const months=Math.floor((now-d)/1000/60/60/24/30.44); return months>=12?`${Math.floor(months/12)}세 ${months%12}개월`:`${months}개월`; }
+
+function calculate(){
+  const bv = document.getElementById('birthDate').value;
+  if(!bv){alert('생년월일을 입력해주세요.');return;}
+  const birth = new Date(bv);
+  const now = new Date();
+  const ageMonths = Math.floor((now-birth)/1000/60/60/24/30.44);
+  const ageYears = Math.floor(ageMonths/12);
+
+  document.getElementById('currentAge').innerHTML = `
+    <div class="result-label">현재 나이</div>
+    <div class="result-value" style="font-size:1.5rem;">${ageYears > 0 ? ageYears+'세 '+(ageMonths%12)+'개월' : ageMonths+'개월'}</div>
+    <div class="result-sub">생년월일: ${fmtDate(birth)}</div>`;
+
+  // 어린이집 만 0세반: 생후 6개월부터 입소 가능
+  const creche0 = addMonths(birth, 6);
+  // 어린이집 만 1세반: 만 1세 되는 날
+  const creche1 = new Date(birth.getFullYear()+1, birth.getMonth(), birth.getDate());
+  // 어린이집 만 2세반
+  const creche2 = new Date(birth.getFullYear()+2, birth.getMonth(), birth.getDate());
+  // 어린이집 만 3세반
+  const creche3 = new Date(birth.getFullYear()+3, birth.getMonth(), birth.getDate());
+  // 유치원: 만 3세 (생일이 속한 해의 3월 1일)
+  const kinder3yr = birth.getFullYear() + 3;
+  const kinder = new Date(kinder3yr, 2, 1); // March 1
+  // 초등학교: 만 6세 되는 해의 3월 1일
+  const elemYr = birth.getFullYear() + 6 + (birth.getMonth() >= 3 ? 1 : 0); // 4월생부터 +1
+  // 실제 초등 기준: 해당 연도 1월1일~12월31일생 → 다음해 3월 입학
+  // 정확 기준: 만 6세 도달하는 해의 이듬해 3월
+  const birthYear = birth.getFullYear();
+  const elemEnterYear = birthYear + 7; // 대략 생년+7 = 초등입학년도 (3월2일 이후 출생 기준 보정 필요)
+  // 정확: 3월2일 이후 출생이면 +1년
+  const birthMD = birth.getMonth()*100+birth.getDate();
+  const exactElemYear = (birthMD > 301) ? birthYear+7 : birthYear+6; // 3월2일 이후면 +7
+  const elementary = new Date(exactElemYear, 2, 1);
+
+  function dDayLabel(date){
+    const diff = diffDays(now, date);
+    if(diff < 0) return {text:`${Math.abs(diff)}일 전 도달`, cls:'badge-past'};
+    if(diff === 0) return {text:'오늘!', cls:'badge-now'};
+    return {text:`D-${diff}`, cls:'badge-future'};
+  }
+
+  const cards = [
+    {label:'어린이집 0세반 입소 가능', value: fmtDate(creche0), sub:'생후 6개월 이후 입소 가능 (원마다 다를 수 있음)', date: creche0},
+    {label:'어린이집 1세반 입소 가능', value: fmtDate(creche1), sub:'만 1세 (생일 기준)', date: creche1},
+    {label:'어린이집 2세반 입소 가능', value: fmtDate(creche2), sub:'만 2세 (생일 기준)', date: creche2},
+    {label:'어린이집 3세반 입소 가능', value: fmtDate(creche3), sub:'만 3세 — 유치원 입학도 가능한 시기', date: creche3},
+    {label:'유치원 입학 가능 (3세)', value: `${kinder3yr}년 3월 1일`, sub:`만 3세 기준 · ${kinder3yr}년 3월부터 원서 접수`, date: kinder},
+    {label:'초등학교 입학 예정 연도', value: `${exactElemYear}년 3월`, sub:`${exactElemYear-1}년 11~12월 취학 통지서 발송 예정`, date: elementary},
+  ];
+
+  document.getElementById('dateCards').innerHTML = cards.map(c=>{
+    const dd = dDayLabel(c.date);
+    const isPast = diffDays(now, c.date) < 0;
+    return `<div class="date-result-card${!isPast?' highlight':''}">
+      <div class="drc-label${!isPast?' green':''}">${c.label}</div>
+      <div class="drc-value">${c.value}</div>
+      <div class="drc-sub">${c.sub}</div>
+      <span class="dday-badge ${dd.cls}">${dd.text}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('results').classList.remove('hidden');
+}
+</script>
+</body></html>

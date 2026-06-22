@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아기 이름 짓기 도우미 — 한자 획수·뜻 이름 추천 | 아기도구함</title>
+<meta name="description" content="성씨와 원하는 이름 느낌을 선택하면 획수 조건에 맞는 아기 이름 후보를 추천해드려요.">
+<link rel="stylesheet" href="../style.css">
+<style>
+.name-card{background:var(--bg);border:1.5px solid var(--gray-100);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:10px;cursor:pointer;transition:.18s;}
+.name-card:hover{border-color:var(--primary);background:var(--primary-light);}
+.name-full{font-size:1.8rem;font-weight:900;color:var(--primary-dark);}
+.name-hanja{font-size:14px;color:var(--text-muted);margin-top:2px;}
+.name-meaning{font-size:13px;color:var(--text-muted);margin-top:.5rem;line-height:1.55;}
+.name-stroke{font-size:11px;background:var(--surface);display:inline-block;padding:2px 8px;border-radius:99px;color:var(--text-muted);margin-top:6px;}
+.vibe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;}
+.vibe-btn{padding:9px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);background:var(--bg);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-align:center;transition:.15s;line-height:1.4;}
+.vibe-btn:hover{border-color:var(--primary);}
+.vibe-btn.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary-dark);font-weight:700;}
+.gender-row{display:flex;gap:10px;margin-bottom:1rem;}
+.pop-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;background:var(--amber-light);color:#7a4d0a;margin-left:6px;}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">임신 · 준비</div>
+  <h1>아기 이름 짓기 도우미</h1>
+  <p>성씨와 원하는 느낌을 선택하면<br>의미 좋은 이름 후보를 추천해드려요.</p>
+</div>
+<main>
+  <div class="card-raised card">
+    <div class="input-row" style="margin-bottom:1rem;">
+      <div class="input-group">
+        <label>성씨 (한글)</label>
+        <input type="text" id="surname" placeholder="예: 김" maxlength="2">
+      </div>
+      <div class="input-group">
+        <label>이름 글자 수</label>
+        <select id="nameLen">
+          <option value="2" selected>두 글자 (홍길동)</option>
+          <option value="1">한 글자 (홍길)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="gender-row">
+      <button class="pill-btn active" onclick="setGender(this,'both')">👶 무관</button>
+      <button class="pill-btn" onclick="setGender(this,'boy')">👦 남아</button>
+      <button class="pill-btn" onclick="setGender(this,'girl')">👧 여아</button>
+    </div>
+
+    <span class="label">원하는 이름 느낌 (복수 선택)</span>
+    <div class="vibe-grid" id="vibeGrid"></div>
+
+    <button class="calc-btn" onclick="generate()" style="margin-top:1.25rem;">✨ 이름 추천받기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <h2 class="block-title" id="resultTitle"></h2>
+    <div id="nameList"></div>
+    <button class="calc-btn" onclick="generate()" style="background:var(--surface);color:var(--text);margin-top:.75rem;">🔄 다른 이름 더 보기</button>
+  </div>
+
+  <div class="section-gap card">
+    <h2 class="block-title">2024 인기 아기 이름 TOP 10</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div><strong style="font-size:12px;color:var(--text-muted);">👦 남아</strong>
+        <ol style="padding-left:1.2rem;font-size:13px;line-height:2;color:var(--text);">
+          <li>시우 <span class="pop-badge">1위</span></li><li>하준</li><li>도윤</li><li>지호</li><li>준서</li>
+          <li>유준</li><li>서준</li><li>주원</li><li>지후</li><li>시현</li>
+        </ol>
+      </div>
+      <div><strong style="font-size:12px;color:var(--text-muted);">👧 여아</strong>
+        <ol style="padding-left:1.2rem;font-size:13px;line-height:2;color:var(--text);">
+          <li>서연 <span class="pop-badge">1위</span></li><li>서아</li><li>하은</li><li>지아</li><li>지유</li>
+          <li>채원</li><li>수아</li><li>다은</li><li>나은</li><li>예린</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer section-gap">
+    이름 추천은 일반적인 한자 의미와 발음을 기반으로 하며, 사주·작명 전문가의 감정을 대체하지 않습니다.
+  </div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+const VIBES = ['밝고 활기찬','지혜롭고 총명한','강하고 용감한','따뜻하고 온화한','고귀하고 품위있는','자연 느낌','순수하고 깨끗한','복 받을'];
+let selectedVibes = [];
+let genderVal = 'both';
+
+const NAMES = {
+  boy: [
+    {name:'준혁',hanja:'俊赫',meaning:'뛰어난 재주와 빛나는 명성',vibes:['밝고 활기찬','지혜롭고 총명한'],stroke:14},
+    {name:'시우',hanja:'時雨',meaning:'때에 맞는 비처럼 복된 존재',vibes:['복 받을','따뜻하고 온화한'],stroke:8},
+    {name:'도윤',hanja:'道允',meaning:'올바른 길을 따르는 아이',vibes:['지혜롭고 총명한','고귀하고 품위있는'],stroke:11},
+    {name:'하준',hanja:'夏俊',meaning:'여름처럼 넘치는 재능',vibes:['밝고 활기찬','강하고 용감한'],stroke:13},
+    {name:'지호',hanja:'智浩',meaning:'지혜롭고 넓은 마음',vibes:['지혜롭고 총명한','따뜻하고 온화한'],stroke:13},
+    {name:'서준',hanja:'敍俊',meaning:'빛나는 이야기를 써내려갈 아이',vibes:['밝고 활기찬','고귀하고 품위있는'],stroke:12},
+    {name:'건우',hanja:'健宇',meaning:'건강하게 세상을 품는 아이',vibes:['강하고 용감한','복 받을'],stroke:10},
+    {name:'유찬',hanja:'裕燦',meaning:'풍요롭고 빛나는 아이',vibes:['밝고 활기찬','복 받을'],stroke:15},
+    {name:'민재',hanja:'敏才',meaning:'민첩하고 재능 있는 아이',vibes:['지혜롭고 총명한','강하고 용감한'],stroke:12},
+    {name:'태양',hanja:'泰陽',meaning:'크고 밝은 태양 같은 아이',vibes:['밝고 활기찬','자연 느낌'],stroke:9},
+    {name:'이안',hanja:'怡安',meaning:'기쁘고 평안한 아이',vibes:['따뜻하고 온화한','순수하고 깨끗한'],stroke:8},
+    {name:'현준',hanja:'賢俊',meaning:'현명하고 뛰어난 아이',vibes:['지혜롭고 총명한','고귀하고 품위있는'],stroke:16},
+    {name:'태오',hanja:'泰悟',meaning:'크고 깨달음이 깊은 아이',vibes:['자연 느낌','지혜롭고 총명한'],stroke:11},
+    {name:'강산',hanja:'江山',meaning:'강과 산처럼 굳건한 아이',vibes:['자연 느낌','강하고 용감한'],stroke:7},
+    {name:'온유',hanja:'溫柔',meaning:'따뜻하고 부드러운 성품',vibes:['따뜻하고 온화한','순수하고 깨끗한'],stroke:11},
+  ],
+  girl: [
+    {name:'서연',hanja:'瑞妍',meaning:'상서롭고 아름다운 아이',vibes:['고귀하고 품위있는','밝고 활기찬'],stroke:13},
+    {name:'하은',hanja:'夏恩',meaning:'여름처럼 따뜻한 은혜',vibes:['따뜻하고 온화한','복 받을'],stroke:12},
+    {name:'지아',hanja:'智雅',meaning:'지혜롭고 우아한 아이',vibes:['지혜롭고 총명한','고귀하고 품위있는'],stroke:12},
+    {name:'채원',hanja:'彩媛',meaning:'화려하고 아름다운 빛깔',vibes:['밝고 활기찬','고귀하고 품위있는'],stroke:14},
+    {name:'수아',hanja:'秀雅',meaning:'빼어나고 우아한 아이',vibes:['고귀하고 품위있는','순수하고 깨끗한'],stroke:11},
+    {name:'예린',hanja:'藝璘',meaning:'예술적 감성과 빛나는 재능',vibes:['밝고 활기찬','지혜롭고 총명한'],stroke:15},
+    {name:'나은',hanja:'娜恩',meaning:'아름답고 은혜로운 아이',vibes:['따뜻하고 온화한','복 받을'],stroke:11},
+    {name:'소율',hanja:'小律',meaning:'작지만 리듬 있는 삶',vibes:['순수하고 깨끗한','따뜻하고 온화한'],stroke:8},
+    {name:'하린',hanja:'夏璘',meaning:'여름의 빛처럼 반짝이는 아이',vibes:['밝고 활기찬','자연 느낌'],stroke:13},
+    {name:'다온',hanja:'多溫',meaning:'따뜻함이 가득한 아이',vibes:['따뜻하고 온화한','복 받을'],stroke:9},
+    {name:'시은',hanja:'詩恩',meaning:'시처럼 아름답고 은혜로운 아이',vibes:['고귀하고 품위있는','순수하고 깨끗한'],stroke:12},
+    {name:'가온',hanja:'佳溫',meaning:'아름답고 따뜻한 아이',vibes:['따뜻하고 온화한','자연 느낌'],stroke:9},
+    {name:'이든',hanja:'二燉',meaning:'에덴처럼 풍요로운 곳의 아이',vibes:['복 받을','순수하고 깨끗한'],stroke:8},
+    {name:'윤아',hanja:'尹雅',meaning:'바르고 우아한 아이',vibes:['고귀하고 품위있는','지혜롭고 총명한'],stroke:9},
+    {name:'솔이',hanja:'率伊',meaning:'소나무처럼 곧은 아이',vibes:['자연 느낌','강하고 용감한'],stroke:8},
+  ]
+};
+
+const vg = document.getElementById('vibeGrid');
+VIBES.forEach(v=>{
+  const btn = document.createElement('button');
+  btn.className='vibe-btn'; btn.textContent=v;
+  btn.onclick=()=>{
+    btn.classList.toggle('active');
+    selectedVibes = selectedVibes.includes(v) ? selectedVibes.filter(x=>x!==v) : [...selectedVibes, v];
+  };
+  vg.appendChild(btn);
+});
+
+function setGender(btn, g){
+  document.querySelectorAll('.gender-row .pill-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); genderVal=g;
+}
+
+function generate(){
+  const surname = document.getElementById('surname').value.trim() || '';
+  let pool = [];
+  if(genderVal==='boy') pool = NAMES.boy;
+  else if(genderVal==='girl') pool = NAMES.girl;
+  else pool = [...NAMES.boy, ...NAMES.girl];
+
+  let filtered = pool;
+  if(selectedVibes.length > 0){
+    filtered = pool.filter(n => selectedVibes.some(v => n.vibes.includes(v)));
+  }
+  if(!filtered.length) filtered = pool;
+
+  // shuffle
+  filtered = filtered.sort(()=>Math.random()-.5).slice(0,6);
+
+  document.getElementById('resultTitle').textContent = `${surname ? surname+' ' : ''}이름 추천 ${filtered.length}개`;
+  document.getElementById('nameList').innerHTML = filtered.map(n=>`
+    <div class="name-card">
+      <div class="name-full">${surname}${n.name}</div>
+      <div class="name-hanja">${n.hanja} (획수: ${n.stroke}획)</div>
+      <div class="name-meaning">${n.meaning}</div>
+      <span class="name-stroke">${n.vibes.join(' · ')}</span>
+    </div>`).join('');
+
+  document.getElementById('results').classList.remove('hidden');
+}
+</script>
+</body></html>

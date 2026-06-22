@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소아 해열제 용량 계산기 — 타이레놀·부루펜 ml 계산 | 아기도구함</title>
+<meta name="description" content="아이 체중을 입력하면 타이레놀(아세트아미노펜)과 부루펜(이부프로펜) 정확한 ml 용량을 즉시 계산해드려요.">
+<link rel="stylesheet" href="../style.css">
+<style>
+.med-card{background:var(--bg);border:1.5px solid var(--gray-100);border-radius:var(--radius);padding:1.25rem;margin-bottom:12px;}
+.med-card.tylenol{border-left:4px solid var(--primary);}
+.med-card.brufen{border-left:4px solid var(--amber);}
+.med-name{font-size:15px;font-weight:800;margin-bottom:2px;}
+.med-sub{font-size:12px;color:var(--text-muted);margin-bottom:.75rem;}
+.dose-row{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;}
+.dose-ml{font-size:2rem;font-weight:900;color:var(--primary-dark);}
+.med-card.brufen .dose-ml{color:#7a4d0a;}
+.dose-unit{font-size:14px;color:var(--text-muted);}
+.dose-range{font-size:12px;color:var(--text-muted);}
+.interval-badge{display:inline-block;background:var(--primary-light);color:var(--primary-dark);font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin-top:6px;}
+.med-card.brufen .interval-badge{background:var(--amber-light);color:#7a4d0a;}
+.timer-section{background:var(--surface);border-radius:var(--radius-sm);padding:1rem;margin-top:.75rem;}
+.timer-section .tl{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;}
+.cross-timer{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ct-btn{padding:9px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--text);transition:.15s;}
+.ct-btn:hover{border-color:var(--primary);color:var(--primary);}
+.ct-display{font-size:12px;color:var(--text-muted);margin-top:6px;min-height:18px;}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">건강 · 응급</div>
+  <h1>소아 해열제 용량 계산기</h1>
+  <p>체중을 입력하면 타이레놀·부루펜 정확한 ml 용량을<br>즉시 계산해드려요. 새벽에 열날 때 바로 확인하세요.</p>
+</div>
+<main>
+  <div class="card-raised card">
+    <div class="input-row">
+      <div class="input-group">
+        <label>아이 체중 (kg)</label>
+        <input type="number" id="weight" placeholder="예: 8.5" step="0.1" min="3" max="40">
+      </div>
+      <div class="input-group">
+        <label>월령 (개월)</label>
+        <input type="number" id="ageMonth" placeholder="예: 7" min="0" max="120">
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calculate()">🌡️ 용량 계산하기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div class="med-card tylenol">
+      <div class="med-name">타이레놀 (아세트아미노펜)</div>
+      <div class="med-sub">어린이용 160mg/5ml 기준 · 생후 2개월부터 사용 가능</div>
+      <div class="dose-row">
+        <span class="dose-ml" id="tylenolMl">—</span>
+        <span class="dose-unit">ml</span>
+      </div>
+      <div class="dose-range" id="tylenolRange"></div>
+      <span class="interval-badge">4~6시간 간격 · 하루 최대 5회</span>
+      <div class="timer-section">
+        <div class="tl">투약 타이머</div>
+        <div class="cross-timer">
+          <button class="ct-btn" onclick="startTimer('T')">▶ 지금 먹임</button>
+          <div id="tTimer" class="ct-display" style="display:flex;align-items:center;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="med-card brufen">
+      <div class="med-name">부루펜 (이부프로펜)</div>
+      <div class="med-sub">어린이용 100mg/5ml 기준 · 생후 6개월부터 사용 가능</div>
+      <div class="dose-row">
+        <span class="dose-ml" id="brufenMl">—</span>
+        <span class="dose-unit">ml</span>
+      </div>
+      <div class="dose-range" id="brufenRange"></div>
+      <span class="interval-badge">6~8시간 간격 · 하루 최대 4회</span>
+      <div class="timer-section">
+        <div class="tl">투약 타이머</div>
+        <div class="cross-timer">
+          <button class="ct-btn" onclick="startTimer('B')">▶ 지금 먹임</button>
+          <div id="bTimer" class="ct-display" style="display:flex;align-items:center;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="danger-box section-gap">
+      ⛔ <strong>교차 복용 주의:</strong> 타이레놀과 부루펜은 교차 복용 가능하지만 반드시 각 약의 최소 간격을 지켜야 해요. 같은 약을 너무 자주 먹이면 안 됩니다.
+    </div>
+
+    <div class="section-gap card">
+      <h2 class="block-title">교차 복용 예시</h2>
+      <table class="data-table">
+        <thead><tr><th>시각</th><th>약</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>오전 8:00</td><td>타이레놀</td><td>첫 투약</td></tr>
+          <tr><td>오전 12:00</td><td>부루펜</td><td>4시간 후 (타이레놀 간격 유지)</td></tr>
+          <tr><td>오후 6:00</td><td>타이레놀</td><td>6시간 후 (부루펜 간격 유지)</td></tr>
+          <tr><td>오후 10:00</td><td>부루펜</td><td>4시간 후</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-gap card">
+    <h2 class="block-title">해열제 복용 기준</h2>
+    <table class="data-table">
+      <thead><tr><th>체온</th><th>권장 조치</th></tr></thead>
+      <tbody>
+        <tr><td>37.5°C 미만</td><td>정상 — 해열제 불필요</td></tr>
+        <tr><td>37.5~38.0°C</td><td>미열 — 충분한 수분 섭취, 관찰</td></tr>
+        <tr><td>38.0~38.5°C</td><td>발열 — 아이가 많이 힘들어하면 해열제 가능</td></tr>
+        <tr><td>38.5°C 이상</td><td>✅ 해열제 투약 권장</td></tr>
+        <tr><td>39.5°C 이상</td><td>⚠️ 즉시 소아과 방문 또는 응급실 고려</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="danger-box section-gap">
+    <strong>⚠️ 반드시 의사 상담이 필요한 경우:</strong><br>
+    생후 3개월 미만 발열 · 38.5도 이상 3일 이상 지속 · 경련 · 의식 저하 · 발진 동반 · 극도의 보챔 · 수분 섭취 거부
+  </div>
+
+  <div class="disclaimer section-gap">
+    본 계산기는 일반적인 참고용이며, 의약품 사용 전 반드시 약 설명서를 확인하고 소아과 전문의와 상담하세요. 동일 성분 약제를 중복 투여하지 마세요.
+  </div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+const timers = {};
+function calculate(){
+  const w = parseFloat(document.getElementById('weight').value);
+  const m = parseInt(document.getElementById('ageMonth').value);
+  if(!w||w<3){alert('체중을 올바르게 입력해주세요.');return;}
+  // 타이레놀: 10~15mg/kg, 160mg/5ml → 5ml당 160mg
+  const tMin = Math.round(w*10/160*5*10)/10;
+  const tMax = Math.round(w*15/160*5*10)/10;
+  const tDose = Math.round((tMin+tMax)/2*10)/10;
+  document.getElementById('tylenolMl').textContent = tDose;
+  document.getElementById('tylenolRange').textContent = `권장 범위: ${tMin}~${tMax}ml (체중 1kg당 10~15mg)`;
+  // 부루펜: 5~10mg/kg, 100mg/5ml
+  const bMin = Math.round(w*5/100*5*10)/10;
+  const bMax = Math.round(w*10/100*5*10)/10;
+  const bDose = Math.round((bMin+bMax)/2*10)/10;
+  document.getElementById('brufenMl').textContent = m>=6 ? bDose : '—';
+  document.getElementById('brufenRange').textContent = m>=6
+    ? `권장 범위: ${bMin}~${bMax}ml (체중 1kg당 5~10mg)`
+    : '⚠️ 생후 6개월 미만은 사용 불가';
+  document.getElementById('results').classList.remove('hidden');
+}
+function startTimer(type){
+  const id = type;
+  if(timers[id]) clearInterval(timers[id]);
+  const start = Date.now();
+  const intervalMin = type==='T' ? 240 : 360; // 4h or 6h in minutes
+  const el = document.getElementById(type==='T'?'tTimer':'bTimer');
+  timers[id] = setInterval(()=>{
+    const elapsed = Math.floor((Date.now()-start)/60000);
+    const remaining = intervalMin - elapsed;
+    if(remaining <= 0){
+      clearInterval(timers[id]);
+      el.textContent = '✅ 다음 투약 가능';
+      el.style.color = 'var(--primary)';
+    } else {
+      const h = Math.floor(remaining/60), m = remaining%60;
+      el.textContent = `다음 투약까지 ${h>0?h+'시간 ':''}${m}분`;
+    }
+  },5000);
+  el.textContent = `지금 투약함 · ${type==='T'?'4시간':'6시간'} 뒤 재투약 가능`;
+}
+</script>
+</body></html>

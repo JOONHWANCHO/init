@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수유 간격 타이머 & 일지 — 모유·분유 기록 | 아기도구함</title>
+<meta name="description" content="수유 시작·종료 버튼으로 기록하고 평균 간격을 자동 계산해요. 병원에 가져갈 수 있는 CSV 내보내기 지원.">
+<link rel="stylesheet" href="../style.css">
+<style>
+.timer-display{text-align:center;padding:2rem 1rem;background:var(--surface);border-radius:var(--radius);margin-top:1rem;}
+.timer-clock{font-size:3rem;font-weight:900;color:var(--primary-dark);font-variant-numeric:tabular-nums;letter-spacing:.05em;}
+.timer-status{font-size:13px;color:var(--text-muted);margin-top:.25rem;}
+.timer-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;}
+.timer-btn{padding:14px;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;}
+.btn-start{background:var(--primary);color:#fff;}
+.btn-start:hover{background:var(--primary-dark);}
+.btn-stop{background:var(--gray-100);color:var(--text);}
+.btn-stop:hover{background:var(--gray-200);}
+.btn-stop:disabled{opacity:.4;cursor:default;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem;}
+.stat-card{background:var(--surface);border-radius:var(--radius-sm);padding:.875rem;text-align:center;}
+.stat-card .sv{font-size:1.3rem;font-weight:800;color:var(--primary-dark);}
+.stat-card .sk{font-size:11px;color:var(--text-muted);margin-top:2px;font-weight:600;text-transform:uppercase;}
+.log-table-wrap{overflow-x:auto;margin-top:.5rem;}
+.side-select{display:flex;gap:8px;justify-content:center;margin:1rem 0 .5rem;}
+.side-btn{padding:7px 20px;border-radius:99px;border:1.5px solid var(--gray-200);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;}
+.side-btn.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary-dark);}
+.export-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:1.5px solid var(--gray-200);border-radius:99px;background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text);transition:.15s;margin-top:1rem;}
+.export-btn:hover{border-color:var(--primary);color:var(--primary);}
+.delete-btn{background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:14px;padding:2px 6px;border-radius:4px;}
+.delete-btn:hover{color:var(--red);background:var(--red-light);}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+
+<div class="tool-hero">
+  <div class="cat-tag">수유 · 수면</div>
+  <h1>수유 간격 타이머 & 일지</h1>
+  <p>수유 시작·종료를 기록하고 평균 간격과 횟수를 자동으로 계산해요.</p>
+</div>
+
+<main>
+  <div class="card-raised card">
+    <span class="label">수유 방향</span>
+    <div class="side-select">
+      <button class="side-btn active" onclick="setSide(this,'왼쪽')">👈 왼쪽</button>
+      <button class="side-btn" onclick="setSide(this,'오른쪽')">오른쪽 👉</button>
+      <button class="side-btn" onclick="setSide(this,'분유')">🍼 분유</button>
+      <button class="side-btn" onclick="setSide(this,'양쪽')">양쪽</button>
+    </div>
+
+    <div class="timer-display">
+      <div class="timer-clock" id="clock">00:00</div>
+      <div class="timer-status" id="timerStatus">시작 버튼을 눌러주세요</div>
+    </div>
+
+    <div class="timer-btns">
+      <button class="timer-btn btn-start" id="startBtn" onclick="startTimer()">▶ 수유 시작</button>
+      <button class="timer-btn btn-stop" id="stopBtn" onclick="stopTimer()" disabled>■ 수유 종료</button>
+    </div>
+  </div>
+
+  <div class="stats-row section-gap" id="statsRow">
+    <div class="stat-card"><div class="sv" id="statCount">0</div><div class="sk">오늘 횟수</div></div>
+    <div class="stat-card"><div class="sv" id="statAvgDur">--</div><div class="sk">평균 수유시간</div></div>
+    <div class="stat-card"><div class="sv" id="statAvgGap">--</div><div class="sk">평균 간격</div></div>
+  </div>
+
+  <div class="section-gap">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
+      <h2 class="block-title" style="margin-bottom:0;">수유 기록</h2>
+      <button class="export-btn" onclick="exportCSV()">📥 CSV 내보내기</button>
+    </div>
+    <div class="log-table-wrap">
+      <table class="data-table" id="logTable">
+        <thead><tr><th>#</th><th>시작 시각</th><th>방향</th><th>수유 시간</th><th>간격</th><th></th></tr></thead>
+        <tbody id="logBody"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem;">아직 기록이 없어요</td></tr></tbody>
+      </table>
+    </div>
+    <button class="export-btn" onclick="clearAll()" style="color:var(--red);border-color:var(--red-mid);margin-top:.5rem;">🗑 전체 삭제</button>
+  </div>
+
+  <div class="warn-box section-gap">
+    💡 <strong>신생아 수유 간격 기준:</strong> 모유: 2~3시간마다 (하루 8~12회) · 분유: 3~4시간마다 (하루 6~8회). 간격은 수유 <em>시작</em> 기준으로 측정해요.
+  </div>
+
+  <div class="disclaimer section-gap">
+    기록은 브라우저 로컬스토리지에 저장되며 기기 외부로 전송되지 않습니다. 브라우저 데이터 삭제 시 기록이 지워질 수 있어요.
+  </div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+
+<script>
+let logs = JSON.parse(localStorage.getItem('feedingLogs')||'[]');
+let startTime = null;
+let timerInterval = null;
+let currentSide = '왼쪽';
+
+function setSide(btn, side){
+  document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSide = side;
+}
+
+function pad(n){return String(n).padStart(2,'0');}
+function fmtDur(ms){
+  const s=Math.floor(ms/1000), m=Math.floor(s/60), sec=s%60;
+  return `${pad(m)}:${pad(sec)}`;
+}
+function fmtTime(d){
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function startTimer(){
+  if(timerInterval) return;
+  startTime = new Date();
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('stopBtn').disabled = false;
+  document.getElementById('timerStatus').textContent = `${currentSide} · 수유 중...`;
+  timerInterval = setInterval(()=>{
+    const elapsed = Date.now() - startTime.getTime();
+    document.getElementById('clock').textContent = fmtDur(elapsed);
+  },500);
+}
+
+function stopTimer(){
+  if(!timerInterval) return;
+  clearInterval(timerInterval); timerInterval=null;
+  const endTime = new Date();
+  const dur = endTime - startTime;
+  logs.unshift({start: startTime.toISOString(), side: currentSide, dur});
+  if(logs.length>100) logs = logs.slice(0,100);
+  localStorage.setItem('feedingLogs', JSON.stringify(logs));
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('stopBtn').disabled = true;
+  document.getElementById('clock').textContent = '00:00';
+  document.getElementById('timerStatus').textContent = `완료! (${fmtDur(dur)} 수유)`;
+  startTime = null;
+  renderTable(); updateStats();
+}
+
+function deleteLog(i){
+  logs.splice(i,1);
+  localStorage.setItem('feedingLogs', JSON.stringify(logs));
+  renderTable(); updateStats();
+}
+
+function renderTable(){
+  const tbody = document.getElementById('logBody');
+  if(!logs.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem;">아직 기록이 없어요</td></tr>';
+    return;
+  }
+  tbody.innerHTML = logs.map((l,i)=>{
+    const d = new Date(l.start);
+    const gap = i < logs.length-1 ? (d - new Date(logs[i+1].start)) : null;
+    const gapStr = gap ? fmtDur(gap) : '—';
+    return `<tr>
+      <td style="color:var(--text-muted)">${logs.length-i}</td>
+      <td>${fmtTime(d)}</td>
+      <td>${l.side}</td>
+      <td><strong>${fmtDur(l.dur)}</strong></td>
+      <td>${gapStr}</td>
+      <td><button class="delete-btn" onclick="deleteLog(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStats(){
+  const today = new Date().toDateString();
+  const todayLogs = logs.filter(l=>new Date(l.start).toDateString()===today);
+  document.getElementById('statCount').textContent = todayLogs.length + '회';
+  if(todayLogs.length){
+    const avgDur = todayLogs.reduce((a,l)=>a+l.dur,0)/todayLogs.length;
+    document.getElementById('statAvgDur').textContent = fmtDur(avgDur);
+  } else {
+    document.getElementById('statAvgDur').textContent = '--';
+  }
+  if(logs.length>1){
+    let gaps=[];
+    for(let i=0;i<logs.length-1;i++){
+      gaps.push(new Date(logs[i].start)-new Date(logs[i+1].start));
+    }
+    const avg = gaps.reduce((a,b)=>a+b,0)/gaps.length;
+    document.getElementById('statAvgGap').textContent = fmtDur(avg);
+  } else {
+    document.getElementById('statAvgGap').textContent = '--';
+  }
+}
+
+function exportCSV(){
+  if(!logs.length){ alert('기록이 없습니다.'); return; }
+  const rows = [['번호','날짜','시작시각','방향','수유시간(분)']];
+  [...logs].reverse().forEach((l,i)=>{
+    const d=new Date(l.start);
+    rows.push([i+1,d.toLocaleDateString('ko-KR'),fmtTime(d),l.side,(l.dur/60000).toFixed(1)]);
+  });
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='수유일지.csv';
+  a.click();
+}
+
+function clearAll(){
+  if(!confirm('전체 기록을 삭제할까요?')) return;
+  logs=[];
+  localStorage.removeItem('feedingLogs');
+  renderTable(); updateStats();
+}
+
+renderTable(); updateStats();
+</script>
+</body></html>

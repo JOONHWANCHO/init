@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>임신 주수 & 출산 예정일 계산기 — 주차별 태아 발달 | 아기도구함</title>
+<meta name="description" content="마지막 생리일 또는 초음파 날짜를 입력하면 현재 임신 주수와 출산 예정일, 주차별 태아 발달 정보를 알려드려요.">
+<link rel="stylesheet" href="../style.css">
+<style>
+.due-date-big{font-size:2rem;font-weight:900;color:var(--primary-dark);}
+.week-card{background:var(--surface);border-radius:var(--radius-sm);padding:1rem 1.1rem;}
+.week-num{font-size:2.5rem;font-weight:900;color:var(--primary-dark);line-height:1;}
+.week-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.trimester-bar{display:flex;height:8px;border-radius:99px;overflow:hidden;margin:1rem 0 .5rem;}
+.t1{background:#c6ebd5;flex:12;}
+.t2{background:#3d7a5e;flex:14;}
+.t3{background:#275040;flex:14;}
+.t-labels{display:flex;font-size:10px;color:var(--text-muted);}
+.t-labels span{flex:1;text-align:center;}
+.progress-current{position:relative;}
+.milestone-list{list-style:none;padding:0;}
+.milestone-list li{padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px;color:var(--text-muted);display:flex;gap:8px;}
+.milestone-list li:last-child{border-bottom:none;}
+.milestone-list li .mw{font-weight:700;color:var(--primary-dark);min-width:40px;}
+.fetal-size{display:flex;align-items:center;gap:12px;padding:1rem;background:var(--surface);border-radius:var(--radius-sm);}
+.fetal-size .fs-emoji{font-size:2.5rem;}
+.fetal-size .fs-info .fs-size{font-size:1.1rem;font-weight:800;color:var(--primary-dark);}
+.fetal-size .fs-info .fs-label{font-size:12px;color:var(--text-muted);}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">임신 · 준비</div>
+  <h1>임신 주수 & 출산 예정일</h1>
+  <p>마지막 생리일을 입력하면 현재 임신 주수,<br>출산 예정일, 주차별 태아 발달 정보를 알려드려요.</p>
+</div>
+<main>
+  <div class="card-raised card">
+    <div class="btn-group" id="calcType" style="margin-bottom:1rem;">
+      <button class="pill-btn active" onclick="setType(this,'lmp')">🩸 마지막 생리일 기준</button>
+      <button class="pill-btn" onclick="setType(this,'ultrasound')">🔬 초음파 주수 기준</button>
+    </div>
+
+    <div id="lmpInput">
+      <div class="input-group">
+        <label>마지막 생리 첫 날</label>
+        <input type="date" id="lmpDate" max="">
+      </div>
+    </div>
+    <div id="ultraInput" class="hidden">
+      <div class="input-row">
+        <div class="input-group">
+          <label>초음파 날짜</label>
+          <input type="date" id="ultraDate" max="">
+        </div>
+        <div class="input-group">
+          <label>그 때 주수 (주)</label>
+          <input type="number" id="ultraWeek" placeholder="예: 8" min="4" max="40">
+        </div>
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calculate()">🤰 주수 계산하기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="result-box">
+        <div class="result-label">현재 임신 주수</div>
+        <div class="week-num" id="currentWeek">—</div>
+        <div class="week-sub" id="currentDays"></div>
+      </div>
+      <div class="result-box amber">
+        <div class="result-label">출산 예정일</div>
+        <div style="font-size:1.2rem;font-weight:900;color:#7a4d0a;" id="dueDate">—</div>
+        <div class="week-sub" id="dueDays"></div>
+      </div>
+    </div>
+
+    <div class="section-gap">
+      <h2 class="block-title">임신 진행 단계</h2>
+      <div class="card">
+        <div class="trimester-bar">
+          <div class="t1"></div><div class="t2"></div><div class="t3"></div>
+        </div>
+        <div class="t-labels">
+          <span>1삼분기<br>(~12주)</span>
+          <span>2삼분기<br>(13~27주)</span>
+          <span>3삼분기<br>(28주~)</span>
+        </div>
+        <div id="trimesterLabel" style="margin-top:.75rem;font-size:13px;color:var(--text-muted);"></div>
+      </div>
+    </div>
+
+    <div class="section-gap">
+      <h2 class="block-title">현재 주차 태아</h2>
+      <div class="card">
+        <div class="fetal-size" id="fetalInfo"></div>
+        <div style="margin-top:.875rem;font-size:13px;color:var(--text-muted);line-height:1.65;" id="weeklyDesc"></div>
+      </div>
+    </div>
+
+    <div class="section-gap card">
+      <h2 class="block-title">임신 주요 마일스톤</h2>
+      <ul class="milestone-list" id="milestoneList"></ul>
+    </div>
+  </div>
+
+  <div class="disclaimer section-gap">
+    출산 예정일은 마지막 생리일 기준 280일(40주) 계산이며 실제 출산일과 다를 수 있어요. 정확한 예정일은 초음파로 확인하세요.
+  </div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+const FETAL = {
+  4:{emoji:'🌱',size:'0.1cm',label:'양귀비씨 크기',desc:'착상이 완료되고 배아가 형성되기 시작해요.'},
+  5:{emoji:'🫐',size:'0.2cm',label:'블루베리보다 작아요',desc:'심장이 뛰기 시작해요. 뇌와 척수가 발달해요.'},
+  6:{emoji:'🫘',size:'0.6cm',label:'강낭콩 크기',desc:'팔다리 싹이 생기고 얼굴 구조가 형성되기 시작해요.'},
+  7:{emoji:'🫐',size:'1cm',label:'블루베리 크기',desc:'손가락·발가락 구분이 시작돼요. 뇌가 빠르게 발달해요.'},
+  8:{emoji:'🍇',size:'1.6cm',label:'포도 크기',desc:'모든 주요 장기가 형성 중이에요. 움직이기 시작해요.'},
+  9:{emoji:'🍒',size:'2.3cm',label:'체리 크기',desc:'태아(fetus)로 불리기 시작해요. 손가락이 완전히 분리돼요.'},
+  10:{emoji:'🍓',size:'3.1cm',label:'딸기 크기',desc:'손톱이 자라고 이마가 발달해요. 삼킴 반사가 생겨요.'},
+  11:{emoji:'🫑',size:'4.1cm',label:'작은 피망 크기',desc:'생식기가 구별되기 시작해요. 열 손가락 발가락이 완성돼요.'},
+  12:{emoji:'🍋',size:'5.4cm',label:'라임 크기',desc:'1삼분기 완료! 대부분 장기 형성이 끝나요.'},
+  14:{emoji:'🍑',size:'8.7cm',label:'복숭아 크기',desc:'얼굴 근육이 발달해요. 머리카락이 자라기 시작해요.'},
+  16:{emoji:'🥑',size:'11.6cm',label:'아보카도 크기',desc:'태동을 느끼기 시작할 수 있어요.'},
+  20:{emoji:'🍌',size:'16.5cm',label:'바나나 크기',desc:'정밀 초음파로 성별 확인 가능! 청각이 발달해요.'},
+  24:{emoji:'🌽',size:'21cm',label:'옥수수 크기',desc:'생존 가능한 주수. 눈이 열리기 시작해요.'},
+  28:{emoji:'🥦',size:'25cm',label:'브로콜리 크기',desc:'3삼분기 시작. 눈을 뜨고 감을 수 있어요.'},
+  32:{emoji:'🥥',size:'28cm',label:'코코넛 크기',desc:'뼈가 굳어지기 시작해요. 지방이 쌓여요.'},
+  36:{emoji:'🎃',size:'33cm',label:'작은 호박 크기',desc:'폐가 거의 성숙해요. 출산 준비 완료 단계예요.'},
+  40:{emoji:'👶',size:'51cm',label:'출산 예정!',desc:'아기가 나올 준비를 마쳤어요!'}
+};
+const MILESTONES = [
+  {week:4,text:'임신 확인 (소변 검사)'},
+  {week:6,text:'첫 초음파 — 심장 박동 확인'},
+  {week:10,text:'1차 기형아 검사 시기'},
+  {week:12,text:'목투명대 검사 (다운증후군 선별)'},
+  {week:16,text:'2차 기형아 검사 (쿼드 검사)'},
+  {week:20,text:'정밀 초음파 — 성별 확인 가능'},
+  {week:24,text:'임신성 당뇨 검사 (50g)'},
+  {week:28,text:'Rh- 산모 항D면역글로불린 접종'},
+  {week:32,text:'태아 체중·자세 확인 초음파'},
+  {week:36,text:'B군 연쇄구균 검사 (GBS)'},
+  {week:38,text:'분만 준비 — 병원 가방 준비'},
+  {week:40,text:'출산 예정일'},
+];
+
+let calcTypeVal = 'lmp';
+function setType(btn, type){
+  document.querySelectorAll('#calcType .pill-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); calcTypeVal=type;
+  document.getElementById('lmpInput').classList.toggle('hidden', type!=='lmp');
+  document.getElementById('ultraInput').classList.toggle('hidden', type!=='ultrasound');
+}
+
+function addDays(d, n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function fmtDate(d){return d.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});}
+
+function calculate(){
+  let conceptionBase;
+  if(calcTypeVal==='lmp'){
+    const lmp=document.getElementById('lmpDate').value;
+    if(!lmp){alert('마지막 생리일을 입력해주세요.');return;}
+    conceptionBase=new Date(lmp);
+  } else {
+    const ud=document.getElementById('ultraDate').value;
+    const uw=parseInt(document.getElementById('ultraWeek').value);
+    if(!ud||!uw){alert('초음파 날짜와 주수를 입력해주세요.');return;}
+    conceptionBase=addDays(new Date(ud), -uw*7);
+  }
+  const now=new Date();
+  const daysPassed=Math.floor((now-conceptionBase)/86400000);
+  const weeksPassed=Math.floor(daysPassed/7);
+  const dayExtra=daysPassed%7;
+  const dueDate=addDays(conceptionBase, 280);
+  const daysLeft=Math.floor((dueDate-now)/86400000);
+
+  document.getElementById('currentWeek').textContent=weeksPassed+'주';
+  document.getElementById('currentDays').textContent=dayExtra+'일차 · 총 '+daysPassed+'일째';
+  document.getElementById('dueDate').textContent=fmtDate(dueDate);
+  document.getElementById('dueDays').textContent=daysLeft>0?`D-${daysLeft}`:(daysLeft===0?'오늘이 예정일!':'예정일 +'+Math.abs(daysLeft)+'일');
+
+  let trimLabel='';
+  if(weeksPassed<=12) trimLabel='🌱 1삼분기 (초기) — 입덧이 심한 시기예요. 충분한 휴식이 필요해요.';
+  else if(weeksPassed<=27) trimLabel='☀️ 2삼분기 (중기) — 태동을 느낄 수 있어요. 비교적 안정적인 시기예요.';
+  else trimLabel='🌕 3삼분기 (후기) — 출산 준비를 시작할 시기예요.';
+  document.getElementById('trimesterLabel').textContent=trimLabel;
+
+  // fetal info — closest week key
+  const fkeys=Object.keys(FETAL).map(Number).sort((a,b)=>a-b);
+  let fk=fkeys[0];
+  for(const k of fkeys){if(weeksPassed>=k) fk=k;}
+  const fi=FETAL[fk];
+  document.getElementById('fetalInfo').innerHTML=`
+    <span class="fs-emoji">${fi.emoji}</span>
+    <div class="fs-info"><div class="fs-size">약 ${fi.size}</div><div class="fs-label">${fi.label}</div></div>`;
+  document.getElementById('weeklyDesc').textContent=fi.desc;
+
+  document.getElementById('milestoneList').innerHTML=MILESTONES.map(m=>{
+    const done=weeksPassed>m.week;
+    const current=weeksPassed===m.week;
+    return `<li style="${current?'color:var(--primary-dark);font-weight:700;':done?'opacity:.5;text-decoration:line-through;':''}">
+      <span class="mw">${m.week}주</span><span>${current?'👉 '+m.text:m.text}</span></li>`;
+  }).join('');
+
+  document.getElementById('results').classList.remove('hidden');
+}
+const today=new Date().toISOString().split('T')[0];
+document.getElementById('lmpDate').max=today;
+document.getElementById('ultraDate').max=today;
+</script>
+</body></html>

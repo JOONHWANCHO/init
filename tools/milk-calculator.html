@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>분유·수유량 계산기 — 하루 권장 수유량 | 아기도구함</title>
+<meta name="description" content="아이 월령과 체중을 입력하면 하루 권장 수유량과 1회 수유량을 계산해드려요.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">이유식 · 영양</div>
+  <h1>분유 · 수유량 계산기</h1>
+  <p>월령과 체중을 입력하면 하루 권장 수유량과 1회 적정량을 알려드려요.</p>
+</div>
+<main>
+  <div class="card-raised card">
+    <span class="label">수유 방식</span>
+    <div class="btn-group" style="margin-bottom:1.25rem;" id="feedType">
+      <button class="pill-btn active" onclick="setType(this,'formula')">🍼 분유</button>
+      <button class="pill-btn" onclick="setType(this,'breast')">🤱 모유</button>
+    </div>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label>아이 월령</label>
+        <select id="monthSel">
+          <option value="0">신생아 (0~1개월)</option>
+          <option value="1">1개월</option>
+          <option value="2">2개월</option>
+          <option value="3">3개월</option>
+          <option value="4" selected>4개월</option>
+          <option value="5">5개월</option>
+          <option value="6">6개월</option>
+          <option value="7">7개월</option>
+          <option value="8">8개월</option>
+          <option value="9">9개월</option>
+          <option value="10">10개월</option>
+          <option value="11">11개월</option>
+          <option value="12">12개월(돌)</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>체중 (kg)</label>
+        <input type="number" id="weight" placeholder="예: 6.5" step="0.1" min="1" max="20">
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calculate()">📊 수유량 계산하기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="result-box" style="text-align:center;">
+        <div class="result-label">하루 총량</div>
+        <div class="result-value" id="dailyTotal" style="font-size:1.3rem;"></div>
+        <div class="result-sub">ml/일</div>
+      </div>
+      <div class="result-box amber" style="text-align:center;">
+        <div class="result-label">1회 수유량</div>
+        <div class="result-value" id="perFeed" style="font-size:1.3rem;"></div>
+        <div class="result-sub">ml/회</div>
+      </div>
+      <div class="result-box blue" style="text-align:center;">
+        <div class="result-label">하루 횟수</div>
+        <div class="result-value" id="feedCount" style="font-size:1.3rem;"></div>
+        <div class="result-sub">회/일</div>
+      </div>
+    </div>
+
+    <div class="info-box section-gap">
+      <p id="resultNote" style="line-height:1.75;"></p>
+    </div>
+
+    <div class="warn-box section-gap">
+      💡 이 계산은 <strong>체중의 약 150~160ml/kg</strong> 기준(분유) 또는 수유 빈도 기준(모유)을 사용해요. 아이가 더 먹거나 덜 먹더라도 체중이 잘 늘고 있다면 괜찮아요.
+    </div>
+  </div>
+
+  <div class="section-gap card">
+    <h2 class="block-title">월령별 분유 권장량 표</h2>
+    <table class="data-table">
+      <thead><tr><th>월령</th><th>1회량</th><th>횟수/일</th><th>하루 총량</th></tr></thead>
+      <tbody>
+        <tr><td>신생아~1개월</td><td>60~90ml</td><td>7~8회</td><td>480~720ml</td></tr>
+        <tr><td>1~2개월</td><td>90~120ml</td><td>6~7회</td><td>540~840ml</td></tr>
+        <tr><td>2~4개월</td><td>120~150ml</td><td>5~6회</td><td>600~900ml</td></tr>
+        <tr><td>4~6개월</td><td>150~180ml</td><td>5회</td><td>750~900ml</td></tr>
+        <tr><td>6~8개월</td><td>160~200ml</td><td>4~5회</td><td>640~1000ml</td></tr>
+        <tr><td>8~12개월</td><td>200~220ml</td><td>3~4회</td><td>600~880ml</td></tr>
+        <tr><td>12개월 이후</td><td>유아식 병행</td><td>2~3회</td><td>400~600ml</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="disclaimer section-gap">
+    본 계산 결과는 참고용이며 아이의 성장 속도와 건강 상태에 따라 다를 수 있습니다. 수유량이 걱정된다면 소아과 전문의와 상담하세요.
+  </div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+let feedTypeVal = 'formula';
+function setType(btn, type){
+  document.querySelectorAll('#feedType .pill-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  feedTypeVal = type;
+}
+function calculate(){
+  const month = parseInt(document.getElementById('monthSel').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  if(!weight || weight < 1){ alert('체중을 입력해주세요.'); return; }
+
+  let daily, perFeed, count, note;
+  if(feedTypeVal === 'formula'){
+    const rate = month <= 1 ? 150 : month <= 3 ? 155 : 160;
+    daily = Math.round(weight * rate);
+    if(month === 0) count = 8;
+    else if(month <= 1) count = 7;
+    else if(month <= 3) count = 6;
+    else if(month <= 5) count = 5;
+    else if(month <= 8) count = 4;
+    else count = 3;
+    perFeed = Math.round(daily / count / 10) * 10;
+    note = `체중 ${weight}kg 기준으로 하루 약 ${daily}ml의 분유가 권장됩니다. 1회 ${perFeed}ml씩 하루 ${count}회가 이상적이에요. 배고파하면 조금 더 줘도 좋고, 남기면 억지로 먹이지 않아도 괜찮아요.`;
+  } else {
+    if(month <= 1) count = 8, perFeed = 90, daily = 720;
+    else if(month <= 3) count = 7, perFeed = 110, daily = 770;
+    else if(month <= 5) count = 6, perFeed = 130, daily = 780;
+    else if(month <= 8) count = 5, perFeed = 150, daily = 750;
+    else count = 4, perFeed = 160, daily = 640;
+    note = `모유 수유는 아이가 배고파할 때마다(On-demand) 주는 것이 기본 원칙이에요. 하루 ${count}회 전후가 일반적이며 소변이 하루 6~8회 이상 나오면 충분히 먹고 있는 거예요.`;
+  }
+  document.getElementById('dailyTotal').textContent = daily + 'ml';
+  document.getElementById('perFeed').textContent = perFeed + 'ml';
+  document.getElementById('feedCount').textContent = count + '회';
+  document.getElementById('resultNote').textContent = note;
+  document.getElementById('results').classList.remove('hidden');
+}
+</script>
+</body></html>
