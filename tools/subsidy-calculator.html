@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>육아 지원금 총정리 계산기 — 부모급여·아동수당·첫만남이용권 | 아기도구함</title>
+<meta name="description" content="생년월일을 입력하면 받을 수 있는 부모급여, 아동수당, 첫만남이용권 등 육아 지원금 총액을 자동 계산해드려요.">
+<link rel="stylesheet" href="../style.css">
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6517109263592669" crossorigin="anonymous"></script>
+<style>
+.subsidy-card{background:var(--bg);border:1.5px solid var(--gray-100);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.subsidy-card.active{border-color:var(--primary);background:var(--primary-light);}
+.subsidy-card.inactive{opacity:.5;}
+.sc-left .sc-name{font-size:14px;font-weight:700;}
+.sc-left .sc-desc{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.sc-right .sc-amount{font-size:1.2rem;font-weight:900;color:var(--primary-dark);text-align:right;}
+.sc-right .sc-period{font-size:11px;color:var(--text-muted);text-align:right;}
+.total-box{background:var(--primary);color:#fff;border-radius:var(--radius);padding:1.5rem;text-align:center;margin-top:1rem;}
+.total-box .tl{font-size:12px;opacity:.75;margin-bottom:.25rem;}
+.total-box .tv{font-size:2.5rem;font-weight:900;}
+.total-box .ts{font-size:13px;opacity:.8;margin-top:.25rem;}
+.progress-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;}
+.pill-ok{background:var(--primary-light);color:var(--primary-dark);}
+.pill-done{background:var(--gray-100);color:var(--gray-500);}
+.pill-future{background:var(--blue-light);color:var(--blue);}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">입학 · 지원금</div>
+  <h1>육아 지원금 총정리 계산기</h1>
+  <p>생년월일을 입력하면 받을 수 있는 국가 육아 지원금을<br>한 번에 계산해드려요. (2024년 기준)</p>
+</div>
+<main>
+<!-- 상단 반응형 배너 광고 -->
+<div class="ad-slot ad-top">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+  <div class="card-raised card">
+    <div class="input-group">
+      <label>아이 생년월일</label>
+      <input type="date" id="birthDate" max="">
+    </div>
+    <button class="calc-btn" onclick="calculate()">💰 지원금 계산하기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div id="subsidyList"></div>
+    <div class="total-box" id="totalBox"></div>
+
+    <div class="section-gap card">
+      <h2 class="block-title">주요 지원금 신청 방법</h2>
+      <table class="data-table">
+        <thead><tr><th>지원금</th><th>신청 방법</th><th>신청 시기</th></tr></thead>
+        <tbody>
+          <tr><td>첫만남이용권</td><td>정부24, 행복출산 원스톱</td><td>출생 신고 시 함께</td></tr>
+          <tr><td>부모급여</td><td>복지로, 주민센터</td><td>출생 후 60일 이내</td></tr>
+          <tr><td>아동수당</td><td>복지로, 주민센터</td><td>출생 후 60일 이내</td></tr>
+          <tr><td>영아수당(보육료)</td><td>복지로</td><td>매월 자동 지급</td></tr>
+          <tr><td>출산지원금(지자체)</td><td>거주 주민센터</td><td>출생 후 1개월 이내</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warn-box section-gap">
+      💡 <strong>놓치기 쉬운 혜택:</strong> 출생 후 60일 이내 신청 안 하면 소급 적용이 안 돼요! 출생 신고 후 바로 복지로(www.bokjiro.go.kr)에서 통합 신청하세요.
+    </div>
+  </div>
+
+  <div class="info-box section-gap">
+    <p><strong>📌 2024년 기준 주요 변경사항</strong><br>
+    • 부모급여: 0세 월 100만원, 1세 월 50만원으로 인상<br>
+    • 첫만남이용권: 첫째 200만원, 둘째 이상 300만원<br>
+    • 아동수당: 만 8세 미만 월 10만원 (소득 무관)<br>
+    • 지자체별 추가 출산장려금은 별도 문의 필요</p>
+  </div>
+
+  <!-- 결과 영역 내 광고 -->
+<div class="ad-slot ad-result">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="disclaimer section-gap">
+    본 계산기는 2024년 정부 발표 기준이며 변경될 수 있어요. 정확한 금액과 신청 방법은 복지로(www.bokjiro.go.kr) 또는 주민센터에서 확인하세요.
+  </div>
+<!-- 푸터 위 광고 배너 -->
+<div class="ad-slot ad-footer">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+document.getElementById('birthDate').max = new Date().toISOString().split('T')[0];
+
+function calculate(){
+  const bv = document.getElementById('birthDate').value;
+  if(!bv){alert('생년월일을 입력해주세요.');return;}
+  const birth = new Date(bv);
+  const now = new Date();
+  const ageMonths = Math.floor((now-birth)/1000/60/60/24/30.44);
+  const ageYears = Math.floor(ageMonths/12);
+
+  const subsidies = [];
+  let totalReceived = 0, totalRemaining = 0;
+
+  // 1. 첫만남이용권 200만원 (출생 시 1회)
+  const welcome = 200;
+  const welcomeDone = ageMonths >= 0;
+  subsidies.push({
+    name:'첫만남이용권', icon:'🎁',
+    desc:'출생 시 바우처 1회 지급 (둘째는 300만원)',
+    amount: welcome+'만원 (1회성)',
+    status: welcomeDone ? 'done' : 'future',
+    statusLabel: welcomeDone ? '지급 완료' : '출생 시 수령',
+    total: welcome
+  });
+  totalReceived += welcome;
+
+  // 2. 부모급여 (0세: 월 100만, 1세: 월 50만)
+  let parentPay = 0, parentPayRemaining = 0;
+  const months0 = Math.min(Math.max(12-ageMonths, 0), 12); // remaining 0세 months
+  const months1 = Math.min(Math.max(24-ageMonths, 0), 12); // remaining 1세 months
+  if(ageMonths < 12) {
+    parentPay = (12-months0)*100 + 0; // received so far as 0세
+    parentPayRemaining = months0*100 + months1*50;
+  } else if(ageMonths < 24) {
+    parentPay = 12*100 + (ageMonths-12)*50;
+    parentPayRemaining = months1*50;
+  } else {
+    parentPay = 12*100 + 12*50;
+    parentPayRemaining = 0;
+  }
+  subsidies.push({
+    name:'부모급여', icon:'👨‍👩‍👧',
+    desc:'0세 월 100만원 / 1세 월 50만원 · 만 24개월까지',
+    amount:`0세 12개월 × 100만원 + 1세 12개월 × 50만원 = 총 1,800만원`,
+    status: ageMonths >= 24 ? 'done' : 'active',
+    statusLabel: ageMonths >= 24 ? '수령 완료' : `남은 수령액 약 ${parentPayRemaining}만원`,
+    total: 1800
+  });
+  totalReceived += parentPay;
+  totalRemaining += parentPayRemaining;
+
+  // 3. 아동수당 (만 0~7세 월 10만원 = 최대 96개월)
+  const childAllowanceMonths = 96; // 8년
+  const caReceived = Math.min(ageMonths, childAllowanceMonths) * 10;
+  const caRemaining = Math.max(childAllowanceMonths - ageMonths, 0) * 10;
+  subsidies.push({
+    name:'아동수당', icon:'👶',
+    desc:'만 8세 미만 월 10만원 (소득 무관)',
+    amount:`월 10만원 × 최대 96개월 = 총 960만원`,
+    status: ageMonths >= 96 ? 'done' : 'active',
+    statusLabel: ageMonths >= 96 ? '수령 완료' : `남은 수령액 약 ${caRemaining}만원`,
+    total: 960
+  });
+  totalReceived += caReceived;
+  totalRemaining += caRemaining;
+
+  // 4. 영아기 특례 보육료 (0~1세 어린이집)
+  subsidies.push({
+    name:'영아기 보육료 지원', icon:'🏫',
+    desc:'어린이집 이용 시 0세 월 54만원 / 1세 월 47만원 지원',
+    amount:'어린이집 이용 여부에 따라 상이',
+    status: ageMonths < 24 ? 'active' : 'done',
+    statusLabel: ageMonths < 24 ? '이용 가능' : '해당 기간 종료',
+    total: 0
+  });
+
+  // 5. 산모·신생아 건강관리 서비스
+  subsidies.push({
+    name:'산모·신생아 건강관리사', icon:'🏥',
+    desc:'출산 후 가정 방문 서비스 (소득에 따라 본인부담 상이)',
+    amount:'5~25일 지원 (정부 지원 약 80~100%)',
+    status: ageMonths < 3 ? 'active' : 'done',
+    statusLabel: ageMonths < 3 ? '신청 가능' : '신청 기간 종료',
+    total: 0
+  });
+
+  const total = totalReceived + totalRemaining;
+
+  document.getElementById('subsidyList').innerHTML = subsidies.map(s=>`
+    <div class="subsidy-card ${s.status==='active'?'active':s.status==='future'?'':'inactive'}">
+      <div class="sc-left">
+        <div class="sc-name">${s.icon} ${s.name}</div>
+        <div class="sc-desc">${s.desc}</div>
+        <div style="margin-top:5px;">
+          <span class="progress-pill ${s.status==='active'?'pill-ok':s.status==='future'?'pill-future':'pill-done'}">${s.statusLabel}</span>
+        </div>
+      </div>
+      <div class="sc-right">
+        <div class="sc-amount">${s.total > 0 ? s.total.toLocaleString()+'만원' : '—'}</div>
+        <div class="sc-period" style="max-width:130px;text-align:right;">${s.amount}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('totalBox').innerHTML = `
+    <div class="tl">현재까지 수령한 지원금 (추정)</div>
+    <div class="tv">${(totalReceived).toLocaleString()}만원</div>
+    <div class="ts">앞으로 받을 지원금 약 ${(totalRemaining).toLocaleString()}만원 남아있어요</div>`;
+
+  document.getElementById('results').classList.remove('hidden');
+}
+</script>
+</body></html>

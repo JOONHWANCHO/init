@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아이 성장 백분위수 계산기 — 키·몸무게 백분위 | 아기도구함</title>
+<meta name="description" content="아이의 키와 몸무게를 입력하면 WHO 기준 백분위수를 계산해드려요.">
+<link rel="stylesheet" href="../style.css">
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6517109263592669" crossorigin="anonymous"></script>
+<style>
+.percentile-bar-wrap{margin-top:1rem;}
+.pbar-label{font-size:12px;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between;}
+.pbar-track{height:12px;background:var(--gray-100);border-radius:99px;position:relative;overflow:visible;}
+.pbar-fill{height:100%;border-radius:99px;background:var(--primary);transition:width .6s ease;}
+.pbar-marker{position:absolute;top:-4px;width:20px;height:20px;background:var(--primary-dark);border-radius:50%;transform:translateX(-50%);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.pbar-zones{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--gray-400);}
+.big-percentile{font-size:3rem;font-weight:900;color:var(--primary-dark);line-height:1;}
+.pct-label{font-size:13px;color:var(--text-muted);margin-top:4px;}
+.interp-badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;margin-top:.5rem;}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">성장 · 발달</div>
+  <h1>아이 성장 백분위수 계산기</h1>
+  <p>키와 몸무게를 입력하면 또래 대비 백분위수를 알려드려요.<br>검진 전·후에 확인해보세요.</p>
+</div>
+<main>
+<!-- 상단 반응형 배너 광고 -->
+<div class="ad-slot ad-top">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+  <div class="card-raised card">
+    <div style="display:flex;gap:10px;margin-bottom:1.25rem;">
+      <button class="pill-btn active" onclick="setGender(this,'M')" id="gM">👦 남아</button>
+      <button class="pill-btn" onclick="setGender(this,'F')" id="gF">👧 여아</button>
+    </div>
+    <div class="input-row" style="margin-bottom:1rem;">
+      <div class="input-group">
+        <label>월령 (개월)</label>
+        <input type="number" id="ageMonth" placeholder="예: 6" min="0" max="60">
+      </div>
+      <div class="input-group">
+        <label>성별</label>
+        <select id="genderSel" onchange="syncGender(this.value)">
+          <option value="M">남아</option>
+          <option value="F">여아</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>키 (cm)</label>
+        <input type="number" id="height" placeholder="예: 67.5" step="0.1">
+      </div>
+      <div class="input-group">
+        <label>몸무게 (kg)</label>
+        <input type="number" id="weight" placeholder="예: 7.2" step="0.1">
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calculate()">📊 백분위 계산하기</button>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="result-box" id="heightResult">
+        <div class="result-label">키 백분위</div>
+        <div class="big-percentile" id="heightPct">—</div>
+        <div class="pct-label">백분위</div>
+        <div id="heightBadge"></div>
+        <div class="percentile-bar-wrap">
+          <div class="pbar-track"><div class="pbar-fill" id="hBar" style="width:50%"></div><div class="pbar-marker" id="hMarker" style="left:50%"></div></div>
+          <div class="pbar-zones"><span>3%</span><span>50%</span><span>97%</span></div>
+        </div>
+      </div>
+      <div class="result-box amber" id="weightResult">
+        <div class="result-label">몸무게 백분위</div>
+        <div class="big-percentile" id="weightPct">—</div>
+        <div class="pct-label">백분위</div>
+        <div id="weightBadge"></div>
+        <div class="percentile-bar-wrap">
+          <div class="pbar-track"><div class="pbar-fill" id="wBar" style="background:var(--amber);width:50%"></div><div class="pbar-marker" id="wMarker" style="left:50%;background:var(--amber);"></div></div>
+          <div class="pbar-zones"><span>3%</span><span>50%</span><span>97%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box section-gap" id="interpretation"></div>
+
+    <div class="warn-box section-gap">
+      ⚠️ 백분위 수치보다 <strong>성장 추세</strong>가 더 중요해요. 3개월마다 기록해서 꾸준히 같은 백분위를 유지하고 있는지 확인하세요. 백분위가 크게 떨어지거나 올라간다면 소아과 상담을 권장합니다.
+    </div>
+  </div>
+
+  <div class="section-gap card">
+    <h2 class="block-title">백분위 해석 기준</h2>
+    <table class="data-table">
+      <thead><tr><th>백분위</th><th>의미</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>97% 이상</td><td>매우 큰 편</td><td>성장판·체중 관리 상담 고려</td></tr>
+        <tr><td>85~97%</td><td>큰 편</td><td>정상 범위</td></tr>
+        <tr><td>15~85%</td><td>평균 범위</td><td>✅ 정상</td></tr>
+        <tr><td>3~15%</td><td>작은 편</td><td>정상 범위, 추세 관찰</td></tr>
+        <tr><td>3% 미만</td><td>매우 작은 편</td><td>소아과 상담 권장</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 결과 영역 내 광고 -->
+<div class="ad-slot ad-result">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="disclaimer section-gap">
+    본 계산기는 WHO 성장 기준과 한국 소아 성장 참조치를 단순화한 추정값으로, 정확한 의료적 판단을 대체하지 않습니다. 정기 영유아검진에서 의사의 평가를 받으세요.
+  </div>
+<!-- 푸터 위 광고 배너 -->
+<div class="ad-slot ad-footer">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+// WHO 참조치 (평균, 표준편차 근사값 — 실제 구현 시 WHO LMS 파라미터 사용 권장)
+// height: [mean_cm, sd] / weight: [mean_kg, sd] by month, gender
+const REF = {
+  M: {
+    height: [[49.9,1.9],[54.7,2.0],[58.4,2.2],[61.4,2.3],[63.9,2.4],[65.9,2.5],[67.6,2.5],[69.2,2.6],[70.6,2.7],[72.0,2.7],[73.3,2.8],[74.5,2.8],[75.7,2.9],[79.1,3.1],[82.3,3.3],[86.4,3.5],[89.1,3.6],[91.2,3.7],[93.9,3.8],[95.2,3.9],[96.1,4.0],[97.6,4.1],[99.1,4.2],[100.4,4.3],[101.6,4.3]],
+    weight: [[3.3,.6],[4.5,.7],[5.6,.8],[6.4,.9],[7.0,1.0],[7.5,1.0],[7.9,1.1],[8.3,1.1],[8.6,1.2],[8.9,1.2],[9.2,1.2],[9.4,1.3],[9.6,1.3],[10.2,1.4],[10.9,1.5],[11.5,1.5],[11.8,1.6],[12.1,1.6],[12.5,1.7],[12.7,1.7],[12.9,1.8],[13.2,1.8],[13.4,1.9],[13.6,1.9],[13.9,2.0]]
+  },
+  F: {
+    height: [[49.1,1.9],[53.7,2.0],[57.1,2.1],[59.8,2.2],[62.1,2.3],[64.0,2.3],[65.7,2.4],[67.3,2.5],[68.7,2.5],[70.1,2.6],[71.5,2.6],[72.8,2.7],[74.0,2.7],[77.5,3.0],[80.7,3.1],[84.2,3.3],[86.5,3.4],[88.5,3.5],[91.2,3.7],[92.9,3.8],[94.2,3.9],[95.6,4.0],[97.1,4.1],[98.4,4.2],[99.7,4.2]],
+    weight: [[3.2,.6],[4.2,.7],[5.1,.8],[5.8,.9],[6.4,.9],[6.9,1.0],[7.3,1.0],[7.6,1.1],[7.9,1.1],[8.2,1.2],[8.5,1.2],[8.7,1.2],[8.9,1.3],[9.5,1.4],[10.2,1.4],[10.7,1.5],[11.1,1.5],[11.4,1.6],[11.8,1.6],[12.0,1.7],[12.3,1.7],[12.5,1.8],[12.7,1.8],[13.0,1.9],[13.2,1.9]]
+  }
+};
+let gender = 'M';
+function setGender(btn,g){
+  document.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  gender=g;
+  document.getElementById('genderSel').value=g;
+}
+function syncGender(g){
+  gender=g;
+  document.getElementById('g'+g).click();
+}
+function zToPct(z){
+  // Φ(z) approximation
+  const t=1/(1+0.2316419*Math.abs(z));
+  const d=0.3989422*Math.exp(-z*z/2);
+  const p=d*t*(0.3193815+t*(-0.3565638+t*(1.7814779+t*(-1.8212560+t*1.3302744))));
+  return z>=0 ? Math.round((1-p)*100) : Math.round(p*100);
+}
+function interpret(pct){
+  if(pct>=97) return {text:'매우 큰 편 (상위 3%)',cls:'chip-blue'};
+  if(pct>=85) return {text:'큰 편 (상위 15%)',cls:'chip-blue'};
+  if(pct>=15) return {text:'평균 범위 ✅',cls:'chip-green'};
+  if(pct>=3) return {text:'작은 편 (하위 15%)',cls:'chip-amber'};
+  return {text:'매우 작은 편 — 소아과 상담 권장',cls:'chip-red'};
+}
+function calculate(){
+  const m=parseInt(document.getElementById('ageMonth').value);
+  const h=parseFloat(document.getElementById('height').value);
+  const w=parseFloat(document.getElementById('weight').value);
+  if(isNaN(m)||m<0||m>24){alert('월령을 0~24개월 사이로 입력해주세요.');return;}
+  if(!h&&!w){alert('키 또는 몸무게를 입력해주세요.');return;}
+  const ref=REF[gender];
+  let hPct=null,wPct=null;
+  if(h&&ref.height[m]){const [mean,sd]=ref.height[m];hPct=zToPct((h-mean)/sd);}
+  if(w&&ref.weight[m]){const [mean,sd]=ref.weight[m];wPct=zToPct((w-mean)/sd);}
+  if(hPct!==null){
+    const r=interpret(hPct);
+    document.getElementById('heightPct').textContent=hPct+'%';
+    document.getElementById('heightBadge').innerHTML=`<span class="interp-badge ${r.cls}">${r.text}</span>`;
+    const pct=Math.min(Math.max(hPct,2),98);
+    document.getElementById('hBar').style.width=pct+'%';
+    document.getElementById('hMarker').style.left=pct+'%';
+  }
+  if(wPct!==null){
+    const r=interpret(wPct);
+    document.getElementById('weightPct').textContent=wPct+'%';
+    document.getElementById('weightBadge').innerHTML=`<span class="interp-badge ${r.cls}">${r.text}</span>`;
+    const pct=Math.min(Math.max(wPct,2),98);
+    document.getElementById('wBar').style.width=pct+'%';
+    document.getElementById('wMarker').style.left=pct+'%';
+  }
+  const notes=[];
+  if(hPct!==null&&wPct!==null){
+    const diff=Math.abs(hPct-wPct);
+    if(diff>30) notes.push(`키(${hPct}%)와 몸무게(${wPct}%) 백분위 차이가 ${diff}%p로 큰 편이에요. 소아과 상담을 받아보세요.`);
+    else notes.push(`키와 몸무게 백분위가 균형적이에요. 현재 성장 추세를 유지해주세요.`);
+  }
+  notes.push('백분위는 절대 기준이 아니에요. 3개월마다 측정해서 추세를 관찰하는 것이 더 중요합니다.');
+  document.getElementById('interpretation').innerHTML=`<p>${notes.join('<br>')}</p>`;
+  document.getElementById('results').classList.remove('hidden');
+}
+</script>
+</body></html>

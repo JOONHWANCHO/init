@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이유식 재료 월령 체커 — 월령별 먹을 수 있는 재료 | 아기도구함</title>
+<meta name="description" content="아이 월령을 입력하면 먹어도 되는 재료, 알레르기 주의 재료, 아직 이른 재료를 한눈에 확인하세요.">
+<link rel="stylesheet" href="../style.css">
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6517109263592669" crossorigin="anonymous"></script>
+<style>
+.section-row{margin-top:1.25rem;}
+.section-row h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
+.section-row h3 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.count-tag{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-muted);}
+.texture-box{background:var(--surface);border-radius:var(--radius-sm);padding:1rem 1.1rem;margin-top:1rem;}
+.texture-row{display:flex;gap:10px;margin-bottom:5px;font-size:13px;}
+.texture-row .tk{font-weight:700;color:var(--primary);min-width:55px;}
+.texture-row .tv{color:var(--text-muted);}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">이유식 · 영양</div>
+  <h1>이유식 재료 월령 체커</h1>
+  <p>월령을 선택하면 먹어도 되는 재료, 주의할 재료,<br>아직 이른 재료를 한눈에 확인하세요.</p>
+</div>
+<main>
+<!-- 상단 반응형 배너 광고 -->
+<div class="ad-slot ad-top">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+  <div class="card-raised card">
+    <span class="label">아이 월령 선택</span>
+    <div class="btn-group" id="monthBtns"></div>
+  </div>
+
+  <div id="stageBanner" class="result-box hidden section-gap">
+    <div class="result-label" id="stageLabel"></div>
+    <div style="font-size:16px;font-weight:700;color:var(--primary-dark);margin-bottom:4px;" id="stageTitle"></div>
+    <div style="font-size:13px;color:var(--text-muted);" id="stageDesc"></div>
+  </div>
+
+  <div id="results" class="hidden section-gap">
+    <div class="card">
+      <div class="section-row">
+        <h3><span class="dot" style="background:var(--primary)"></span>먹을 수 있어요 <span class="count-tag" id="okCount"></span></h3>
+        <div class="chip-row" id="okFoods"></div>
+      </div>
+      <div class="section-row">
+        <h3><span class="dot" style="background:var(--amber)"></span>처음엔 소량씩 주의 <span class="count-tag" id="cautionCount"></span></h3>
+        <div class="chip-row" id="cautionFoods"></div>
+      </div>
+      <div class="section-row">
+        <h3><span class="dot" style="background:var(--red)"></span>알레르기 고위험 — 천천히 <span class="count-tag" id="allergyCount"></span></h3>
+        <div class="chip-row" id="allergyFoods"></div>
+      </div>
+      <div class="section-row">
+        <h3><span class="dot" style="background:var(--gray-400)"></span>아직 이른 재료 <span class="count-tag" id="notYetCount"></span></h3>
+        <div class="chip-row" id="notYetFoods"></div>
+      </div>
+    </div>
+
+    <div class="danger-box section-gap">
+      <strong>알레르기 도입 원칙:</strong> 새 재료는 한 번에 한 가지씩, 3~5일 간격을 두고 소량부터 시작하세요. 두드러기·구토·설사 반응 시 즉시 중단하고 소아과에 방문하세요.
+    </div>
+
+    <div class="texture-box section-gap">
+      <h3 style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:.75rem;text-transform:uppercase;">이 시기의 농도 & 질감</h3>
+      <div id="textureContent"></div>
+    </div>
+  </div>
+
+  <!-- 결과 영역 내 광고 -->
+<div class="ad-slot ad-result">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="disclaimer section-gap">
+    본 정보는 일반적인 이유식 가이드라인을 기반으로 하며, 개별 아이의 건강 상태와 알레르기에 따라 다를 수 있습니다. 구체적인 이유식 계획은 소아과 전문의와 상담하세요.
+  </div>
+<!-- 푸터 위 광고 배너 -->
+<div class="ad-slot ad-footer">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-6517109263592669"
+       data-ad-slot="8422973979"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+const STAGES=[
+  {months:[4,5],label:'초기 이유식',title:'4~5개월 — 아주 묽은 미음 시작',desc:'모유·분유가 주식이에요. 쌀미음 한두 숟가락부터 시작하고 3~5일마다 새 재료를 하나씩 추가합니다.',texture:[{k:'농도',v:'10배죽 — 요구르트보다 묽게'},{k:'질감',v:'완전히 갈아 체에 걸러주세요'},{k:'1회량',v:'1~2큰술(15~30ml)'}],ok:['쌀(미음)','단호박','감자','고구마','브로콜리','애호박','당근','사과(익힌것)','배(익힌것)'],caution:['완두콩','시금치','양배추'],allergy:[],notYet:['달걀','생선','새우·갑각류','견과류','우유(음료)','치즈','꿀','돼지고기','닭고기','소금·간장','설탕','등푸른생선','토마토(날것)','키위','딸기','망고','복숭아']},
+  {months:[6],label:'초기 이유식 심화',title:'6개월 — 다양한 채소·곡물 도입',desc:'쌀 외 다른 곡물과 채소의 종류를 늘려가세요. 달걀노른자를 처음 시도해볼 수 있어요.',texture:[{k:'농도',v:'7~8배죽 — 숟가락에서 천천히 흘러내리는 정도'},{k:'질감',v:'약간의 입자감(2~3mm 이하)'},{k:'1회량',v:'30~80ml'}],ok:['쌀','찹쌀','단호박','감자','고구마','브로콜리','애호박','당근','사과','배','양배추','시금치','팽이버섯','두부','닭가슴살(갈은것)','소고기(갈은것)'],caution:['달걀노른자(첫도입)','완두콩','옥수수','오이','청경채'],allergy:['달걀노른자'],notYet:['달걀흰자','새우·갑각류','견과류','우유(음료)','치즈','꿀','소금·간장','설탕','등푸른생선','키위','딸기','라면·가공식품']},
+  {months:[7,8],label:'중기 이유식',title:'7~8개월 — 다짐육·흰살생선 도입',desc:'하루 2회로 늘리는 시기예요. 고기와 흰살생선으로 철분·단백질을 보충하고 씹는 연습을 시작해요.',texture:[{k:'농도',v:'5배죽 — 숟가락으로 떠올릴 수 있는 농도'},{k:'질감',v:'3~5mm 입자 — 혀로 으깰 수 있는 부드러움'},{k:'1회량',v:'80~120ml'}],ok:['쌀','찹쌀','오트밀','단호박','감자','고구마','브로콜리','애호박','당근','양배추','시금치','버섯류','두부','닭가슴살','소고기','대구','가자미','명태','바나나','아보카도','파프리카','토마토(익힌것)','플레인요거트(무가당)'],caution:['달걀흰자(첫도입)','치즈(아기용)','연두부','파','마늘(소량)'],allergy:['달걀흰자','흰살생선','유제품'],notYet:['새우·갑각류','견과류','꿀','소금·간장','설탕','등푸른생선','날생선','날달걀','키위','라면·가공식품','우유(음료)']},
+  {months:[9,10,11],label:'후기 이유식',title:'9~11개월 — 잇몸으로 씹는 연습',desc:'하루 3회 이유식으로 늘려가세요. 핑거푸드로 스스로 먹는 연습도 시작할 수 있어요.',texture:[{k:'농도',v:'3~5배죽, 진밥 형태'},{k:'질감',v:'5~7mm 입자 — 잇몸으로 으깰 수 있는 정도'},{k:'1회량',v:'120~180ml'}],ok:['쌀(진밥)','오트밀','고구마','감자','단호박','브로콜리','애호박','당근','양배추','시금치','버섯류','두부','소고기','닭고기','돼지고기(살코기)','대구','가자미','명태','달걀(완전히 익힌것)','치즈(아기용)','플레인요거트','바나나','사과','아보카도','블루베리','딸기(잘게)','파프리카','토마토','들깨(으깬것)'],caution:['고등어(익힌것)','연어(첫도입)','돼지고기(첫도입)'],allergy:['견과류(으깨거나 퓨레로)','새우(익혀서 소량)','게(익혀서 소량)'],notYet:['꿀','소금·간장','설탕','날생선·날달걀','통견과류','라면·가공식품','우유(음료)']},
+  {months:[12,13,14,15,16,17,18],label:'이유식 완료기',title:'12~18개월 — 유아식으로 전환',desc:'어른 음식과 비슷하게 먹을 수 있어요. 꿀은 이제 소량 가능하지만 짠 음식·통견과류는 여전히 주의하세요.',texture:[{k:'농도',v:'부드러운 밥(일반 밥보다 약간 질게)'},{k:'질감',v:'어른 식사에 가까운 다양한 질감'},{k:'1회량',v:'180~240ml (어른 공기 반 그릇)'}],ok:['대부분의 식재료 가능','밥','국(저염)','나물(저염)','생선(잘게)','고기류','달걀','두부','유제품','채소류','과일류','견과류버터(페이스트형)','꿀(소량)'],caution:['생선회','날달걀','짠 음식','매운 음식','카페인'],allergy:['견과류(통째 주의)','갑각류','조개류'],notYet:['라면(고나트륨)','탄산음료','알코올이 든 음식','통견과류(3세 전까지 질식위험)']}
+];
+function getStage(m){return STAGES.find(s=>s.months.includes(m));}
+function chips(arr,cls){return arr.map(f=>`<span class="chip ${cls}">${f}</span>`).join('');}
+function render(m){
+  const s=getStage(m);if(!s)return;
+  document.getElementById('stageLabel').textContent=s.label;
+  document.getElementById('stageTitle').textContent=s.title;
+  document.getElementById('stageDesc').textContent=s.desc;
+  document.getElementById('stageBanner').classList.remove('hidden');
+  document.getElementById('okFoods').innerHTML=chips(s.ok,'chip-green');
+  document.getElementById('okCount').textContent=s.ok.length+'가지';
+  document.getElementById('cautionFoods').innerHTML=chips(s.caution,'chip-amber');
+  document.getElementById('cautionCount').textContent=s.caution.length+'가지';
+  document.getElementById('allergyFoods').innerHTML=chips(s.allergy,'chip-red');
+  document.getElementById('allergyCount').textContent=s.allergy.length+'가지';
+  document.getElementById('notYetFoods').innerHTML=chips(s.notYet,'chip-gray');
+  document.getElementById('notYetCount').textContent=s.notYet.length+'가지';
+  document.getElementById('textureContent').innerHTML=s.texture.map(t=>`<div class="texture-row"><span class="tk">${t.k}</span><span class="tv">${t.v}</span></div>`).join('');
+  document.getElementById('results').classList.remove('hidden');
+  document.querySelectorAll('#monthBtns .pill-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.m)===m));
+}
+const months=[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+const labels={4:'4개월',5:'5개월',6:'6개월',7:'7개월',8:'8개월',9:'9개월',10:'10개월',11:'11개월',12:'돌(12개월)',13:'13개월',14:'14개월',15:'15개월',16:'16개월',17:'17개월',18:'18개월'};
+const c=document.getElementById('monthBtns');
+months.forEach(m=>{const b=document.createElement('button');b.className='pill-btn';b.textContent=labels[m];b.dataset.m=m;b.onclick=()=>render(m);c.appendChild(b);});
+const qm=parseInt(new URLSearchParams(location.search).get('month'));
+if(months.includes(qm))render(qm);
+</script>
+</body></html>
