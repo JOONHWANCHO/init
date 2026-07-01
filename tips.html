@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>육아 꿀팁 모음 | 아기도구함</title>
+<meta name="description" content="수면, 이유식, 건강, 발달, 지원금까지 육아 꿀팁을 카테고리별로 모았어요.">
+<meta name="theme-color" content="#3d7a5e">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+<style>
+/* ══════════════════════════════
+   구글 시트 연동 설정
+   1) 구글 시트를 아래 컬럼 구조로 만드세요:
+      A: id | B: category | C: emoji | D: title | E: summary | F: content | G: tags | H: date
+
+   2) Apps Script 웹앱으로 배포:
+      시트 → 확장 프로그램 → Apps Script → 아래 코드 붙여넣기 → 배포 → 웹앱 URL 복사
+      ─────────────────────────────────────
+      function doGet(e) {
+        const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        const rows = sheet.getDataRange().getValues();
+        const headers = rows[0];
+        const tips = rows.slice(1).map(r => {
+          const obj = {};
+          headers.forEach((h, i) => obj[h] = r[i]);
+          return obj;
+        });
+        return ContentService
+          .createTextOutput(JSON.stringify({ tips }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      ─────────────────────────────────────
+      배포 설정: 액세스 권한 = "모든 사용자"
+
+   3) 아래 SHEET_JSON_URL 에 복사한 URL을 붙여넣으세요.
+══════════════════════════════ */
+
+/* ── LIST PAGE ── */
+.list-hero{background:var(--primary);color:#fff;padding:2rem 1.5rem 2.5rem;text-align:center;}
+.list-hero .eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;opacity:.6;text-transform:uppercase;margin-bottom:.5rem;}
+.list-hero h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:900;line-height:1.2;margin-bottom:.4rem;}
+.list-hero p{font-size:13px;opacity:.8;max-width:420px;margin:0 auto;}
+
+.list-main{max-width:760px;margin:0 auto;padding:1.5rem 1rem 5rem;}
+
+.cat-filter{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:1.25rem;scrollbar-width:none;}
+.cat-filter::-webkit-scrollbar{display:none;}
+.cf-btn{padding:7px 16px;border-radius:99px;border:1.5px solid var(--gray-200);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;color:var(--text-muted);transition:.15s;flex-shrink:0;}
+.cf-btn:hover{border-color:var(--primary);color:var(--primary);}
+.cf-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.tip-card{background:var(--bg);border:1px solid var(--gray-100);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:var(--text);transition:.18s;display:flex;flex-direction:column;box-shadow:0 1px 6px rgba(0,0,0,.04);cursor:pointer;}
+.tip-card:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(61,122,94,.12);transform:translateY(-2px);}
+.tip-thumb{height:88px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;flex-shrink:0;}
+.tip-body{padding:.875rem 1rem 1rem;flex:1;display:flex;flex-direction:column;gap:4px;}
+.tip-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+.tip-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.4;}
+.tip-summary{font-size:12px;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.tip-date{font-size:10px;color:var(--gray-400);margin-top:4px;}
+
+.load-more-btn{display:block;width:100%;padding:13px;margin-top:1.25rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);background:var(--bg);color:var(--text-muted);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;}
+.load-more-btn:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ── DETAIL PAGE ── */
+.detail-wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 5rem;}
+.detail-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);text-decoration:none;margin-bottom:1.25rem;font-weight:600;}
+.detail-back:hover{color:var(--primary);}
+.detail-cat-badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:99px;margin-bottom:.75rem;}
+.detail-title{font-size:clamp(1.3rem,4vw,1.8rem);font-weight:900;color:var(--text);line-height:1.3;margin-bottom:.5rem;}
+.detail-meta{font-size:12px;color:var(--text-muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;}
+.detail-content{font-size:15px;color:var(--text);line-height:1.85;}
+.detail-content h2{font-size:17px;font-weight:800;color:var(--text);margin:1.75rem 0 .6rem;padding-left:.75rem;border-left:3px solid var(--primary);}
+.detail-content h3{font-size:15px;font-weight:700;color:var(--text);margin:1.25rem 0 .4rem;}
+.detail-content p{margin-bottom:1rem;}
+.detail-content ul,
+.detail-content ol{padding-left:1.4rem;margin-bottom:1rem;}
+.detail-content li{margin-bottom:.4rem;line-height:1.7;}
+.detail-content strong{font-weight:700;color:var(--text);}
+.detail-content blockquote{background:var(--primary-light);border-left:3px solid var(--primary);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:.875rem 1.1rem;margin:1rem 0;font-size:14px;color:var(--primary-dark);}
+.detail-content .tip-box{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin:1rem 0;font-size:13px;color:#7a4d0a;}
+.detail-content .warn-box{background:var(--red-light);border:1px solid var(--red-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin:1rem 0;font-size:13px;color:#7a1010;}
+
+.detail-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--gray-100);}
+.tag-chip{padding:4px 12px;border-radius:99px;background:var(--gray-50);border:1px solid var(--gray-100);font-size:12px;color:var(--text-muted);}
+
+.related-section{margin-top:2.5rem;}
+.related-section h3{font-size:15px;font-weight:800;color:var(--text);margin-bottom:1rem;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+
+/* ── SETUP GUIDE ── */
+.setup-card{background:var(--bg);border:1px dashed var(--gray-200);border-radius:var(--radius);padding:2rem 1.5rem;text-align:center;margin:2rem 0;}
+.setup-card h3{font-size:16px;font-weight:800;margin-bottom:.75rem;}
+.setup-steps{text-align:left;max-width:480px;margin:1rem auto 0;}
+.setup-step{display:flex;gap:12px;margin-bottom:.875rem;font-size:13px;}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-text{color:var(--text-muted);line-height:1.6;}
+.step-text code{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:4px;padding:1px 5px;font-size:11px;color:var(--text);}
+pre.code-block{background:var(--gray-900);color:#e8f5e9;border-radius:var(--radius-sm);padding:1rem;font-size:11px;overflow-x:auto;text-align:left;margin:1rem 0;line-height:1.7;}
+
+/* ── STATES ── */
+.loading-state{text-align:center;padding:3rem 1rem;color:var(--text-muted);}
+.loading-state .spin{display:inline-block;font-size:2rem;animation:spin 1.2s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:14px;}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="back-btn">← 홈으로</a>
+  <div class="nav-spacer"></div>
+  <a href="index.html" class="logo">아기도구함</a>
+</nav>
+
+<!-- 상단 광고 -->
+<div style="max-width:760px;margin:0 auto;padding:.75rem 1rem 0;">
+  <div class="ad-slot ad-top">
+    <ins class="adsbygoogle" style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+         data-ad-slot="1111111111"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=="undefined"){var _ins=document.currentScript.previousElementSibling;_ins.setAttribute("data-ad-client",CONFIG.ADSENSE_CLIENT);_ins.setAttribute("data-ad-slot",CONFIG.AD_SLOTS.TOP_BANNER);}</script>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+</div>
+
+<!-- ── LIST VIEW ── -->
+<div id="listView">
+  <div class="list-hero">
+    <div class="eyebrow">Parenting Tips</div>
+    <h1>육아 꿀팁 모음 🍯</h1>
+    <p>수면·이유식·건강·발달·지원금까지<br>실전 육아에서 바로 써먹는 꿀팁</p>
+  </div>
+
+  <div class="list-main">
+    <!-- 카테고리 필터 -->
+    <div class="cat-filter" id="catFilter"></div>
+
+    <!-- 카드 그리드 -->
+    <div id="listGrid">
+      <div class="loading-state"><span class="spin">🍯</span><br><br>꿀팁을 불러오는 중이에요...</div>
+    </div>
+
+    <!-- 더 보기 -->
+    <button class="load-more-btn hidden" id="loadMoreBtn" onclick="loadMore()">더 보기 ↓</button>
+
+    <!-- 미설정 안내 -->
+    <div id="setupGuide" class="hidden">
+      <div class="setup-card" id="setup">
+        <div style="font-size:2.5rem;margin-bottom:.5rem;">📋</div>
+        <h3>구글 시트 연동 설정이 필요해요</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:.5rem;">아래 단계를 따라 구글 시트와 연결하면<br>꿀팁 콘텐츠가 자동으로 표시돼요.</p>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <div class="step-text">구글 시트를 새로 만들고 첫 행(헤더)에<br>
+              <code>id</code> <code>category</code> <code>emoji</code> <code>title</code> <code>summary</code> <code>content</code> <code>tags</code> <code>date</code><br>
+              순서로 입력하세요.</div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <div class="step-text">시트 상단 메뉴 → <strong>확장 프로그램 → Apps Script</strong> 클릭 후 아래 코드를 붙여넣으세요.</div>
+          </div>
+          <pre class="code-block">function doGet(e) {
+  const sheet = SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getActiveSheet();
+  const rows = sheet.getDataRange().getValues();
+  const headers = rows[0];
+  const tips = rows.slice(1)
+    .filter(r => r[0]) // id 없는 행 제외
+    .map(r => {
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = r[i]);
+      return obj;
+    });
+  return ContentService
+    .createTextOutput(JSON.stringify({ tips }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <div class="step-text"><strong>배포 → 새 배포</strong> 클릭 → 유형: <strong>웹 앱</strong> → 액세스: <strong>모든 사용자</strong> → 배포 후 URL 복사</div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">4</div>
+            <div class="step-text"><code>tips.html</code> 파일에서 아래 줄을 찾아 URL을 붙여넣으세요.<br>
+              <code>const SHEET_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_JSON_URL : '';</code><br>
+              <code>index.html</code> 파일의 같은 줄도 동일하게 변경하세요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DETAIL VIEW ── -->
+<div id="detailView" class="hidden">
+  <div class="detail-wrap">
+    <a href="tips.html" class="detail-back" onclick="showList(event)">← 꿀팁 목록으로</a>
+
+    <!-- 결과 내 광고 -->
+    <div class="ad-slot ad-result">
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+           data-ad-slot="4444444444"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if(typeof CONFIG!=="undefined"){var _ins=document.currentScript.previousElementSibling;_ins.setAttribute("data-ad-client",CONFIG.ADSENSE_CLIENT);_ins.setAttribute("data-ad-slot",CONFIG.AD_SLOTS.IN_RESULT);}</script>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+
+    <div id="detailContent">
+      <div class="loading-state"><span class="spin">🍯</span><br><br>꿀팁을 불러오는 중이에요...</div>
+    </div>
+
+    <!-- 푸터 위 광고 -->
+    <div class="ad-slot ad-footer" style="margin-top:2rem;">
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+           data-ad-slot="5555555555"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2024 아기도구함 &nbsp;·&nbsp; 모든 정보는 참고용이며 의료적 조언을 대체하지 않습니다.</p>
+  <p style="margin-top:4px;"><a href="index.html">홈으로</a> &nbsp;·&nbsp; <a href="#">개인정보처리방침</a></p>
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+// ▼▼▼ 여기에 구글 Apps Script 웹앱 URL 입력 ▼▼▼
+const SHEET_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_JSON_URL : '';
+// ▲▲▲ 예: 'https://script.google.com/macros/s/AKfy.../exec'
+// ══════════════════════════════════════════
+
+const CAT_COLORS = {
+  '수면':   {bg:'#f0faf4', color:'#275040'},
+  '이유식': {bg:'#fff8ed', color:'#7a4d0a'},
+  '건강':   {bg:'#fff1f1', color:'#7a1010'},
+  '발달':   {bg:'#f0f4ff', color:'#0a2d7a'},
+  '지원금': {bg:'#f5f0ff', color:'#3c1a8a'},
+  '임신':   {bg:'#fef0f5', color:'#8a1a55'},
+  '기타':   {bg:'#f8f8f6', color:'#3f3f3b'},
+};
+const CAT_EMOJI = {'수면':'🌙','이유식':'🥣','건강':'💊','발달':'📏','지원금':'💰','임신':'🤰','기타':'💡'};
+
+let allTips = [];
+let filteredTips = [];
+let displayCount = 12;
+let currentCat = '전체';
+
+// ── 샘플 데이터 (구글 시트 연결 전 미리보기용) ──
+function getSampleTips() {
+  return [
+    {id:'s1',category:'수면',emoji:'😴',title:'아기가 밤에 자주 깨는 진짜 이유',summary:'수면 사이클 끝에서 깨는 것은 정상이에요. 이렇게 대처해보세요.',tags:'수면,신생아,밤중수유',date:'2024-01-10',
+     content:`<h2>아기 수면 사이클이란?</h2><p>아기의 수면 사이클은 성인(약 90분)보다 짧은 <strong>45~60분</strong>으로 구성돼요. 각 사이클이 끝나는 시점에 얕은 수면 상태가 되며, 이때 외부 자극에 쉽게 깨어나요.</p><h2>밤중에 자주 깨는 원인</h2><ul><li><strong>배고픔:</strong> 신생아~4개월은 위가 작아 2~3시간마다 수유가 필요해요.</li><li><strong>수면 연상:</strong> 수유·안아주기로 잠드는 습관이 생기면 사이클 전환 시 같은 조건을 찾아요.</li><li><strong>환경 변화:</strong> 소음, 온도, 빛의 변화에 민감하게 반응해요.</li><li><strong>발달 과정:</strong> 4개월, 8~10개월, 18개월 전후 성장 급등기에 수면 퇴행이 일어나요.</li></ul><blockquote>수면 퇴행은 발달이 잘 이루어지고 있다는 신호예요. 보통 2~6주 안에 자연스럽게 지나가요.</blockquote><h2>실전 대처법</h2><ul><li>잠드는 조건을 수유 없이 스스로 잠들 수 있도록 조금씩 바꿔보세요.</li><li>암막 커튼으로 빛을 차단하고 화이트노이즈(선풍기·빗소리)를 활용해보세요.</li><li>깨더라도 5~10분 기다려보세요. 스스로 다시 잠들 수 있어요.</li><li>낮잠을 규칙적으로 재워 과피로를 예방하세요. 졸릴수록 오히려 밤에 더 자주 깨요.</li></ul><div class="tip-box">💡 <strong>꿀팁:</strong> 취침 루틴(목욕 → 마사지 → 수유 → 잠자리 노래)을 매일 같은 순서로 하면 뇌에서 "이제 잘 시간이다"라는 신호를 인식해요.</div>`},
+    {id:'s2',category:'이유식',emoji:'🥦',title:'이유식 냉동 보관 완벽 가이드',summary:'얼마나 오래 보관할 수 있는지, 해동 방법까지 정리했어요.',tags:'이유식,냉동,보관',date:'2024-01-15',
+     content:`<h2>이유식 냉동 보관 기간</h2><p>만든 이유식은 냉장(2~4°C)에서는 <strong>24~48시간</strong>, 냉동(-18°C 이하)에서는 <strong>1~2개월</strong>까지 보관 가능해요.</p><h2>올바른 냉동 방법</h2><ul><li>1회 분량씩 실리콘 큐브나 이유식 전용 용기에 나눠 담아요.</li><li>완전히 식힌 후 냉동해요. 뜨거운 상태로 넣으면 다른 음식에 영향을 줘요.</li><li>날짜와 내용물을 라벨에 적어두면 관리하기 편해요.</li><li>제조 후 24시간 안에 냉동하는 것이 가장 좋아요.</li></ul><div class="warn-box">⚠️ 한번 해동한 이유식은 재냉동하지 마세요. 세균 증식 위험이 있어요.</div><h2>안전한 해동 방법</h2><ul><li><strong>냉장 해동:</strong> 전날 밤 냉장실로 옮겨두는 방법이 가장 안전해요.</li><li><strong>중탕 해동:</strong> 뜨거운 물에 용기를 넣어 중탕으로 데워요.</li><li><strong>전자레인지:</strong> 짧게 가열 후 꼭 잘 저어주고 온도를 확인하세요. 국소 과열 주의!</li></ul><blockquote>해동 후 먹다 남은 이유식은 버려요. 아기 침이 들어가면 세균이 빠르게 증식할 수 있어요.</blockquote>`},
+    {id:'s3',category:'건강',emoji:'🌡️',title:'열성 경련, 당황하지 말고 이렇게',summary:'경련이 일어났을 때 부모가 해야 할 것과 하지 말아야 할 것.',tags:'건강,경련,열',date:'2024-01-20',
+     content:`<h2>열성 경련이란?</h2><p>열성 경련은 체온이 급격히 오를 때 뇌의 전기 신호가 일시적으로 과활성화되는 현상이에요. 생후 6개월~5세 아이에서 가장 흔하며, 경험한 아이의 약 <strong>30~40%에서 재발</strong>하지만 대부분 <strong>5분 이내에 자연 종료</strong>돼요.</p><h2>경련 중 해야 할 것</h2><ul><li>아이를 <strong>바닥에 눕히고</strong> 주변 위험물을 치워요.</li><li>고개를 <strong>옆으로 돌려</strong> 구토물이 기도를 막지 않게 해요.</li><li><strong>시간을 확인</strong>하세요. 몇 분 경련이 지속되는지 기록해요.</li><li>가능하면 <strong>영상을 촬영</strong>해두면 병원 진료에 도움이 돼요.</li></ul><div class="warn-box">⚠️ 절대 하면 안 되는 것: 입에 손가락·숟가락을 넣지 마세요. 아이를 꽉 잡아 움직임을 억제하지 마세요. 물을 먹이지 마세요.</div><h2>119를 불러야 하는 경우</h2><ul><li>경련이 <strong>5분 이상</strong> 지속될 때</li><li>경련이 멈췄다가 <strong>다시 시작</strong>될 때</li><li>경련 후 <strong>의식이 돌아오지 않을 때</strong></li><li><strong>생후 6개월 미만</strong> 아기일 때</li></ul>`},
+    {id:'s4',category:'발달',emoji:'🗣️',title:'언어 발달이 느린 아이, 언제 걱정해야 할까',summary:'월령별 언어 발달 기준과 전문가 상담이 필요한 신호.',tags:'발달,언어,말늦음',date:'2024-01-25',
+     content:`<h2>월령별 언어 발달 기준</h2><ul><li><strong>6개월:</strong> 옹알이 시작, 소리에 반응</li><li><strong>12개월:</strong> "엄마","아빠" 등 의미 있는 단어 1~2개</li><li><strong>18개월:</strong> 단어 10개 이상, 신체 부위 가리키기</li><li><strong>24개월:</strong> 두 단어 조합("엄마 물"), 단어 50개 이상</li><li><strong>36개월:</strong> 세 단어 문장, 낯선 사람도 이해 가능</li></ul><h2>전문가 상담이 필요한 신호</h2><ul><li>12개월: 옹알이가 없거나 이름에 반응 안 함</li><li>16개월: 뜻 있는 단어 하나도 없음</li><li>24개월: 두 단어 조합이 없음</li><li>어느 월령이든: 이전에 하던 말을 잃어버림</li></ul><blockquote>언어 발달은 개인차가 커요. 하지만 걱정된다면 빨리 상담받는 것이 좋아요. 조기 개입이 효과가 크답니다.</blockquote><div class="tip-box">💡 언어 발달을 도와주는 방법: 하루 20분 이상 책 읽어주기, TV·스마트폰 노출 줄이기, 아이가 말하면 늘려서 반응해주기("물!" → "응, 물 줄게~")</div>`},
+    {id:'s5',category:'이유식',emoji:'🐟',title:'생선 이유식, 언제부터 어떻게?',summary:'흰살생선부터 시작하는 이유와 조리법까지 단계별 안내.',tags:'이유식,생선,단백질',date:'2024-02-01',
+     content:`<h2>생선 이유식 시작 시기</h2><p>흰살생선(대구, 가자미, 명태 등)은 <strong>중기 이유식(7~8개월)</strong>부터 시작할 수 있어요. 알레르기 유발 가능성이 있으므로 처음엔 소량씩 3~5일 간격을 두고 도입해요.</p><h2>종류별 도입 시기</h2><ul><li><strong>흰살생선(대구·가자미·명태):</strong> 7~8개월부터</li><li><strong>연어:</strong> 9~11개월 후기 이유식부터</li><li><strong>등푸른생선(고등어·꽁치):</strong> 12개월 이후</li><li><strong>새우·갑각류:</strong> 9개월 이후 소량씩</li></ul><div class="warn-box">⚠️ 돌 전에는 날생선(회)을 주지 마세요. 반드시 완전히 익혀서 제공해야 해요.</div><h2>간단한 생선 이유식 레시피</h2><p><strong>대구살 애호박 죽 (7개월~)</strong></p><ul><li>재료: 불린 쌀 30g, 대구살 20g, 애호박 20g</li><li>대구는 끓는 물에 5분 이상 쪄서 으깨요.</li><li>쌀과 물(150ml)을 함께 끓이다가 대구, 애호박을 넣고 푹 끓여요.</li><li>블렌더로 갈거나 체에 걸러 농도를 맞춰요.</li></ul>`},
+    {id:'s6',category:'수면',emoji:'🌙',title:'낮잠 거부 시기, 어떻게 대응할까',summary:'18~24개월 낮잠 거부기, 수면 루틴 유지하는 방법.',tags:'수면,낮잠,18개월',date:'2024-02-05',
+     content:`<h2>낮잠 거부는 언제?</h2><p>많은 아이가 <strong>18~24개월</strong> 사이에 낮잠을 거부하기 시작해요. 하지만 이 시기 대부분의 아이는 아직 낮잠이 필요해요. 낮잠 없이 하루를 버티면 저녁에 오히려 과피로 상태가 되어 밤잠을 망칠 수 있어요.</p><h2>낮잠 거부 원인</h2><ul><li>활동량 증가로 낮에 흥분 상태 유지</li><li>독립심 발달로 자고 싶지 않다는 표현</li><li>낮잠 루틴이 무너진 경우</li></ul><h2>실전 대처법</h2><ul><li><strong>조용한 시간(Quiet Time):</strong> 잠을 재우는 것보다 눕혀서 책을 읽거나 조용한 놀이를 하게 해요. 대부분 20~30분 안에 잠들어요.</li><li><strong>낮잠 시간 앞당기기:</strong> 점심 직후 (12~1시)로 타이밍을 조정해보세요.</li><li><strong>밤잠 시간 앞당기기:</strong> 낮잠을 못 잔 날은 30분~1시간 일찍 재워요.</li></ul><blockquote>낮잠을 완전히 끊는 시기는 평균 3~4세예요. 아직 그 전이라면 포기하지 말고 루틴을 유지해보세요.</blockquote>`},
+    {id:'s7',category:'지원금',emoji:'💰',title:'놓치면 후회하는 정부 육아 혜택 5가지',summary:'많은 부모가 모르고 지나치는 숨은 지원금 총정리.',tags:'지원금,혜택,보조금',date:'2024-02-10',
+     content:`<h2>놓치기 쉬운 육아 혜택 5가지</h2><h3>1. 산모·신생아 건강관리사 서비스</h3><p>출산 후 가정에 건강관리사가 방문해 산모 회복과 신생아 돌봄을 지원해요. <strong>출생 후 40일 이내</strong> 신청해야 해요. 소득에 따라 본인 부담이 다르며 정부 지원이 최대 90%까지예요.</p><h3>2. 첫째 출산 지원금 (지자체별)</h3><p>서울, 경기 등 각 지자체에서 별도 출산장려금을 지급해요. 거주 주민센터에 꼭 문의하세요. 조건과 금액이 지역마다 달라요.</p><h3>3. 임신·출산 진료비 국민행복카드</h3><p>임신 확인 후 <strong>국민행복카드</strong>를 발급받으면 임신·분만 관련 의료비를 100만원(다태아 140만원)까지 지원해요.</p><h3>4. 배우자 출산 휴가급여</h3><p>배우자 출산 시 <strong>10일 유급 휴가</strong>를 사용할 수 있어요. 중소기업 근로자는 정부에서 급여를 지원해줘요.</p><h3>5. 육아기 근로시간 단축</h3><p>만 8세 이하 자녀를 둔 부모라면 주 15~35시간으로 근무시간을 줄일 수 있어요. 줄어든 시간만큼 <strong>육아기 근로시간 단축 급여</strong>를 받아요.</p><div class="tip-box">💡 복지로(www.bokjiro.go.kr)에서 "복지서비스 모의계산"을 해보면 내가 받을 수 있는 혜택을 한눈에 확인할 수 있어요.</div>`},
+    {id:'s8',category:'임신',emoji:'🤰',title:'임신 중 먹으면 안 되는 음식 완전 정리',summary:'카페인·날것·수은 함량 높은 생선까지 피해야 할 식품 목록.',tags:'임신,음식,주의',date:'2024-02-15',
+     content:`<h2>카페인</h2><p>하루 <strong>200mg 이하</strong>로 제한해요 (커피 아메리카노 약 1잔). 초과 섭취 시 유산·저체중 출산 위험이 높아질 수 있어요. 커피 외에도 녹차, 홍차, 에너지음료, 초콜릿에도 카페인이 있어요.</p><h2>수은 함량 높은 생선</h2><ul><li><strong>먹지 말 것:</strong> 상어, 황새치, 삼치(대형), 옥돔</li><li><strong>주 1회 이하:</strong> 참치(생선회), 연어</li><li><strong>마음껏 먹어도 좋음:</strong> 새우, 오징어, 연어(통조림), 명태</li></ul><h2>날것으로 먹으면 안 되는 식품</h2><ul><li>생굴, 조개류, 날생선(회)</li><li>반숙란, 날달걀</li><li>날고기, 파테</li><li>살균되지 않은 유제품(치즈 일부)</li></ul><div class="warn-box">⚠️ 꿀은 임신 중에는 안전하지만, 출생 후 돌 전 아기에게는 절대 주지 마세요.</div><h2>한약·건강보조식품</h2><p>"천연이라 괜찮겠지"라고 생각하기 쉽지만 한약재와 건강기능식품도 태아에게 영향을 줄 수 있어요. 반드시 산부인과 전문의와 상담 후 복용하세요.</p>`},
+  ];
+}
+
+// ── 초기화 ──
+async function init() {
+  const params = new URLSearchParams(location.search);
+  const tipId = params.get('id');
+
+  if (tipId) {
+    await loadAllTips();
+    showDetail(tipId);
+  } else {
+    await loadAllTips();
+    showList();
+  }
+}
+
+async function loadAllTips() {
+  if (allTips.length) return; // 이미 로드됨
+
+  if (!SHEET_JSON_URL) {
+    allTips = getSampleTips();
+    return;
+  }
+
+  try {
+    const res = await fetch(SHEET_JSON_URL);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    allTips = Array.isArray(data) ? data : (data.tips || []);
+    if (!allTips.length) throw new Error();
+  } catch {
+    allTips = getSampleTips();
+    // 실제 URL인데 실패한 경우만 안내
+    if (SHEET_JSON_URL) {
+      console.warn('구글 시트 로드 실패 — 샘플 데이터로 표시합니다.');
+    }
+  }
+}
+
+// ── 목록 화면 ──
+function showList(e) {
+  if (e) e.preventDefault();
+  history.pushState({}, '', 'tips.html');
+  document.getElementById('listView').classList.remove('hidden');
+  document.getElementById('detailView').classList.add('hidden');
+  document.title = '육아 꿀팁 모음 | 아기도구함';
+
+  if (!SHEET_JSON_URL) {
+    document.getElementById('setupGuide').classList.remove('hidden');
+  }
+
+  renderCatFilter();
+  renderGrid(currentCat);
+}
+
+function renderCatFilter() {
+  const cats = ['전체', ...new Set(allTips.map(t => t.category || '기타'))];
+  document.getElementById('catFilter').innerHTML = cats.map((c, i) =>
+    `<button class="cf-btn${i===0&&currentCat==='전체'?' active':c===currentCat?' active':''}" onclick="changeCat('${c}',this)">
+      ${CAT_EMOJI[c]||'📌'} ${c}
+    </button>`
+  ).join('');
+}
+
+function changeCat(cat, btn) {
+  currentCat = cat;
+  displayCount = 12;
+  document.querySelectorAll('.cf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(cat);
+}
+
+function renderGrid(cat) {
+  filteredTips = cat === '전체' ? allTips : allTips.filter(t => t.category === cat);
+  const slice = filteredTips.slice(0, displayCount);
+  const grid = document.getElementById('listGrid');
+
+  if (!slice.length) {
+    grid.innerHTML = '<div class="empty-state">해당 카테고리의 꿀팁이 아직 없어요.</div>';
+    document.getElementById('loadMoreBtn').classList.add('hidden');
+    return;
+  }
+
+  grid.innerHTML = `<div class="tips-grid">${slice.map(tip => tipCardHTML(tip)).join('')}</div>`;
+  const btn = document.getElementById('loadMoreBtn');
+  filteredTips.length > displayCount ? btn.classList.remove('hidden') : btn.classList.add('hidden');
+}
+
+function tipCardHTML(tip) {
+  const cat = tip.category || '기타';
+  const col = CAT_COLORS[cat] || CAT_COLORS['기타'];
+  const emoji = tip.emoji || CAT_EMOJI[cat] || '💡';
+  return `<a href="tips.html?id=${tip.id}" class="tip-card" onclick="openDetail(event,'${tip.id}')">
+    <div class="tip-thumb" style="background:${col.bg}">${emoji}</div>
+    <div class="tip-body">
+      <div class="tip-cat" style="color:${col.color}">${cat}</div>
+      <div class="tip-title">${tip.title}</div>
+      <div class="tip-summary">${tip.summary || ''}</div>
+      <div class="tip-date">${tip.date || ''}</div>
+    </div>
+  </a>`;
+}
+
+function loadMore() {
+  displayCount += 12;
+  renderGrid(currentCat);
+}
+
+// ── 상세 화면 ──
+function openDetail(e, id) {
+  e.preventDefault();
+  history.pushState({id}, '', `tips.html?id=${id}`);
+  showDetail(id);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showDetail(id) {
+  const tip = allTips.find(t => String(t.id) === String(id));
+  document.getElementById('listView').classList.add('hidden');
+  document.getElementById('detailView').classList.remove('hidden');
+
+  if (!tip) {
+    document.getElementById('detailContent').innerHTML = '<div class="empty-state">꿀팁을 찾을 수 없어요.</div>';
+    return;
+  }
+
+  const cat = tip.category || '기타';
+  const col = CAT_COLORS[cat] || CAT_COLORS['기타'];
+  const tags = tip.tags ? tip.tags.split(',').map(t => t.trim()) : [];
+
+  // 관련 꿀팁 (같은 카테고리, 자기 자신 제외, 최대 3개)
+  const related = allTips.filter(t => t.category === cat && t.id !== tip.id).slice(0, 3);
+
+  document.title = `${tip.title} | 아기도구함 꿀팁`;
+  document.getElementById('detailContent').innerHTML = `
+    <span class="detail-cat-badge" style="background:${col.bg};color:${col.color}">
+      ${CAT_EMOJI[cat]||'💡'} ${cat}
+    </span>
+    <h1 class="detail-title">${tip.emoji||''} ${tip.title}</h1>
+    <div class="detail-meta">
+      <span>${tip.date || ''}</span>
+      ${tip.summary ? `<span style="color:var(--gray-200)">|</span><span>${tip.summary}</span>` : ''}
+    </div>
+    <div class="detail-content">${tip.content || '<p>내용이 없어요.</p>'}</div>
+    ${tags.length ? `<div class="detail-tags">${tags.map(t=>`<span class="tag-chip">#${t}</span>`).join('')}</div>` : ''}
+    ${related.length ? `
+    <div class="related-section">
+      <h3>관련 꿀팁</h3>
+      <div class="related-grid">${related.map(t=>tipCardHTML(t)).join('')}</div>
+    </div>` : ''}
+  `;
+}
+
+// 브라우저 뒤로가기 처리
+window.addEventListener('popstate', (e) => {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (id) showDetail(id);
+  else showList();
+});
+
+init();
+</script>
+</body>
+</html>
