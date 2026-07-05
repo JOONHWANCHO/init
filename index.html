@@ -476,8 +476,8 @@ async function loadPlay() {
     const data = await res.json();
     allPlays = Array.isArray(data) ? data : (data.tips || []);
     if (!allPlays.length) throw new Error();
-    renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,8));
-  } catch { allPlays = getSamplePlay(); renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,8)); }
+    renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,9));
+  } catch { allPlays = getSamplePlay(); renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,9)); }
 }
 function renderPlayTabs(items) {
   const cats = ['전체', ...new Set(items.map(t => t.category || '기타'))];
@@ -488,7 +488,7 @@ function renderPlayTabs(items) {
 function filterPlay(cat, btn) {
   document.querySelectorAll('#playTabs .tips-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderPlayCards((cat==='전체'?allPlays:allPlays.filter(t=>t.category===cat)).slice(0,8));
+  renderPlayCards((cat==='전체'?allPlays:allPlays.filter(t=>t.category===cat)).slice(0,9));
 }
 function renderPlayCards(items) {
   const grid = document.getElementById('playGrid');
