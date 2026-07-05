@@ -34,6 +34,7 @@ const CONFIG = {
   // ──────────────────────────────────────
   SHEET_JSON_URL: 'https://script.google.com/macros/s/AKfycbwai6Mu34-MLfOOKkEsBcR_xIJLpyzHhzYAZVeznkCPr41XofQxeUICiTYZxjmm35_j/exec',  // ← Apps Script 배포 URL 로 교체
                        // 예: 'https://script.google.com/macros/s/AKfy.../exec'
+  PLAY_SHEET_URL: 'https://script.google.com/macros/s/AKfycbyfOTb5N-KzVWin-eetANZGPW9fLg0PbzPuYvGjQegcvkJzsml_dHFvtR3sFTTxrJ9e/exec',
 
   // ──────────────────────────────────────
   // Google Analytics 4 (선택)

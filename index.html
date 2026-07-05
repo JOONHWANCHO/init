@@ -325,6 +325,30 @@ footer a{color:var(--primary);text-decoration:none;}
   </div>
 </section>
 
+
+<!-- ════════════════════════════════
+     아이 액티비티 섹션
+════════════════════════════════ -->
+<section class="tips-section" style="background:#fff;border-top:1px solid var(--gray-100);">
+  <div class="tips-inner">
+    <div class="tips-header">
+      <h2><span>Google Sheet 연동</span>아이 액티비티 추천 🎪</h2>
+      <a href="play.html" class="tips-more">전체 보기 →</a>
+    </div>
+    <div class="tips-cat-tabs" id="playTabs">
+      <button class="tips-tab active" onclick="filterPlay('전체',this)">전체</button>
+    </div>
+    <div id="playGrid">
+      <div class="tips-loading">액티비티를 불러오는 중... 🎪</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 아기도구함 &nbsp;·&nbsp; 모든 정보는 참고용이며 의료적 조언을 대체하지 않습니다.</p>
+  <p style="margin-top:4px;"><a href="#">개인정보처리방침</a> &nbsp;·&nbsp; <a href="#">문의하기</a></p>
+</footer>
+
 <script>
 function filterTools(){
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -431,12 +455,69 @@ function getSampleTips() {
 }
 
 loadTips();
+
+/* ── 액티비티 섹션 ── */
+const PLAY_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.PLAY_SHEET_URL : '';
+const PLAY_CAT_COLORS = {
+  '실내놀이':   {bg:'#f0f4ff', color:'#0a2d7a'},
+  '실외놀이':   {bg:'#f0faf4', color:'#275040'},
+  '미술/만들기':{bg:'#fff8ed', color:'#7a4d0a'},
+  '음악/율동':  {bg:'#fef0f5', color:'#8a1a55'},
+  '교육/놀이터':{bg:'#f5f0ff', color:'#3c1a8a'},
+  '기타':       {bg:'#f8f8f6', color:'#3f3f3b'},
+};
+const PLAY_CAT_EMOJI = {'실내놀이':'🏠','실외놀이':'🌳','미술/만들기':'🎨','음악/율동':'🎵','교육/놀이터':'📚','기타':'🎪'};
+let allPlays = [];
+
+async function loadPlay() {
+  if (!PLAY_JSON_URL) { allPlays = getSamplePlay(); renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,8)); return; }
+  try {
+    const res = await fetch(PLAY_JSON_URL);
+    const data = await res.json();
+    allPlays = Array.isArray(data) ? data : (data.tips || []);
+    if (!allPlays.length) throw new Error();
+    renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,8));
+  } catch { allPlays = getSamplePlay(); renderPlayTabs(allPlays); renderPlayCards(allPlays.slice(0,8)); }
+}
+function renderPlayTabs(items) {
+  const cats = ['전체', ...new Set(items.map(t => t.category || '기타'))];
+  document.getElementById('playTabs').innerHTML = cats.map((c,i) =>
+    `<button class="tips-tab${i===0?' active':''}" onclick="filterPlay('${c}',this)">${PLAY_CAT_EMOJI[c]||'🎪'} ${c}</button>`
+  ).join('');
+}
+function filterPlay(cat, btn) {
+  document.querySelectorAll('#playTabs .tips-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPlayCards((cat==='전체'?allPlays:allPlays.filter(t=>t.category===cat)).slice(0,8));
+}
+function renderPlayCards(items) {
+  const grid = document.getElementById('playGrid');
+  if (!items.length) { grid.innerHTML = '<div class="tips-loading">해당 카테고리의 액티비티가 없어요.</div>'; return; }
+  grid.innerHTML = `<div class="tips-grid">${items.map(p => {
+    const cat = p.category||'기타', col = PLAY_CAT_COLORS[cat]||PLAY_CAT_COLORS['기타'];
+    return `<a href="play.html?id=${p.id}" class="tip-card">
+      <div class="tip-card-thumb" style="background:${col.bg}">${p.emoji||PLAY_CAT_EMOJI[cat]||'🎪'}</div>
+      <div class="tip-card-body">
+        <div class="tip-cat-badge" style="color:${col.color}">${cat}</div>
+        <div class="tip-title">${p.title}</div>
+        <div class="tip-summary">${p.summary||''}</div>
+      </div>
+    </a>`;
+  }).join('')}</div>`;
+}
+function getSamplePlay() {
+  return [
+    {id:'p1',category:'실내놀이',emoji:'🧩',name:'레고 듀플로 블록 놀이',summary:'24개월부터 즐길 수 있는 대형 블록 창의 놀이'},
+    {id:'p2',category:'실외놀이',emoji:'🌳',name:'어린이대공원 나들이',summary:'서울 대표 무료 어린이 놀이 공간'},
+    {id:'p3',category:'미술/만들기',emoji:'🎨',name:'핑거페인팅 체험',summary:'손으로 그리는 감각 미술 놀이, 18개월+'},
+    {id:'p4',category:'음악/율동',emoji:'🎵',name:'짐보리 음악 수업',summary:'영아 전용 음악·율동 프로그램'},
+    {id:'p5',category:'교육/놀이터',emoji:'📚',name:'국립어린이과학관',summary:'서울 화랑로 위치, 36개월 미만 무료'},
+    {id:'p6',category:'실내놀이',emoji:'🏊',name:'아기 수영 (베이비 스윔)',summary:'생후 4개월부터 가능한 물 적응 프로그램'},
+    {id:'p7',category:'미술/만들기',emoji:'🧸',name:'클레이 점토 놀이',summary:'소근육 발달에 좋은 점토 조형 놀이'},
+    {id:'p8',category:'실외놀이',emoji:'🚲',name:'한강공원 자전거 타기',summary:'세발자전거·킥보드 입문, 가족 라이딩'},
+  ];
+}
+loadPlay();
 </script>
-
-<footer>
-  <p>© 2024 아기도구함 &nbsp;·&nbsp; 모든 정보는 참고용이며 의료적 조언을 대체하지 않습니다.</p>
-  <p style="margin-top:4px;"><a href="#">개인정보처리방침</a> &nbsp;·&nbsp; <a href="#">문의하기</a></p>
-</footer>
-
 </body>
 </html>
