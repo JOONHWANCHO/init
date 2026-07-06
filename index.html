@@ -425,7 +425,7 @@ async function loadTips() {
     // URL 미설정 → 샘플 데이터로 미리보기
     allTips = getSampleTips();
     renderTipTabs(allTips);
-    renderTipCards(allTips.slice(0, 8));
+    renderTipCards(allTips.slice(0, 9));
     return;
   }
 
@@ -437,7 +437,7 @@ async function loadTips() {
     allTips = Array.isArray(data) ? data : (data.tips || []);
     if (!allTips.length) throw new Error('empty');
     renderTipTabs(allTips);
-    renderTipCards(allTips.slice(0, 8));
+    renderTipCards(allTips.slice(0, 9));
   } catch(e) {
     grid.innerHTML = '';
     document.getElementById('tipsSetupGuide').classList.remove('hidden');
@@ -456,7 +456,7 @@ function filterTips(cat, btn) {
   document.querySelectorAll('.tips-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const filtered = cat === '전체' ? allTips : allTips.filter(t => t.category === cat);
-  renderTipCards(filtered.slice(0, 8));
+  renderTipCards(filtered.slice(0, 9));
 }
 
 function renderTipCards(tips) {
@@ -487,6 +487,7 @@ function getSampleTips() {
     {id:'s6',category:'수면',emoji:'🌙',title:'낮잠 거부 시기, 어떻게 대응할까',summary:'18~24개월 낮잠 거부기, 수면 루틴 유지하는 방법.'},
     {id:'s7',category:'지원금',emoji:'💰',title:'놓치면 후회하는 정부 육아 혜택 5가지',summary:'많은 부모가 모르고 지나치는 숨은 지원금 총정리.'},
     {id:'s8',category:'임신',emoji:'🤰',title:'임신 중 먹으면 안 되는 음식 완전 정리',summary:'카페인·날것·수은 함량 높은 생선까지 피해야 할 식품 목록.'},
+    {id:'s9',category:'임신',emoji:'🤰',title:'임신 중 먹으면 안 되는 음식 완전 정리',summary:'카페인·날것·수은 함량 높은 생선까지 피해야 할 식품 목록.'},
   ];
 }
 
