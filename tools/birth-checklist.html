@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>출산 준비물 체크리스트 — 입원가방부터 신생아 용품까지 | 아기도구함</title>
+<meta name="description" content="출산 입원 가방부터 신생아 용품까지 빠짐없이 체크하세요. 항목을 체크하면 진행률이 표시돼요.">
+<link rel="stylesheet" href="../style.css">
+<script src="../config.js"></script>
+<style>
+.check-category{margin-bottom:1.5rem;}
+.check-category h3{font-size:14px;font-weight:800;color:var(--text);margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
+.check-items{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.check-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:var(--radius-sm);cursor:pointer;transition:.1s;font-size:13px;}
+.check-item:hover{background:var(--gray-50);}
+.check-item input{width:16px;height:16px;accent-color:var(--primary);flex-shrink:0;cursor:pointer;}
+.check-item label{cursor:pointer;color:var(--text);line-height:1.4;}
+.check-item.done label{text-decoration:line-through;color:var(--text-muted);}
+.progress-wrap{background:var(--gray-100);border-radius:99px;height:10px;margin:.75rem 0 .25rem;}
+.progress-fill{height:100%;border-radius:99px;background:var(--primary);transition:width .4s;}
+.progress-text{font-size:12px;color:var(--text-muted);text-align:right;}
+.reset-btn{background:none;border:none;font-size:12px;color:var(--gray-400);cursor:pointer;font-family:inherit;padding:4px 8px;border-radius:4px;}
+.reset-btn:hover{color:var(--red);}
+@media(max-width:400px){.check-items{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">임신 · 준비</div>
+  <h1>출산 준비물 체크리스트</h1>
+  <p>입원 가방부터 신생아 용품까지 빠짐없이 체크하세요.<br>진행률이 자동으로 표시돼요.</p>
+</div>
+<main>
+  <div class="ad-slot ad-top">
+    <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.TOP_BANNER);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="card section-gap">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <span class="label" style="margin:0;">전체 진행률</span>
+      <button class="reset-btn" onclick="resetAll()">🗑 전체 초기화</button>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="totalBar" style="width:0%"></div></div>
+    <div class="progress-text" id="totalText">0 / 0 항목 완료</div>
+  </div>
+
+  <div class="section-gap" id="checklistWrap"></div>
+
+  <div class="warn-box section-gap">
+    💡 <strong>출산 예정일 4~6주 전</strong>에 입원 가방을 미리 싸두세요. 예정일보다 일찍 진통이 시작될 수 있어요.
+  </div>
+
+  <div class="ad-slot ad-result">
+    <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.IN_RESULT);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="disclaimer section-gap">준비물 목록은 일반적인 가이드이며, 병원별 입원 안내문을 반드시 확인하세요.</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+const CHECKLIST = [
+  {cat:'🏥 입원 서류 & 귀중품',items:['신분증 (산모·보호자)','산모수첩','건강보험증','병원 예약 확인서','출산비용 카드·현금','스마트폰 충전기']},
+  {cat:'👗 산모 의류 & 위생',items:['수유 브라 2~3개','앞트임 잠옷 2벌','산후 패드 (대형)','세면도구 (칫솔·치약·폼클렌징)','슬리퍼','여행용 수건 2장','산후 복대']},
+  {cat:'🍼 신생아 의류 & 기저귀',items:['배냇저고리 5벌','내의 (신생아~1개월) 3벌','손발싸개 2세트','모자 2개','신생아 기저귀 1팩','물티슈 2~3팩','배냇담요 1~2장']},
+  {cat:'🛏 수유 & 침구',items:['수유 쿠션','모유 저장 팩','젖꼭지 크림 (라놀린)','젖병 2~4개 (호환성 확인)','젖병 세정제','아기 침대 or 범보 시트','수면 조끼 (속싸개)']},
+  {cat:'🚿 목욕 & 피부',items:['아기 욕조','아기 전용 샴푸·바디워시','아기 로션','신생아 목욕 가운','면봉 (아기용)','손발톱 가위 (아기용)','배꼽 소독 세트']},
+  {cat:'🚗 외출 & 이동',items:['카시트 (신생아용, 설치 완료)','유모차 또는 아기띠','기저귀 가방','외출용 젖병·보온병','여벌 옷 2세트 (외출용)','카시트 커버 or 담요']},
+  {cat:'🏠 집 준비',items:['아기 침대 설치 완료','아기 방 온습도계 설치','공기청정기 설치','아기 세탁세제 준비','아기 전용 세면대·욕조 설치','낙상 방지 패드 설치','가습기 (필터 교체 완료)']},
+  {cat:'📋 행정 & 보험',items:['출생신고 서류 준비','아동수당 신청 방법 확인','부모급여 신청 방법 확인','첫만남이용권 신청 준비','산모·신생아 건강관리사 예약','영아보험 가입 확인','국민행복카드 잔액 확인']},
+];
+
+let checks = JSON.parse(localStorage.getItem('birthChecks')||'{}');
+
+function render(){
+  const wrap=document.getElementById('checklistWrap');
+  let totalItems=0,totalChecked=0;
+  wrap.innerHTML=CHECKLIST.map((cat,ci)=>{
+    const items=cat.items;
+    const catChecked=items.filter((_,ii)=>checks[`${ci}-${ii}`]).length;
+    totalItems+=items.length; totalChecked+=catChecked;
+    return `<div class="card check-category">
+      <h3>${cat.cat} <span style="margin-left:auto;font-size:11px;font-weight:500;color:var(--text-muted);">${catChecked}/${items.length}</span></h3>
+      <div class="progress-wrap" style="height:6px;margin-bottom:.75rem;"><div class="progress-fill" style="width:${items.length?catChecked/items.length*100:0}%"></div></div>
+      <div class="check-items">${items.map((item,ii)=>{
+        const key=`${ci}-${ii}`;
+        const done=!!checks[key];
+        return `<div class="check-item${done?' done':''}" onclick="toggle('${key}',this)">
+          <input type="checkbox" ${done?'checked':''} onclick="event.stopPropagation()">
+          <label>${item}</label>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
+  }).join('');
+  const pct=totalItems?Math.round(totalChecked/totalItems*100):0;
+  document.getElementById('totalBar').style.width=pct+'%';
+  document.getElementById('totalText').textContent=`${totalChecked} / ${totalItems} 항목 완료 (${pct}%)`;
+}
+
+function toggle(key,el){
+  checks[key]=!checks[key];
+  localStorage.setItem('birthChecks',JSON.stringify(checks));
+  el.classList.toggle('done',checks[key]);
+  el.querySelector('input').checked=checks[key];
+  updateTotal();
+}
+
+function updateTotal(){
+  let total=0,done=0;
+  CHECKLIST.forEach((c,ci)=>c.items.forEach((_,ii)=>{total++;if(checks[`${ci}-${ii}`])done++;}));
+  const pct=Math.round(done/total*100);
+  document.getElementById('totalBar').style.width=pct+'%';
+  document.getElementById('totalText').textContent=`${done} / ${total} 항목 완료 (${pct}%)`;
+}
+
+function resetAll(){
+  if(!confirm('전체 체크를 초기화할까요?'))return;
+  checks={};localStorage.removeItem('birthChecks');render();
+}
+
+render();
+</script>
+</body></html>

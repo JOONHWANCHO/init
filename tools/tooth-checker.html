@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>유치 발육 시기 체커 — 아기 이앓이 가이드 | 아기도구함</title>
+<meta name="description" content="아이 월령을 선택하면 어떤 이가 나올 시기인지, 이앓이 증상과 대처법을 알려드려요.">
+<link rel="stylesheet" href="../style.css">
+<script src="../config.js"></script>
+<style>
+.tooth-map{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:320px;margin:1rem auto;}
+.tooth-box{aspect-ratio:1;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.2rem;border:1.5px solid var(--gray-100);background:var(--surface);transition:.3s;}
+.tooth-box.erupted{background:var(--primary-light);border-color:var(--primary);}
+.tooth-box.current{background:var(--amber-light);border-color:var(--amber);animation:pulse .8s ease-in-out infinite alternate;}
+.tooth-box .tn{font-size:9px;color:var(--text-muted);margin-top:2px;}
+@keyframes pulse{from{transform:scale(1);}to{transform:scale(1.05);}}
+.legend-row{display:flex;gap:12px;justify-content:center;margin:.75rem 0;font-size:12px;color:var(--text-muted);}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">성장 · 발달</div>
+  <h1>유치 발육 시기 체커</h1>
+  <p>아이 월령을 선택하면 어떤 이가 나올 시기인지,<br>이앓이 증상과 대처법을 알려드려요.</p>
+</div>
+<main>
+  <div class="ad-slot ad-top">
+    <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.TOP_BANNER);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="card section-gap">
+    <span class="label">아이 월령</span>
+    <div class="btn-group" id="monthBtns"></div>
+  </div>
+
+  <div id="result" class="hidden section-gap">
+    <div class="card">
+      <div class="legend-row">
+        <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:var(--primary-light);border:1px solid var(--primary);"></span>이미 났어요</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:var(--amber-light);border:1px solid var(--amber);"></span>지금 이맘때 나요</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:var(--surface);border:1px solid var(--gray-200);"></span>아직이에요</span>
+      </div>
+      <!-- 위 치아 (왼→오른쪽 = 아이 기준 오→왼) -->
+      <div style="text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:4px;">⬆ 윗니</div>
+      <div class="tooth-map" id="upperTeeth"></div>
+      <div style="text-align:center;font-size:11px;color:var(--text-muted);margin:8px 0 4px;">⬇ 아랫니</div>
+      <div class="tooth-map" id="lowerTeeth"></div>
+    </div>
+
+    <div id="currentInfo" class="result-box amber section-gap"></div>
+
+    <div class="section-gap card">
+      <h2 class="block-title">이앓이 대처법</h2>
+      <table class="data-table">
+        <thead><tr><th>방법</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>🧊 냉각 티링</td><td>냉장 보관한 치아발육기를 물게 해요 (냉동은 너무 차가워요)</td></tr>
+          <tr><td>👆 잇몸 마사지</td><td>깨끗한 손가락으로 잇몸을 부드럽게 문질러줘요</td></tr>
+          <tr><td>🥕 딱딱한 음식</td><td>6개월 이후 차가운 당근·오이 스틱 (질식 주의, 항상 옆에서 봐주세요)</td></tr>
+          <tr><td>💊 해열제</td><td>통증이 심해 잠 못 자면 소아용 아세트아미노펜 적정 용량 가능</td></tr>
+          <tr><td>🦷 치아 닦기</td><td>첫 이가 나면 바로 실리콘 칫솔로 닦아줘요 (불소치약 쌀알만큼)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warn-box section-gap">
+      ⚠️ <strong>이앓이로 착각하기 쉬운 증상:</strong> 38.5°C 이상 고열, 설사, 발진은 이앓이 증상이 아니에요. 다른 원인일 수 있으니 소아과 방문이 필요해요.
+    </div>
+
+    <div class="ad-slot ad-result">
+      <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.IN_RESULT);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+  </div>
+
+  <div class="disclaimer section-gap">치아 발육 시기는 개인차가 크며, 위 정보는 평균 기준이에요. 12개월까지 첫 이가 나지 않으면 소아치과 상담을 권장해요.</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+// 치아 정보: [이름, 상악 평균 개월, 하악 평균 개월]
+const TEETH = [
+  {name:'중절치',upper:10,lower:8,emoji:'🦷'},
+  {name:'측절치',upper:11,lower:13,emoji:'🦷'},
+  {name:'견치',upper:19,lower:20,emoji:'🦷'},
+  {name:'제1유구치',upper:16,lower:16,emoji:'🦷'},
+  {name:'제2유구치',upper:29,lower:27,emoji:'🦷'},
+];
+
+const months=[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,22,24,28,32,36];
+const labels={4:'4개월',5:'5개월',6:'6개월',7:'7개월',8:'8개월',9:'9개월',10:'10개월',11:'11개월',12:'12개월',13:'13개월',14:'14개월',15:'15개월',16:'16개월',17:'17개월',18:'18개월',20:'20개월',22:'22개월',24:'24개월',28:'28개월',32:'32개월',36:'36개월'};
+
+const c=document.getElementById('monthBtns');
+months.forEach(m=>{
+  const b=document.createElement('button');
+  b.className='pill-btn';b.textContent=labels[m];b.dataset.m=m;
+  b.onclick=()=>{document.querySelectorAll('#monthBtns .pill-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(m);};
+  c.appendChild(b);
+});
+
+function render(m){
+  const upper=document.getElementById('upperTeeth');
+  const lower=document.getElementById('lowerTeeth');
+  // 좌우 대칭 5개씩 → 10개
+  upper.innerHTML=[...TEETH].reverse().concat(TEETH).map((t,i)=>{
+    const side=i<5?'R':'L';
+    const status=m>t.upper+3?'erupted':m>=t.upper-2?'current':'';
+    return `<div class="tooth-box ${status}">${t.emoji}<div class="tn">${t.name}</div></div>`;
+  }).join('');
+  lower.innerHTML=[...TEETH].reverse().concat(TEETH).map((t,i)=>{
+    const status=m>t.lower+3?'erupted':m>=t.lower-2?'current':'';
+    return `<div class="tooth-box ${status}">${t.emoji}<div class="tn">${t.name}</div></div>`;
+  }).join('');
+
+  const currentTeeth=TEETH.filter(t=>m>=t.upper-2&&m<=t.upper+3||m>=t.lower-2&&m<=t.lower+3);
+  const totalErupted=TEETH.filter(t=>m>t.upper+3).length*2+TEETH.filter(t=>m>t.lower+3).length*2;
+  const infoEl=document.getElementById('currentInfo');
+  if(currentTeeth.length){
+    infoEl.innerHTML=`<div class="result-label">이 시기에 나는 이</div>
+      <div style="font-size:1.1rem;font-weight:800;color:#7a4d0a;margin-bottom:4px;">${currentTeeth.map(t=>t.name).join(', ')}</div>
+      <div class="result-sub">지금까지 나온 이: 약 ${totalErupted}개 · 유치 총 20개</div>`;
+  } else {
+    infoEl.innerHTML=`<div class="result-label">치아 상태</div>
+      <div style="font-size:14px;font-weight:700;color:#7a4d0a;">지금은 이앓이 쉬는 시기예요 😊</div>
+      <div class="result-sub">지금까지 나온 이: 약 ${totalErupted}개 · 유치 총 20개</div>`;
+  }
+  document.getElementById('result').classList.remove('hidden');
+}
+</script>
+</body></html>

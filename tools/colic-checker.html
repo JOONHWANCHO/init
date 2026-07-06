@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영아산통 체크 & 달래기 가이드 | 아기도구함</title>
+<meta name="description" content="아기가 이유 없이 울고 있다면? 영아산통 여부를 체크하고 월령별 달래기 방법을 확인하세요.">
+<link rel="stylesheet" href="../style.css">
+<script src="../config.js"></script>
+<style>
+.check-list{list-style:none;padding:0;}
+.check-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:14px;}
+.check-list li:last-child{border-bottom:none;}
+.check-list input[type=checkbox]{width:18px;height:18px;margin-top:2px;accent-color:var(--primary);flex-shrink:0;cursor:pointer;}
+.score-box{text-align:center;padding:1.5rem;background:var(--primary-light);border-radius:var(--radius);margin-top:1rem;}
+.score-num{font-size:3rem;font-weight:900;color:var(--primary-dark);}
+.score-label{font-size:14px;color:var(--primary-dark);font-weight:600;margin-top:4px;}
+.method-card{background:var(--surface);border-radius:var(--radius-sm);padding:1rem 1.1rem;margin-bottom:10px;}
+.method-card h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.method-card p{font-size:13px;color:var(--text-muted);line-height:1.6;}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">수유 · 수면</div>
+  <h1>영아산통 체크 & 달래기 가이드</h1>
+  <p>아기가 이유 없이 자지러지게 운다면?<br>영아산통 여부를 체크하고 달래기 방법을 확인하세요.</p>
+</div>
+<main>
+  <!-- 상단 광고 -->
+  <div class="ad-slot ad-top">
+    <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.TOP_BANNER);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="card section-gap">
+    <span class="label">영아산통 체크리스트 (Wessel 기준)</span>
+    <ul class="check-list" id="checkList">
+      <li><input type="checkbox" onchange="calcScore()"><span>하루 3시간 이상 울어요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>주 3일 이상 반복돼요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>3주 이상 지속되고 있어요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>주로 저녁~밤에 심하게 울어요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>울 때 다리를 배 쪽으로 끌어당겨요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>얼굴이 빨개지고 배가 딱딱해요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>수유·기저귀 교체 등으로 달래지지 않아요</span></li>
+      <li><input type="checkbox" onchange="calcScore()"><span>생후 2~4개월 사이예요</span></li>
+    </ul>
+    <div class="score-box" id="scoreBox">
+      <div class="score-num" id="scoreNum">0 / 8</div>
+      <div class="score-label" id="scoreLabel">체크 후 결과를 확인하세요</div>
+    </div>
+  </div>
+
+  <div id="result" class="hidden section-gap">
+    <div id="resultBox"></div>
+  </div>
+
+  <div class="section-gap">
+    <h2 class="block-title">영아산통 달래기 5S 방법</h2>
+    <div class="method-card"><h3>🤫 쉿 소리 (Shushing)</h3><p>아기 귀 가까이에서 "쉬이이이~" 소리를 내거나 화이트노이즈를 틀어줘요. 자궁 속 소리와 비슷해 안정감을 줘요.</p></div>
+    <div class="method-card"><h3>🫂 옆으로 눕히기 (Side/Stomach)</h3><p>아기를 옆으로 또는 배를 아래로 향하게 안아줘요. (수면 시에는 반드시 등을 아래로 눕혀야 해요)</p></div>
+    <div class="method-card"><h3>🔄 살살 흔들기 (Swinging)</h3><p>작은 폭으로 리드미컬하게 흔들어줘요. 지나치게 세게 흔들면 위험하니 반드시 부드럽게!</p></div>
+    <div class="method-card"><h3>👅 빨기 (Sucking)</h3><p>공갈젖꼭지나 손가락을 빨게 해줘요. 빠는 행위 자체가 진정 효과가 있어요.</p></div>
+    <div class="method-card"><h3>🌯 포대기 싸기 (Swaddling)</h3><p>담요로 아기를 꼭 감싸줘요. 자궁 속처럼 아늑한 느낌이 울음을 줄여줘요.</p></div>
+  </div>
+
+  <div class="section-gap card">
+    <h2 class="block-title">영아산통 자주 묻는 질문</h2>
+    <table class="data-table">
+      <thead><tr><th>질문</th><th>답변</th></tr></thead>
+      <tbody>
+        <tr><td>언제 끝나나요?</td><td>대부분 생후 3~4개월에 자연스럽게 사라져요</td></tr>
+        <tr><td>원인이 뭔가요?</td><td>아직 정확한 원인 불명 — 장 발달, 과도한 자극 등 복합 요인</td></tr>
+        <tr><td>수유 방식과 관련 있나요?</td><td>모유·분유 상관없이 발생해요</td></tr>
+        <tr><td>병원에 가야 하나요?</td><td>열·구토·혈변 동반 시 즉시 방문, 체중이 늘지 않을 때도 상담</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="danger-box section-gap">
+    ⚠️ <strong>즉시 응급실 방문:</strong> 38°C 이상 열, 초록빛 구토, 혈변, 의식 저하가 동반된 경우 영아산통이 아닐 수 있어요.
+  </div>
+
+  <!-- 결과 내 광고 -->
+  <div class="ad-slot ad-result">
+    <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.IN_RESULT);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="disclaimer section-gap">영아산통 체크리스트는 의학적 진단을 대체하지 않습니다. 아기 상태가 걱정된다면 소아과 전문의와 상담하세요.</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+function calcScore(){
+  const checks = document.querySelectorAll('#checkList input[type=checkbox]');
+  const score = [...checks].filter(c=>c.checked).length;
+  document.getElementById('scoreNum').textContent = `${score} / 8`;
+  let label='', color='', html='';
+  if(score===0){label='체크 후 결과를 확인하세요';color='';}
+  else if(score<=2){label='영아산통 가능성 낮음';color='var(--primary-dark)';}
+  else if(score<=5){label='영아산통 가능성 있음 — 소아과 상담 권장';color='var(--amber)';}
+  else{label='영아산통 가능성 높음 — 소아과 방문 권장';color='var(--red)';}
+  document.getElementById('scoreLabel').textContent=label;
+  if(score>0){
+    document.getElementById('result').classList.remove('hidden');
+    document.getElementById('resultBox').innerHTML = score<=2
+      ? `<div class="result-box"><div class="result-label">결과</div><div class="result-sub">현재 체크 항목이 적어요. 지속적으로 관찰하고 수유 패턴·기저귀·실내 온도를 점검해보세요.</div></div>`
+      : score<=5
+      ? `<div class="result-box amber"><div class="result-label">결과</div><div class="result-sub">영아산통 가능성이 있어요. 아래 5S 달래기 방법을 시도해보고, 개선이 없으면 소아과 상담을 받아보세요.</div></div>`
+      : `<div class="result-box red"><div class="result-label">결과</div><div class="result-sub">영아산통 가능성이 높아요. 소아과를 방문해 다른 원인(역류성 식도염 등)을 배제하고 대처법을 안내받으세요.</div></div>`;
+  }
+}
+</script>
+</body></html>

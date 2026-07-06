@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이유식 스케줄 플래너 — 주간 이유식 계획표 | 아기도구함</title>
+<meta name="description" content="아이 월령을 선택하면 주간 이유식 스케줄을 자동으로 만들어드려요. 인쇄도 가능해요.">
+<link rel="stylesheet" href="../style.css">
+<script src="../config.js"></script>
+<style>
+.schedule-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:.75rem;}
+.schedule-table th{background:var(--primary);color:#fff;padding:8px 6px;text-align:center;font-size:11px;font-weight:700;}
+.schedule-table td{padding:8px 6px;border:1px solid var(--gray-100);text-align:center;vertical-align:top;line-height:1.5;}
+.schedule-table tr:nth-child(even) td{background:var(--gray-50);}
+.meal-cell{font-size:11px;color:var(--text);}
+.meal-cell .meal-name{font-weight:700;color:var(--primary-dark);}
+.meal-cell .meal-amount{color:var(--text-muted);}
+.time-cell{font-weight:700;color:var(--text-muted);font-size:11px;white-space:nowrap;}
+.print-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:1.5px solid var(--gray-200);border-radius:99px;background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text);transition:.15s;margin-top:1rem;}
+.print-btn:hover{border-color:var(--primary);color:var(--primary);}
+@media print{.site-nav,.tool-hero,.ad-slot,.print-btn,.disclaimer,footer{display:none!important;}.card{box-shadow:none!important;border:none!important;}}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="../index.html" class="back-btn">← 전체 도구</a>
+  <div class="nav-spacer"></div>
+  <a href="../index.html" class="logo">아기도구함</a>
+</nav>
+<div class="tool-hero">
+  <div class="cat-tag">이유식 · 영양</div>
+  <h1>이유식 스케줄 플래너</h1>
+  <p>월령을 선택하면 하루 식사 시간과 이유식 구성을<br>주간 계획표로 자동 생성해드려요.</p>
+</div>
+<main>
+  <div class="ad-slot ad-top">
+    <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.TOP_BANNER);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="card section-gap">
+    <span class="label">아이 월령</span>
+    <div class="btn-group" id="monthBtns"></div>
+    <div class="input-group section-gap" style="max-width:200px;">
+      <label>첫 번째 수유 시간</label>
+      <input type="time" id="firstFeed" value="07:00">
+    </div>
+    <button class="calc-btn" onclick="generate()">📅 스케줄 생성하기</button>
+  </div>
+
+  <div id="result" class="hidden section-gap">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:.75rem;">
+        <h2 class="block-title" style="margin:0;" id="scheduleTitle"></h2>
+        <button class="print-btn" onclick="window.print()">🖨️ 인쇄하기</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="schedule-table" id="scheduleTable"></table>
+      </div>
+    </div>
+
+    <div class="info-box section-gap">
+      <p id="stageNote"></p>
+    </div>
+
+    <div class="warn-box section-gap">
+      💡 <strong>스케줄 적용 팁:</strong> 처음 2~3일은 기존 수유 패턴을 유지하면서 이유식을 한 끼만 추가해보세요. 아이가 적응하면 점차 횟수를 늘려가세요.
+    </div>
+
+    <div class="ad-slot ad-result">
+      <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if(typeof CONFIG!=='undefined'){var i=document.currentScript.previousElementSibling;i.setAttribute('data-ad-client',CONFIG.ADSENSE_CLIENT);i.setAttribute('data-ad-slot',CONFIG.AD_SLOTS.IN_RESULT);}(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+  </div>
+
+  <div class="disclaimer section-gap">스케줄은 일반적인 가이드라인이며 아이의 리듬에 따라 조정하세요.</div>
+</main>
+<footer>© 2024 아기도구함 · <a href="../index.html">전체 도구 보기</a></footer>
+<script>
+const STAGES = {
+  '4-5': {label:'초기(4~5개월)',meals:1,formula:5,weanAmount:'1~2큰술',weanMenu:['쌀미음','단호박미음','감자미음','고구마미음','브로콜리미음','애호박미음','당근미음'],note:'하루 수유 5회 + 이유식 1회. 이유식은 오전 10시 수유 직전이 이상적이에요.'},
+  '6':   {label:'초기심화(6개월)',meals:1,formula:5,weanAmount:'30~80ml',weanMenu:['쌀죽','소고기미음','닭가슴살죽','시금치죽','두부죽','완두콩죽','팽이버섯죽'],note:'재료 종류를 늘려가는 시기예요. 3~5일마다 새 재료를 한 가지씩 추가하세요.'},
+  '7-8': {label:'중기(7~8개월)',meals:2,formula:4,weanAmount:'80~120ml',weanMenu:['소고기채소죽','닭고기죽','두부채소죽','대구살죽','달걀노른자죽','연두부죽','버섯채소죽'],note:'하루 이유식 2회로 늘리는 시기예요. 두 끼 간격은 4~5시간이 좋아요.'},
+  '9-11':{label:'후기(9~11개월)',meals:3,formula:3,weanAmount:'120~180ml',weanMenu:['소고기진밥','연어채소밥','닭고기야채죽','달걀채소밥','두부된장죽','참치채소밥','돼지고기채소밥'],note:'하루 3회 이유식, 어른 식사 패턴에 가까워지는 시기예요. 핑거푸드도 시작해보세요.'},
+  '12+': {label:'완료기(12개월~)',meals:3,formula:2,weanAmount:'180~240ml',weanMenu:['부드러운밥','나물비빔밥','달걀볶음밥','두부된장국밥','소고기야채볶음밥','연어구이+밥','닭고기채소볶음밥'],note:'어른 식사와 비슷하게 3끼를 먹어요. 간은 최소화하고 싱겁게 조리하세요.'},
+};
+const DAYS = ['월','화','수','목','금','토','일'];
+let selectedStage = '4-5';
+
+const months = [['4-5','4~5개월'],['6','6개월'],['7-8','7~8개월'],['9-11','9~11개월'],['12+','12개월~']];
+const c = document.getElementById('monthBtns');
+months.forEach(([v,l],i)=>{
+  const b=document.createElement('button');
+  b.className='pill-btn'+(i===0?' active':'');
+  b.textContent=l; b.dataset.v=v;
+  b.onclick=()=>{document.querySelectorAll('#monthBtns .pill-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');selectedStage=v;};
+  c.appendChild(b);
+});
+
+function addMin(time, mins){
+  const [h,m]=time.split(':').map(Number);
+  const t=(h*60+m+mins)%1440;
+  return `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+}
+
+function generate(){
+  const stage=STAGES[selectedStage];
+  const first=document.getElementById('firstFeed').value||'07:00';
+
+  // 시간 계산: 수유 간격 약 3~4시간
+  const feedInterval = selectedStage==='4-5'||selectedStage==='6' ? 210 : selectedStage==='12+' ? 360 : 240;
+  const feedTimes=[];
+  for(let i=0;i<stage.formula;i++) feedTimes.push(addMin(first,feedInterval*i));
+
+  // 이유식 타임: 수유 직전 (오전 첫·두번째 수유 앞)
+  const weanTimes=[];
+  if(stage.meals>=1) weanTimes.push(addMin(feedTimes[1]||feedTimes[0], -30));
+  if(stage.meals>=2) weanTimes.push(addMin(feedTimes[2]||feedTimes[1], -30));
+  if(stage.meals>=3) weanTimes.push(addMin(feedTimes[stage.formula-1], -30));
+
+  // 전체 이벤트 정렬
+  const events=[];
+  feedTimes.forEach(t=>events.push({time:t,type:'수유',content:`모유/분유`}));
+  weanTimes.forEach((t,i)=>events.push({time:t,type:'이유식',content:stage.weanMenu[i%stage.weanMenu.length]}));
+  events.sort((a,b)=>a.time.localeCompare(b.time));
+
+  // 테이블 생성
+  document.getElementById('scheduleTitle').textContent=`${stage.label} 주간 스케줄`;
+  document.getElementById('stageNote').innerHTML=`<strong>📌 이 시기 가이드:</strong> ${stage.note}`;
+
+  const thead=`<thead><tr><th>시간</th><th>구분</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead>`;
+  const tbody=events.map((e,idx)=>{
+    const menus=DAYS.map((_,di)=>{
+      if(e.type==='이유식'){
+        const menuIdx=(idx+di)%stage.weanMenu.length;
+        return `<td class="meal-cell"><div class="meal-name">${stage.weanMenu[menuIdx]}</div><div class="meal-amount">${stage.weanAmount}</div></td>`;
+      }
+      return `<td class="meal-cell"><div class="meal-name">수유</div><div class="meal-amount">적정량</div></td>`;
+    }).join('');
+    const badge=e.type==='이유식'?`<span class="chip chip-green" style="font-size:10px;padding:2px 7px;">이유식</span>`:`<span class="chip chip-gray" style="font-size:10px;padding:2px 7px;">수유</span>`;
+    return `<tr><td class="time-cell">${e.time}</td><td>${badge}</td>${menus}</tr>`;
+  }).join('');
+
+  document.getElementById('scheduleTable').innerHTML=thead+`<tbody>${tbody}</tbody>`;
+  document.getElementById('result').classList.remove('hidden');
+}
+</script>
+</body></html>
