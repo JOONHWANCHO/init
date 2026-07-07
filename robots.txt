@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /style.css
+Allow: /tools/
+
+# 사이트맵 위치를 구글 등 검색엔진에 명시 (도메인을 실제 주소로 변경하세요)
+Sitemap: https://noriya.kr/sitemap.xml
