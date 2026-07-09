@@ -59,7 +59,7 @@ const CONFIG = {
   // 구글 시트 직접 수집 (tracker.gs 배포 후 입력)
   // admin/tracker.gs 를 Apps Script에 배포하고 URL을 입력하세요
   // ──────────────────────────────────────
-  TRACKER_URL: 'https://script.google.com/macros/s/AKfycbwOelZfwqChLr1kDTjzN_txPhfz6aXCKS_fFVuyMAZneDJhv8T9lNVHn2oE85l2Bm-V/exec',     // ← tracker.gs 배포 URL (예: 'https://script.google.com/macros/s/XXXX/exec')
+  TRACKER_URL: 'https://script.google.com/macros/s/AKfycbzlPE487W61f0fu2ZdYZQVaQHu3vtW_vG1KZHJP1x8_EVWYY8Rd2h0DpltGwE9QFna7/exec',     // ← tracker.gs 배포 URL (예: 'https://script.google.com/macros/s/XXXX/exec')
 
   // ──────────────────────────────────────
   // 사이트 기본 정보
