@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#3d7a5e">
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
+<script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=9e748c58c39f61c6111a8d0d18ff77e2&libraries=services&autoload=false"></script>
 <style>
 /* ══════════════════════════════
    구글 시트 연동 설정
@@ -163,6 +164,24 @@
 .price-row-tag{flex-shrink:0;font-size:13px;font-weight:800;color:var(--primary-dark);background:var(--primary-light);padding:5px 11px;border-radius:99px;white-space:nowrap;}
 .price-row-tag.free{color:#0a2d7a;background:#f0f4ff;}
 .discount-pct{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:#e0455f;padding:2px 7px;border-radius:99px;margin-right:5px;vertical-align:middle;}
+
+/* ── 내 주변 추천 (카카오맵) ── */
+.near-map-section{padding-top:1.5rem;padding-bottom:1.5rem;}
+.map-section-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:.9rem;}
+.map-section-title span{color:var(--primary);}
+#near-map{width:100%;height:220px;border-radius:var(--radius);background:var(--surface);overflow:hidden;}
+#map-spots-slider-container{margin-top:.75rem;}
+#map-spots-slider{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+#map-spots-slider::-webkit-scrollbar{display:none;}
+.map-loading-msg{padding:1.5rem 1rem;text-align:center;color:var(--text-muted);font-size:13px;width:100%;}
+.map-recommend-card{flex:0 0 168px;background:var(--bg);border:1.5px solid var(--gray-100);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:.15s;box-shadow:0 1px 6px rgba(0,0,0,.04);}
+.map-recommend-card:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(61,122,94,.12);transform:translateY(-2px);}
+.map-recommend-card.active{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-light);}
+.map-recommend-card img{width:100%;height:84px;object-fit:cover;display:block;background:var(--gray-100);}
+.map-recommend-card .info{padding:.6rem .7rem .7rem;}
+.map-recommend-card .badge-tag{display:inline-block;font-size:10px;font-weight:800;color:var(--primary-dark);background:var(--primary-light);padding:2px 8px;border-radius:99px;margin-bottom:5px;}
+.map-recommend-card .place-name{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:3px;}
+.map-recommend-card .place-distance{font-size:11px;color:var(--text-muted);font-weight:600;}
 </style>
 </head>
 <body>
@@ -173,6 +192,12 @@
     <a href="index.html" class="logo">아기도구함</a>
   </nav>
   
+  <div class="play-hero">
+    <div class="eyebrow">Kids Activity</div>
+    <h1>아이 액티비티 추천 🎪</h1>
+    <p>실내놀이·실외놀이·미술·음악·교육까지<br>아이가 좋아할 액티비티를 모았어요</p>
+  </div>
+
   <!-- 상단 광고 -->
   <div style="max-width:760px;margin:0 auto;padding:.75rem 1rem 0;">
     <div class="ad-slot ad-top">
@@ -187,12 +212,6 @@
         (adsbygoogle=window.adsbygoogle||[]).push({});
       </script>
     </div>
-  </div>
-
-  <div class="play-hero">
-    <div class="eyebrow">Kids Activity</div>
-    <h1>아이 액티비티 추천 🎪</h1>
-    <p>실내놀이·실외놀이·미술·음악·교육까지<br>아이가 좋아할 액티비티를 모았어요</p>
   </div>
   
   <!-- ── LIST VIEW ── -->
@@ -234,6 +253,17 @@
           <h2>💰 최저가 액티비티</h2>
         </div>
         <div class="price-list" id="priceList"></div>
+      </section>
+
+      <!-- 내 주변 추천 (카카오맵) -->
+      <section class="qs-block near-map-section">
+        <h3 class="map-section-title">📍 이번 주 <span>추천 액티비티 TOP 5</span></h3>
+        <div id="near-map"></div>
+        <div id="map-spots-slider-container">
+          <div id="map-spots-slider">
+            <div class="map-loading-msg">추천 장소를 불러오고 있습니다...</div>
+          </div>
+        </div>
       </section>
 
     </div>
@@ -322,21 +352,21 @@
   // ── 샘플 데이터 ──────────────────────────────
   function getSampleData() {
     return [
-      {id:'p1',category:'실내놀이',emoji:'🧩',name:'레고 듀플로 블록 놀이',summary:'24개월부터 즐길 수 있는 대형 블록 창의 놀이',age:24,link:'https://www.lego.com/ko-kr',price:45900,discount:39900,views:8200,
+      {id:'p1',category:'실내놀이',emoji:'🧩',name:'레고 듀플로 블록 놀이',summary:'24개월부터 즐길 수 있는 대형 블록 창의 놀이',age:24,link:'https://www.lego.com/ko-kr',price:45900,discount:39900,views:8200,address:'서울 송파구 올림픽로 240',
        content:`<h2>레고 듀플로란?</h2><p>듀플로는 일반 레고보다 2배 큰 블록으로 작은 손으로도 쉽게 조립할 수 있어요. 삼킴 사고 위험이 낮아 24개월부터 안전하게 사용할 수 있어요.</p><h2>발달 효과</h2><ul><li>소근육 발달 및 손-눈 협응력 향상</li><li>색깔·모양·크기 인지 학습</li><li>창의적 구성 놀이로 상상력 자극</li><li>집중력 향상</li></ul><blockquote>블록 놀이는 수학적 사고의 기초를 만들어요. 함께 "더 높이 쌓아보자!"라고 말하며 언어 자극도 함께 해보세요.</blockquote><div class="tip-box">💡 <strong>꿀팁:</strong> 블록을 색깔별로 분류하는 놀이를 함께 하면 분류 개념도 자연스럽게 배울 수 있어요.</div>`},
-      {id:'p2',category:'실외놀이',emoji:'🌳',name:'어린이대공원 나들이',summary:'서울 대표 무료 어린이 놀이 공간',age:12,link:'https://www.childrenpark.or.kr',price:0,discount:0,views:15200,
+      {id:'p2',category:'실외놀이',emoji:'🌳',name:'어린이대공원 나들이',summary:'서울 대표 무료 어린이 놀이 공간',age:12,link:'https://www.childrenpark.or.kr',price:0,discount:0,views:15200,address:'서울 광진구 능동로 216',
        content:`<h2>어린이대공원 소개</h2><p>서울 광진구에 위치한 어린이대공원은 동물원·놀이동산·식물원이 모두 무료로 운영되는 가족 나들이 명소예요.</p><h2>아이와 즐길 수 있는 것</h2><ul><li>동물원 — 사자·기린·코끼리 등 다양한 동물 관람</li><li>꿈의숲 놀이터 — 대형 복합 놀이 시설</li><li>식물원 — 사계절 꽃과 나무 탐색</li><li>공연장 — 주말 어린이 공연 무료 관람</li></ul><div class="tip-box">💡 주차는 혼잡하니 대중교통(7호선 어린이대공원역)을 이용하세요.</div>`},
-      {id:'p3',category:'미술/만들기',emoji:'🎨',name:'핑거페인팅 체험',summary:'손으로 그리는 감각 미술 놀이, 18개월+',age:24,link:'',price:12000,discount:9900,views:5400,
+      {id:'p3',category:'미술/만들기',emoji:'🎨',name:'핑거페인팅 체험',summary:'손으로 그리는 감각 미술 놀이, 18개월+',age:24,link:'',price:12000,discount:9900,views:5400,address:'서울 마포구 월드컵북로 396',
        content:`<h2>핑거페인팅이란?</h2><p>붓 없이 손가락으로 직접 물감을 찍어 그리는 감각 미술이에요. 촉각 자극이 풍부해 영아 발달에 매우 좋아요.</p><h2>준비물</h2><ul><li>무독성 핑거페인트 (또는 식용색소 + 밀가루 반죽)</li><li>큰 도화지 또는 욕실 타일</li><li>물티슈·앞치마</li></ul><h2>놀이 방법</h2><ul><li>도화지를 바닥에 넓게 펼쳐요.</li><li>여러 색의 물감을 작은 접시에 담아요.</li><li>손가락·손바닥·발바닥으로 자유롭게 찍어요.</li><li>말리면 액자에 넣어 소중한 추억으로!</li></ul><blockquote>손바닥 도장으로 만든 나무, 발바닥 도장으로 만든 동물 — 아이만의 작품을 함께 만들어보세요.</blockquote>`},
-      {id:'p4',category:'음악/율동',emoji:'🎵',name:'짐보리 음악 수업',summary:'영아 전용 음악·율동 프로그램',age:6,link:'https://www.gymboree.co.kr',price:33000,discount:29000,views:6100,
+      {id:'p4',category:'음악/율동',emoji:'🎵',name:'짐보리 음악 수업',summary:'영아 전용 음악·율동 프로그램',age:6,link:'https://www.gymboree.co.kr',price:33000,discount:29000,views:6100,address:'서울 강남구 테헤란로 152',
        content:`<h2>짐보리란?</h2><p>미국에서 시작된 영아 전용 놀이·음악 프로그램으로 국내에도 다수 센터가 운영되고 있어요. 음악·율동·감각 놀이를 통합한 수업이에요.</p><h2>대상 연령</h2><ul><li>Play & Music — 6개월~5세</li><li>짐나스틱 — 15개월~5세</li></ul><h2>기대 효과</h2><ul><li>청각 발달 및 리듬감 형성</li><li>또래와의 사회적 상호작용 경험</li><li>대근육·소근육 동시 발달</li></ul><div class="tip-box">💡 첫 수업은 무료 체험이 가능한 센터가 많아요. 가까운 지점에 문의해보세요.</div>`},
-      {id:'p5',category:'교육/놀이터',emoji:'📚',name:'국립어린이과학관',summary:'서울 화랑로 위치, 36개월 미만 무료',age:36,link:'https://www.csc.go.kr',price:0,discount:0,views:9800,
+      {id:'p5',category:'교육/놀이터',emoji:'📚',name:'국립어린이과학관',summary:'서울 화랑로 위치, 36개월 미만 무료',age:36,link:'https://www.csc.go.kr',price:0,discount:0,views:9800,address:'서울 종로구 창경궁로 215',
        content:`<h2>국립어린이과학관 소개</h2><p>서울 화랑로에 위치한 국립어린이과학관은 체험형 과학 전시로 아이들에게 큰 인기예요. 36개월 미만은 무료 입장이에요.</p><h2>주요 전시</h2><ul><li>유아 전용 체험존 (36개월 미만)</li><li>로봇·코딩 체험 (5세 이상 권장)</li><li>우주·자연 탐험 전시</li><li>4D 영상관</li></ul><div class="tip-box">💡 주말은 매우 혼잡해요. 평일 오전 개관 시간(9:30)에 맞춰 방문하면 여유롭게 즐길 수 있어요.</div>`},
-      {id:'p6',category:'실내놀이',emoji:'🏊',name:'아기 수영 (베이비 스윔)',summary:'생후 4개월부터 가능한 물 적응 프로그램',age:6,link:'',price:88000,discount:79000,views:4200,
+      {id:'p6',category:'실내놀이',emoji:'🏊',name:'아기 수영 (베이비 스윔)',summary:'생후 4개월부터 가능한 물 적응 프로그램',age:6,link:'',price:88000,discount:79000,views:4200,address:'서울 서초구 반포대로 235',
        content:`<h2>베이비 수영이란?</h2><p>부모와 함께 물에 들어가 신체를 움직이는 영아 수영 프로그램이에요. 생후 4개월부터 참여할 수 있어요.</p><h2>효과</h2><ul><li>대근육 발달 (팔다리 움직임)</li><li>물에 대한 공포심 제거</li><li>수면 질 향상</li><li>부모-아기 유대감 강화</li></ul><h2>주의사항</h2><ul><li>수영장 수온은 32~34°C가 적당해요.</li><li>수영 전 1시간 이상 수유를 피하세요.</li><li>귀 염증(중이염) 있을 때는 쉬어요.</li></ul>`},
-      {id:'p7',category:'미술/만들기',emoji:'🧸',name:'클레이 점토 놀이',summary:'소근육 발달에 좋은 점토 조형 놀이',age:48,link:'',price:9900,discount:7900,views:3800,
+      {id:'p7',category:'미술/만들기',emoji:'🧸',name:'클레이 점토 놀이',summary:'소근육 발달에 좋은 점토 조형 놀이',age:48,link:'',price:9900,discount:7900,views:3800,address:'서울 마포구 양화로 176',
        content:`<h2>클레이 놀이의 효과</h2><p>점토를 주무르고 빚으며 소근육을 발달시키고 창의적 표현 능력을 키워요.</p><h2>추천 점토 종류</h2><ul><li><strong>밀가루 반죽:</strong> 가장 안전, 집에서 만들 수 있어요.</li><li><strong>자연 클레이:</strong> 굳으면 보존 가능, 색칠도 할 수 있어요.</li><li><strong>에어 클레이:</strong> 가볍고 색깔이 다양해요.</li></ul><div class="tip-box">💡 식용색소로 색깔 반죽을 만들어주면 더 흥미로워해요. 반죽에 라벤더 오일 한 방울 — 향기 놀이도 함께!</div>`},
-      {id:'p8',category:'실외놀이',emoji:'🚲',name:'한강공원 자전거 타기',summary:'세발자전거·킥보드 입문, 가족 라이딩',age:60,link:'https://hangang.seoul.go.kr',price:0,discount:0,views:7300,
+      {id:'p8',category:'실외놀이',emoji:'🚲',name:'한강공원 자전거 타기',summary:'세발자전거·킥보드 입문, 가족 라이딩',age:60,link:'https://hangang.seoul.go.kr',price:0,discount:0,views:7300,address:'서울 영등포구 여의동로 330',
        content:`<h2>한강공원 자전거 코스</h2><p>한강변 자전거 도로는 자동차 없는 안전한 환경이라 아이와 함께 라이딩하기에 최적이에요.</p><h2>추천 코스</h2><ul><li>여의도한강공원 — 넓은 광장, 분수대</li><li>뚝섬한강공원 — 자전거 대여 가능, 수영장 병행</li><li>반포한강공원 — 달빛무지개분수 야경</li></ul><h2>준비물</h2><ul><li>헬멧 (필수!), 무릎·팔꿈치 보호대</li><li>물·간식, 자외선차단제</li><li>세발자전거 또는 킥보드</li></ul><blockquote>처음엔 페달 없이 두 발로 밀며 타는 "밸런스 바이크"로 시작하면 균형 감각을 자연스럽게 익힐 수 있어요.</blockquote>`},
     ];
   }
@@ -427,6 +457,7 @@
     renderAgeGrid();
     initLiveRecs();
     renderPriceList();
+    initNearMap();
   }
 
   function fmtViews(n) {
@@ -552,7 +583,208 @@
       </a>`;
     }).join('');
   }
-  
+
+  // ══════════════════════════════════════════
+  // 내 주변 추천 (카카오맵) — 현재 위치 기준 가장 가까운 5개
+  // config.js 에 CONFIG.KAKAO_MAP_KEY 를 추가하세요.
+  // (카카오 개발자센터 → 내 애플리케이션 → JavaScript 키, 플랫폼에 사이트 도메인 등록 필요)
+  // ══════════════════════════════════════════
+  const DEFAULT_USER_LOCATION = { lat: 37.5665, lng: 126.9780 }; // 위치 권한이 없을 때 서울시청 기준
+  let nearMapInitialized = false;
+  let kakaoSDKLoading = false;
+
+  // 분석 로그 훅이 따로 없다면 조용히 무시
+  if (typeof window.sendUserActionLog !== 'function') {
+    window.sendUserActionLog = function () {};
+  }
+
+  function haversineDistanceKm(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function fmtDistance(km) {
+    return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`;
+  }
+
+  function getUserLocation() {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) { resolve({ ...DEFAULT_USER_LOCATION, isDefault: true }); return; }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude, isDefault: false }),
+        () => resolve({ ...DEFAULT_USER_LOCATION, isDefault: true }),
+        { timeout: 5000 }
+      );
+    });
+  }
+
+  function ensureKakaoSDK(callback) {
+    if (typeof kakao !== 'undefined' && kakao.maps) { callback(); return; }
+    if (typeof CONFIG === 'undefined' || !CONFIG.KAKAO_MAP_KEY) {
+      const slider = document.getElementById('map-spots-slider');
+      if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 API 키가 설정되지 않았어요. config.js에 KAKAO_MAP_KEY를 추가해주세요.</div>';
+      return;
+    }
+    if (kakaoSDKLoading) return;
+    kakaoSDKLoading = true;
+    const script = document.createElement('script');
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${CONFIG.KAKAO_MAP_KEY}&libraries=services&autoload=false`;
+    script.onload = callback;
+    script.onerror = () => {
+      const slider = document.getElementById('map-spots-slider');
+      if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 스크립트 로드 실패</div>';
+    };
+    document.head.appendChild(script);
+  }
+
+  function initNearMap() {
+    if (nearMapInitialized) return; // 지도는 한 번만 생성
+    if (!allItems.length) return;
+    nearMapInitialized = true;
+    ensureKakaoSDK(() => renderNearLocationMap(allItems));
+  }
+
+  function goToDetail(id) {
+    openDetail({ preventDefault(){} }, id);
+  }
+
+  function renderNearLocationMap(posts) {
+    const mapContainer = document.getElementById('near-map');
+    const slider = document.getElementById('map-spots-slider');
+    if (!mapContainer || !slider) return;
+
+    if (!posts || posts.length === 0) {
+      slider.innerHTML = `<div class="map-loading-msg">액티비티 데이터가 없습니다.</div>`;
+      return;
+    }
+    if (typeof kakao === 'undefined') {
+      slider.innerHTML = `<div class="map-loading-msg" style="color:red;">카카오 스크립트 로드 실패</div>`;
+      return;
+    }
+
+    kakao.maps.load(async function () {
+      const userLoc = await getUserLocation();
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      // 데이터 내 모든 액티비티의 주소를 위경도로 변환 (거리 계산을 위해 전체 대상)
+      const convertedSpotsPromises = posts.map((spot) => {
+        return new Promise((resolve) => {
+          const keys = Object.keys(spot);
+          const addressKey = keys.find(k => k.toLowerCase().includes('address') || k.includes('주소') || k.includes('위치'));
+          const titleKey = keys.find(k => k.toLowerCase().includes('title') || k.includes('제목') || k.toLowerCase().includes('name'));
+
+          if (!addressKey) { resolve(null); return; }
+          const spotAddress = String(spot[addressKey]).trim();
+          const spotTitle = titleKey ? spot[titleKey] : (spot.title || spot.name || '추천 장소');
+
+          geocoder.addressSearch(spotAddress, function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              resolve({
+                ...spot,
+                title: spotTitle,
+                lat: parseFloat(result[0].y),
+                lng: parseFloat(result[0].x)
+              });
+            } else {
+              resolve(null);
+            }
+          });
+        });
+      });
+
+      const geocoded = (await Promise.all(convertedSpotsPromises)).filter(s => s !== null);
+      if (geocoded.length === 0) {
+        slider.innerHTML = `<div class="map-loading-msg">올바른 주소가 포함된 데이터가 없습니다.</div>`;
+        return;
+      }
+
+      // 현재 위치 기준 거리 계산 후 가장 가까운 5개만 채택
+      const withDistance = geocoded.map(spot => ({
+        ...spot,
+        distanceKm: haversineDistanceKm(userLoc.lat, userLoc.lng, spot.lat, spot.lng)
+      }));
+      const validSpots = withDistance.sort((a, b) => a.distanceKm - b.distanceKm).slice(0, 5);
+
+      // 1. 초기 지도 생성 (사용자 위치 또는 첫 번째 장소 중심)
+      const centerLoc = userLoc.isDefault ? validSpots[0] : userLoc;
+      const initialPosition = new kakao.maps.LatLng(centerLoc.lat, centerLoc.lng);
+      const mapOption = { center: initialPosition, level: 6 };
+      const map = new kakao.maps.Map(mapContainer, mapOption);
+
+      // 사용자 위치 마커 (내 위치를 실제로 확인했을 때만 표시)
+      if (!userLoc.isDefault) {
+        new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(userLoc.lat, userLoc.lng),
+          map,
+          image: new kakao.maps.MarkerImage(
+            'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><circle cx="13" cy="13" r="8" fill="#3d7a5e" stroke="#fff" stroke-width="3"/></svg>'),
+            new kakao.maps.Size(26, 26)
+          )
+        });
+      }
+
+      const markers = [];
+      const infowindows = [];
+
+      // 2. 지도에 마커와 인포윈도우 그리기
+      validSpots.forEach((spot, idx) => {
+        const position = new kakao.maps.LatLng(spot.lat, spot.lng);
+        const marker = new kakao.maps.Marker({ position, map });
+
+        const infowindow = new kakao.maps.InfoWindow({
+          content: `<div style="padding:5px; font-size:11px; font-weight:700; color:#222; text-align:center; width:130px;">${spot.title}</div>`
+        });
+        if (idx === 0) infowindow.open(map, marker);
+
+        markers.push(marker);
+        infowindows.push(infowindow);
+
+        // 마커 클릭 시 해당 액티비티 상세페이지로 이동
+        kakao.maps.event.addListener(marker, 'click', function () {
+          sendUserActionLog(spot.id, spot.title, 'marker_click');
+          goToDetail(spot.id);
+        });
+      });
+
+      // 3. 하단 슬라이더 카드 HTML 구성
+      slider.innerHTML = validSpots.map((spot, idx) => {
+        const cat = spot.category || '기타';
+        const col = CAT_COLORS[cat] || CAT_COLORS['기타'];
+        const emoji = spot.emoji || CAT_EMOJI[cat] || '🎪';
+        const isActive = idx === 0 ? 'active' : '';
+        const safeSpotTitle = spot.title ? String(spot.title).replace(/'/g, "\\'") : '추천 장소';
+        const spotId = spot.id ?? `map-${idx}`;
+
+        return `
+          <div class="map-recommend-card ${isActive}" id="map-card-${idx}" onclick="sendUserActionLog('${spotId}', '${safeSpotTitle}', 'click'); goToDetail('${spotId}')">
+            <div class="play-thumb" style="background:${col.bg};height:84px;font-size:2.2rem;">${emoji}</div>
+            <div class="info">
+              <div class="badge-tag">TOP ${idx + 1} · 내 주변</div>
+              <div class="place-name">${spot.title}</div>
+              <div class="place-distance">📍 ${fmtDistance(spot.distanceKm)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 4. 카드 클릭 시 지도 위 마커도 함께 하이라이트 (호버 프리뷰용, 이동은 goToDetail이 담당)
+      window.mapSelectEngine = function (index) {
+        const target = validSpots[index];
+        if (!target) return;
+        document.querySelectorAll('.map-recommend-card').forEach(card => card.classList.remove('active'));
+        const activeCard = document.getElementById(`map-card-${index}`);
+        if (activeCard) activeCard.classList.add('active');
+        infowindows.forEach(info => info.close());
+        infowindows[index].open(map, markers[index]);
+        map.panTo(new kakao.maps.LatLng(target.lat, target.lng));
+      };
+    });
+  }
+
   // ── 상세 화면 ────────────────────────────────
   function openDetail(e, id) {
     e.preventDefault();
