@@ -622,22 +622,33 @@
   }
 
   function ensureKakaoSDK(callback) {
-    if (typeof kakao !== 'undefined' && kakao.maps) { callback(); return; }
-    if (typeof CONFIG === 'undefined' || !CONFIG.KAKAO_MAP_KEY) {
-      const slider = document.getElementById('map-spots-slider');
-      if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 API 키가 설정되지 않았어요. config.js에 KAKAO_MAP_KEY를 추가해주세요.</div>';
-      return;
-    }
-    if (kakaoSDKLoading) return;
-    kakaoSDKLoading = true;
-    const script = document.createElement('script');
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${CONFIG.KAKAO_MAP_KEY}&libraries=services&autoload=false`;
-    script.onload = callback;
-    script.onerror = () => {
-      const slider = document.getElementById('map-spots-slider');
-      if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 스크립트 로드 실패</div>';
-    };
-    document.head.appendChild(script);
+  if (typeof kakao !== 'undefined' && kakao.maps) { callback(); return; }
+  
+  if (typeof CONFIG === 'undefined' || !CONFIG.KAKAO_MAP_KEY) {
+    const slider = document.getElementById('map-spots-slider');
+    if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 API 키가 설정되지 않았어요. config.js에 KAKAO_MAP_KEY를 추가해주세요.</div>';
+    return;
+  }
+  
+  if (kakaoSDKLoading) return;
+  kakaoSDKLoading = true;
+  
+  const script = document.createElement('script');
+  // 1. https:// 를 명시적으로 작성하고 키값 좌우 공백을 제거(.trim())해 줍니다.
+  const trimmedKey = CONFIG.KAKAO_MAP_KEY.trim();
+  script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${trimmedKey}&libraries=services&autoload=false`;
+  
+  script.onload = callback;
+  
+  script.onerror = (err) => {
+    // 2. 개발자 도구(F12) 콘솔에서 진짜 에러 원인을 확인하기 위해 기록
+    console.error("카카오맵 스크립트 로드 실패 상세:", err);
+    
+    const slider = document.getElementById('map-spots-slider');
+    if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 스크립트 로드 실패 (F12 콘솔창을 확인해보세요)</div>';
+  };
+  
+  document.head.appendChild(script);
   }
 
   function initNearMap() {
