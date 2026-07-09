@@ -32,15 +32,34 @@ const CONFIG = {
   // Google 꿀팁 시트 연동 (Apps Script 웹앱 URL)
   // 설정 방법: tips.html 파일 상단 주석 참고
   // ──────────────────────────────────────
-  SHEET_JSON_URL: 'https://script.google.com/macros/s/AKfycbwai6Mu34-MLfOOKkEsBcR_xIJLpyzHhzYAZVeznkCPr41XofQxeUICiTYZxjmm35_j/exec',  // ← Apps Script 배포 URL 로 교체
+  SHEET_JSON_URL: 'https://script.google.com/macros/s/AKfycbwai6Mu34-MLfOOKkEsBcR_xIJLpyzHhzYAZVeznkCPr41XofQxeUICiTYZxjmm35_j/exec',  // ← 꿀팁 시트 (Sheet1) Apps Script URL
                        // 예: 'https://script.google.com/macros/s/AKfy.../exec'
-  PLAY_SHEET_URL: 'https://script.google.com/macros/s/AKfycbyfOTb5N-KzVWin-eetANZGPW9fLg0PbzPuYvGjQegcvkJzsml_dHFvtR3sFTTxrJ9e/exec',
+
+  // ──────────────────────────────────────
+  // 아이 액티비티 시트 연동 (Sheet2, Apps Script 웹앱 URL)
+  // Apps Script 코드에서 getActiveSheet() 대신
+  // SpreadsheetApp.getActiveSpreadsheet().getSheets()[1] 로 변경하세요.
+  // ──────────────────────────────────────
+  PLAY_SHEET_URL: 'https://script.google.com/macros/s/AKfycbyfOTb5N-KzVWin-eetANZGPW9fLg0PbzPuYvGjQegcvkJzsml_dHFvtR3sFTTxrJ9e/exec',  // ← Sheet2 Apps Script 배포 URL 로 교체
 
   // ──────────────────────────────────────
   // Google Analytics 4 (선택)
   // https://analytics.google.com 에서 발급
   // ──────────────────────────────────────
   GA_ID: '',           // ← GA4 측정 ID 로 교체 (예: 'G-XXXXXXXXXX')
+
+  // ──────────────────────────────────────
+  // Admin 대시보드 설정
+  // ──────────────────────────────────────
+  ADMIN_PASSWORD: 'babytools2024!',  // ← 반드시 변경하세요
+  GA_PROPERTY_ID: '',  // ← GA4 Property ID (예: '123456789') — GA 관리 → 속성 설정에서 확인
+  GA_PRIVATE_KEY: '',  // ← 서비스 계정 비공개 키 (admin/GA_SETUP.md 참고)
+
+  // ──────────────────────────────────────
+  // 구글 시트 직접 수집 (tracker.gs 배포 후 입력)
+  // admin/tracker.gs 를 Apps Script에 배포하고 URL을 입력하세요
+  // ──────────────────────────────────────
+  TRACKER_URL: 'https://script.google.com/macros/s/AKfycbwOelZfwqChLr1kDTjzN_txPhfz6aXCKS_fFVuyMAZneDJhv8T9lNVHn2oE85l2Bm-V/exec',     // ← tracker.gs 배포 URL (예: 'https://script.google.com/macros/s/XXXX/exec')
 
   // ──────────────────────────────────────
   // 사이트 기본 정보
