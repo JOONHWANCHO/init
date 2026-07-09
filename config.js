@@ -68,7 +68,7 @@ const CONFIG = {
   SITE_URL:     'https://noriya.kr',  // ← 실제 도메인으로 교체
   CONTACT_EMAIL: '',   // ← 문의 이메일 (선택)
 
-  KAKAO_MAP_KEY: '9e748c58c39f61c6111a8d0d18ff77e2',
+  KAKAO_MAP_KEY: 'b78a133ce4df6122259f06ec1c31f389',
 
 };
 
