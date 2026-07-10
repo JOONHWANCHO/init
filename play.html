@@ -634,10 +634,23 @@
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${CONFIG.KAKAO_MAP_KEY}&libraries=services&autoload=false`;
     script.onload = callback;
-    script.onerror = () => {
-      const slider = document.getElementById('map-spots-slider');
-      if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 스크립트 로드 실패</div>';
-    };
+    script.onerror = (event) => {
+    const slider = document.getElementById('map-spots-slider');
+    
+    // 에러의 원인이 config 변수 때문인지, 네트워크 문제인지 화면에 직접 표시합니다.
+    let errorMsg = "카카오맵 스크립트 로드 실패";
+    if (typeof CONFIG === 'undefined') {
+      errorMsg += " (이유: config.js 파일을 찾을 수 없음)";
+    } else if (!CONFIG.KAKAO_MAP_KEY) {
+      errorMsg += " (이유: CONFIG 안의 키 값이 비어있음)";
+    } else {
+      errorMsg += " (이유: 카카오 도메인 미등록 또는 프로토콜 차단)";
+    }
+
+    if (slider) {
+      slider.innerHTML = `<div class="map-loading-msg" style="color:red; font-size:14px; text-align:center;">${errorMsg}</div>`;
+    }
+  };
     document.head.appendChild(script);
   }
 
