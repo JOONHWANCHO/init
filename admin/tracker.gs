@@ -22,40 +22,41 @@ const SHEET_ERRORS    = 'js_errors';
 
 // ── 메인 엔드포인트 (POST) ──────────────────────────────
 function doPost(e) {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
-  };
-
   try {
-    const body   = JSON.parse(e.postData.contents);
-    const type   = body.type;   // 'pageview' | 'event' | 'batch'
-    const ss     = SpreadsheetApp.getActiveSpreadsheet();
+    // no-cors 모드에서 Content-Type이 text/plain으로 오므로 둘 다 처리
+    var raw = (e.postData && e.postData.contents) ? e.postData.contents : '{}';
+    var body = JSON.parse(raw);
+    var type = body.type;
+    var ss   = SpreadsheetApp.getActiveSpreadsheet();
 
     if (type === 'batch') {
-      // 배치: 여러 이벤트를 한 번에 처리
-      const items = body.items || [];
-      items.forEach(item => processItem(ss, item));
+      var items = body.items || [];
+      items.forEach(function(item) { processItem(ss, item); });
     } else {
       processItem(ss, body);
     }
 
-    return buildResponse({ ok: true }, headers);
+    return buildResponse({ ok: true });
 
   } catch (err) {
-    logError(err.message, 'doPost');
-    return buildResponse({ ok: false, error: err.message }, headers);
+    try { logError(err.message, 'doPost'); } catch(_) {}
+    return buildResponse({ ok: false, error: err.message });
   }
 }
 
-// CORS preflight
+// GET 엔드포인트: ?action=ping|stats|raw
 function doGet(e) {
-  return buildResponse({ status: 'ok', message: '아기도구함 Analytics Tracker' }, {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
-  });
+  var p      = (e && e.parameter) ? e.parameter : {};
+  var action = p.action || 'ping';
+  var days   = parseInt(p.days || '7');
+  var ss     = SpreadsheetApp.getActiveSpreadsheet();
+  try {
+    if (action === 'stats') return buildResponse(getDashboardStats(ss, days));
+    if (action === 'raw')   return buildResponse(getRawData(ss, p.sheet || 'events', parseInt(p.limit || '50')));
+    return buildResponse({ status: 'ok', message: '아기도구함 Analytics Tracker', ts: new Date().toISOString() });
+  } catch(err) {
+    return buildResponse({ error: err.message });
+  }
 }
 
 // ── 아이템 처리 ─────────────────────────────────────────
