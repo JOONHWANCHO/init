@@ -9,7 +9,10 @@
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
 <script src="analytics.js"></script>
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=176add17f32e811b79391894c7453a56&libraries=services&autoload=false"></script>
+<!-- 카카오맵 SDK는 여기서 미리 로드하지 않습니다.
+     config.js의 CONFIG.KAKAO_MAP_KEY로 ensureKakaoSDK()가 필요할 때 동적으로 로드합니다.
+     (예전엔 여기서도 다른 하드코딩된 키로 중복 로드하고 있었는데, config.js의 키와
+     달라서 카카오 개발자센터에 도메인을 등록해도 반영되지 않는 문제가 있었습니다.) -->
 <style>
 /* ══════════════════════════════
    구글 시트 연동 설정
