@@ -44,21 +44,6 @@ function doPost(e) {
   }
 }
 
-// GET 엔드포인트: ?action=ping|stats|raw
-function doGet(e) {
-  var p      = (e && e.parameter) ? e.parameter : {};
-  var action = p.action || 'ping';
-  var days   = parseInt(p.days || '7');
-  var ss     = SpreadsheetApp.getActiveSpreadsheet();
-  try {
-    if (action === 'stats') return buildResponse(getDashboardStats(ss, days));
-    if (action === 'raw')   return buildResponse(getRawData(ss, p.sheet || 'events', parseInt(p.limit || '50')));
-    return buildResponse({ status: 'ok', message: '아기도구함 Analytics Tracker', ts: new Date().toISOString() });
-  } catch(err) {
-    return buildResponse({ error: err.message });
-  }
-}
-
 // ── 아이템 처리 ─────────────────────────────────────────
 function processItem(ss, item) {
   const type = item.type;
