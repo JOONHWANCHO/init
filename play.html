@@ -629,6 +629,10 @@
   function ensureKakaoSDK(callback) {
     if (typeof kakao !== 'undefined' && kakao.maps) { callback(); return; }
     if (typeof CONFIG === 'undefined' || !CONFIG.KAKAO_MAP_KEY) {
+      console.error('[카카오맵] KAKAO_MAP_KEY가 설정되지 않았습니다. config.js를 확인하세요.', {
+        CONFIG_defined: typeof CONFIG !== 'undefined',
+        KAKAO_MAP_KEY: typeof CONFIG !== 'undefined' ? CONFIG.KAKAO_MAP_KEY : undefined,
+      });
       const slider = document.getElementById('map-spots-slider');
       if (slider) slider.innerHTML = '<div class="map-loading-msg" style="color:red;">카카오맵 API 키가 설정되지 않았어요. config.js에 KAKAO_MAP_KEY를 추가해주세요.</div>';
       return;
@@ -637,10 +641,14 @@
     kakaoSDKLoading = true;
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${CONFIG.KAKAO_MAP_KEY}&libraries=services&autoload=false`;
-    script.onload = callback;
+    console.log('[카카오맵] SDK 로드 시도:', script.src);
+    script.onload = function () {
+      console.log('[카카오맵] SDK 로드 성공');
+      callback();
+    };
     script.onerror = (event) => {
     const slider = document.getElementById('map-spots-slider');
-    
+
     // 에러의 원인이 config 변수 때문인지, 네트워크 문제인지 화면에 직접 표시합니다.
     let errorMsg = "카카오맵 스크립트 로드 실패";
     if (typeof CONFIG === 'undefined') {
@@ -650,6 +658,7 @@
     } else {
       errorMsg += " (이유: 카카오 도메인 미등록 또는 프로토콜 차단)";
     }
+    console.error('[카카오맵] ' + errorMsg, script.src);
 
     if (slider) {
       slider.innerHTML = `<div class="map-loading-msg" style="color:red; font-size:14px; text-align:center;">${errorMsg}</div>`;
