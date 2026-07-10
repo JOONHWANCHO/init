@@ -21,6 +21,12 @@ const SHEET_TOOLS     = 'tool_stats';
 const SHEET_ERRORS    = 'js_errors';
 
 // ── 메인 엔드포인트 (POST) ──────────────────────────────
+// ⚠ 브라우저의 analytics.js는 더 이상 이 엔드포인트를 사용하지 않습니다.
+// Apps Script 웹앱은 요청 시 302로 리다이렉트되는데, fetch가 이를 따라가면서
+// POST body가 사라지고 GET으로 전환되어 버립니다 (브라우저 표준 동작).
+// 그래서 실제 수집은 doGet의 ?d= 파라미터 방식으로 처리합니다.
+// 이 doPost는 curl -L, Postman 등 리다이렉트를 메서드 유지한 채 처리하는
+// 서버-투-서버 클라이언트로 테스트할 때를 위해 남겨둡니다.
 function doPost(e) {
   try {
     // no-cors 모드에서 Content-Type이 text/plain으로 오므로 둘 다 처리
@@ -310,7 +316,7 @@ function getEventStats(ss, cutoffStr, eventFilter) {
     .slice(0, 20);
 }
 
-// ── GET 엔드포인트 (?action=stats|raw|ping) ──────────────
+// ── GET 엔드포인트 (?action=stats|raw|ping, ?d=... 데이터 수집) ──
 function doGet(e) {
   const p      = e.parameter || {};
   const action = p.action || 'ping';
@@ -318,6 +324,18 @@ function doGet(e) {
   const ss     = SpreadsheetApp.getActiveSpreadsheet();
 
   try {
+    // 클라이언트 데이터 수집 (analytics.js가 ?d=인코딩된JSON 형태로 전송)
+    // POST는 Apps Script의 302 리다이렉트에서 body가 유실되기 때문에
+    // 실제 수집은 GET(d 파라미터)으로 처리합니다.
+    if (p.d) {
+      const item = JSON.parse(p.d);
+      if (item.type === 'batch') {
+        (item.items || []).forEach(function (it) { processItem(ss, it); });
+      } else {
+        processItem(ss, item);
+      }
+      return buildResponse({ ok: true });
+    }
     if (action === 'stats') {
       return buildResponse(getDashboardStats(ss, days));
     }

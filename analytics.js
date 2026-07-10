@@ -131,20 +131,23 @@
 
     if (!TRACKER_URL) return;
 
-    const payload = JSON.stringify({ type: 'batch', items: batch });
-
-    // Apps Script는 POST → 302 리다이렉트 발생
-    // sendBeacon은 리다이렉트 미지원 → fetch no-cors 사용
-    // no-cors는 응답 확인 불가하지만 데이터 전송은 됨
-    try {
-      fetch(TRACKER_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' }, // no-cors에서는 simple header만 허용
-        body: payload,
-        mode: 'no-cors',   // CORS 에러 우회 (응답 읽기 불가하지만 전송은 됨)
-        keepalive: true,   // 페이지 이탈 후에도 전송 유지
-      }).catch(function () {});
-    } catch (_) {}
+    // ⚠ POST는 사용하지 않습니다.
+    // Apps Script 웹앱(/exec)은 요청을 받으면 302로 실행 URL로 리다이렉트하는데,
+    // fetch가 이 리다이렉트를 따라갈 때 POST의 body가 통째로 사라지고 메서드가 GET으로
+    // 바뀝니다 (fetch/브라우저 스펙 동작). mode:'no-cors'라 에러도 안 나서
+    // doPost가 아니라 doGet(ping)만 조용히 호출되고 데이터는 유실됩니다.
+    // → GET 쿼리 파라미터로 전송하면 리다이렉트에도 메서드가 유지되어 안전합니다.
+    const sep = TRACKER_URL.indexOf('?') === -1 ? '?' : '&';
+    batch.forEach(function (item) {
+      try {
+        const url = TRACKER_URL + sep + 'd=' + encodeURIComponent(JSON.stringify(item));
+        fetch(url, {
+          method: 'GET',
+          mode: 'no-cors',   // CORS 에러 우회 (응답 읽기 불가하지만 전송은 됨)
+          keepalive: true,   // 페이지 이탈 후에도 전송 유지
+        }).catch(function () {});
+      } catch (_) {}
+    });
   }
 
   // 주기적 배치 전송
