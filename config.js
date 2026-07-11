@@ -59,7 +59,7 @@ const CONFIG = {
   // 구글 시트 직접 수집 (tracker.gs 배포 후 입력)
   // admin/tracker.gs 를 Apps Script에 배포하고 URL을 입력하세요
   // ──────────────────────────────────────
-  TRACKER_URL: 'https://script.google.com/macros/s/AKfycbyws9Zja4H5TQYs_Lt-qPHXIQiDY9RHT0HjVXcBWj2Bwb_dpqIbQlMpDcoNAaKZ-9uj/exec',     // ← tracker.gs 배포 URL (예: 'https://script.google.com/macros/s/XXXX/exec')
+  TRACKER_URL: 'https://script.google.com/macros/s/AKfycbx-9ck3tZEV6VItw8E8q3MmN7ru6nkwgeYHCWqFE5UOjWDAHuLFYgIhGVts11azUEV3/exec',     // ← tracker.gs 배포 URL (예: 'https://script.google.com/macros/s/XXXX/exec')
 
   // ──────────────────────────────────────
   // 사이트 기본 정보
@@ -68,7 +68,7 @@ const CONFIG = {
   SITE_URL:     'https://noriya.kr',  // ← 실제 도메인으로 교체
   CONTACT_EMAIL: '',   // ← 문의 이메일 (선택)
 
-  KAKAO_MAP_KEY: '9e748c58c39f61c6111a8d0d18ff77e2',
+  KAKAO_MAP_KEY: 'b78a133ce4df6122259f06ec1c31f389',
 
 };
 

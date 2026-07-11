@@ -324,6 +324,7 @@ function showList(e) {
   document.getElementById('listView').classList.remove('hidden');
   document.getElementById('detailView').classList.add('hidden');
   document.title = '육아 꿀팁 모음 | 아기도구함';
+  if (window.BTAnalytics) window.BTAnalytics.trackContentView('', '', '');
 
   if (!SHEET_JSON_URL) {
     document.getElementById('setupGuide').classList.remove('hidden');
@@ -412,6 +413,7 @@ function showDetail(id) {
   const related = allTips.filter(t => t.category === cat && t.id !== tip.id).slice(0, 3);
 
   document.title = `${tip.title} | 아기도구함 꿀팁`;
+  if (window.BTAnalytics) window.BTAnalytics.trackContentView('tip', tip.id, tip.title);
   document.getElementById('detailContent').innerHTML = `
     <span class="detail-cat-badge" style="background:${col.bg};color:${col.color}">
       ${CAT_EMOJI[cat]||'💡'} ${cat}

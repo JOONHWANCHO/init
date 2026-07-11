@@ -30,11 +30,11 @@ body{font-family:-apple-system,'Pretendard','Noto Sans KR',sans-serif;background
 
 /* APP */
 #app{display:none;}
-.topnav{background:var(--p);color:#fff;padding:0 1.5rem;height:52px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:100;}
-.topnav .logo{font-weight:900;font-size:14px;margin-right:8px;}
-.nav-btn{padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:none;font-family:inherit;transition:.15s;}
+.topnav{background:var(--p);color:#fff;padding:0 1.5rem;height:52px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:100;overflow-x:auto;}
+.topnav .logo{font-weight:900;font-size:14px;margin-right:8px;flex-shrink:0;}
+.nav-btn{padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:none;font-family:inherit;transition:.15s;white-space:nowrap;flex-shrink:0;}
 .nav-btn:hover,.nav-btn.on{background:rgba(255,255,255,.18);color:#fff;}
-.logout{margin-left:auto;padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:1.5px solid rgba(255,255,255,.25);font-family:inherit;}
+.logout{margin-left:auto;padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:1.5px solid rgba(255,255,255,.25);font-family:inherit;flex-shrink:0;}
 .logout:hover{border-color:#fff;color:#fff;}
 
 .wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1rem 4rem;}
@@ -50,10 +50,10 @@ body{font-family:-apple-system,'Pretendard','Noto Sans KR',sans-serif;background
 .reload-btn:disabled{opacity:.5;cursor:default;}
 
 /* KPI */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:1.5rem;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:1.5rem;}
 .kpi{background:var(--bg);border-radius:var(--radius);padding:1rem 1.1rem;box-shadow:var(--shadow);}
 .kpi-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.4rem;}
-.kpi-v{font-size:1.7rem;font-weight:900;color:var(--tx);line-height:1;}
+.kpi-v{font-size:1.6rem;font-weight:900;color:var(--tx);line-height:1;}
 .kpi-s{font-size:11px;color:var(--muted);margin-top:3px;}
 .kpi-c{font-size:11px;font-weight:700;margin-top:3px;}
 .up{color:#2e7d32;}.dn{color:var(--r);}
@@ -75,6 +75,7 @@ tbody tr:last-child td{border-bottom:none;}
 tbody tr:hover td{background:var(--g50);}
 .rn{font-weight:800;color:var(--g400);}
 .bar{height:5px;background:var(--p);border-radius:99px;opacity:.65;margin-top:3px;}
+.empty-row{text-align:center;padding:2rem;color:var(--muted);}
 
 /* AI */
 .ai-box{background:linear-gradient(135deg,var(--pl),#fff);border:1px solid var(--pm);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1.5rem;}
@@ -121,7 +122,8 @@ pre{background:var(--g900);color:#e8f5e9;border-radius:var(--rsm);padding:.875re
   <nav class="topnav">
     <span class="logo">🍼 Admin</span>
     <button class="nav-btn on" onclick="showPanel('overview',this)">📊 개요</button>
-    <button class="nav-btn" onclick="showPanel('pages',this)">📄 페이지</button>
+    <button class="nav-btn" onclick="showPanel('traffic',this)">🌐 트래픽</button>
+    <button class="nav-btn" onclick="showPanel('content',this)">📄 콘텐츠</button>
     <button class="nav-btn" onclick="showPanel('tools',this)">🔧 툴</button>
     <button class="nav-btn" onclick="showPanel('revenue',this)">💰 수익</button>
     <button class="nav-btn" onclick="showPanel('raw',this)">📋 원본</button>
@@ -131,7 +133,7 @@ pre{background:var(--g900);color:#e8f5e9;border-radius:var(--rsm);padding:.875re
 
   <div class="wrap">
 
-    <!-- 개요 -->
+    <!-- ══════════ 개요 ══════════ -->
     <div class="panel on" id="panel-overview">
       <div class="dbar">
         <button class="dbar-btn on" onclick="setDays(7,this)">7일</button>
@@ -140,157 +142,164 @@ pre{background:var(--g900);color:#e8f5e9;border-radius:var(--rsm);padding:.875re
         <button class="reload-btn" id="reloadBtn" onclick="loadData()">🔄 새로고침</button>
       </div>
 
-      <!-- AI 인사이트 -->
       <div class="ai-box">
         <div class="ai-hd"><span class="ic">🤖</span><span>AI 인사이트 (Claude)</span></div>
         <div class="ai-body" id="aiText">데이터 로드 후 AI 분석 버튼을 눌러주세요.</div>
         <button class="ai-btn" id="aiBtn" onclick="runAI()" disabled>✨ 분석 요청</button>
       </div>
 
-      <!-- KPI -->
-      <div class="kpi-grid" id="kpiGrid">
-        <div class="kpi"><div class="kpi-l">페이지뷰</div><div class="kpi-v" id="kv-pv">—</div><div class="kpi-s" id="ks-pv">로드 중</div></div>
-        <div class="kpi"><div class="kpi-l">방문 세션</div><div class="kpi-v" id="kv-ss">—</div><div class="kpi-s" id="ks-ss">로드 중</div></div>
-        <div class="kpi"><div class="kpi-l">일평균 PV</div><div class="kpi-v" id="kv-dpv">—</div><div class="kpi-s">페이지뷰/일</div></div>
-        <div class="kpi"><div class="kpi-l">툴 사용 횟수</div><div class="kpi-v" id="kv-tc">—</div><div class="kpi-s">계산 버튼 클릭</div></div>
-        <div class="kpi"><div class="kpi-l">광고 노출</div><div class="kpi-v" id="kv-ad">—</div><div class="kpi-s">ad_impression</div></div>
-        <div class="kpi"><div class="kpi-l">어필리에이트</div><div class="kpi-v" id="kv-af">—</div><div class="kpi-s">클릭 (쿠팡 등)</div></div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-l">방문 세션</div><div class="kpi-v" id="kv-ss">—</div><div class="kpi-s" id="ks-ss">기간 합계</div></div>
+        <div class="kpi"><div class="kpi-l">페이지뷰</div><div class="kpi-v" id="kv-pv">—</div><div class="kpi-s" id="ks-pv">기간 합계</div></div>
+        <div class="kpi"><div class="kpi-l">평균 체류시간</div><div class="kpi-v" id="kv-dur">—</div><div class="kpi-s">세션당 평균</div></div>
+        <div class="kpi"><div class="kpi-l">이탈률</div><div class="kpi-v" id="kv-bounce">—</div><div class="kpi-s">1페이지만 보고 나감</div></div>
+        <div class="kpi"><div class="kpi-l">세션당 페이지</div><div class="kpi-v" id="kv-pps">—</div><div class="kpi-s">평균 열람 수</div></div>
+        <div class="kpi"><div class="kpi-l">툴 사용</div><div class="kpi-v" id="kv-tc">—</div><div class="kpi-s">계산 버튼 클릭</div></div>
+        <div class="kpi"><div class="kpi-l">광고 노출/클릭</div><div class="kpi-v" id="kv-ad">—</div><div class="kpi-s" id="ks-ad">CTR —</div></div>
+        <div class="kpi"><div class="kpi-l">어필리에이트 클릭</div><div class="kpi-v" id="kv-af">—</div><div class="kpi-s">쿠팡 등 외부 링크</div></div>
       </div>
 
-      <!-- 차트 -->
       <div class="cgrid">
         <div class="cc full"><div class="ct">📈 일별 페이지뷰 & 세션</div><canvas id="cDaily" height="70"></canvas></div>
-        <div class="cc"><div class="ct">🔧 툴 사용 TOP 5</div><canvas id="cTools" height="200"></canvas></div>
-        <div class="cc"><div class="ct">📱 기기 유형</div><canvas id="cDevice" height="200"></canvas></div>
+      </div>
+
+      <div class="tc">
+        <div class="ct">🚪 진입/이탈 상위 페이지</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" id="entryExitGrid">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;">가장 많이 들어온 페이지</div>
+            <table><tbody id="entryBody"></tbody></table>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;">가장 많이 나간 페이지</div>
+            <table><tbody id="exitBody"></tbody></table>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 페이지 -->
-    <div class="panel" id="panel-pages">
-      <div class="tc">
-        <div class="ct">📄 페이지별 방문 TOP 20</div>
-        <table><thead><tr><th>#</th><th>페이지</th><th>페이지뷰</th><th>세션</th><th>비율</th></tr></thead>
-        <tbody id="pageBody"><tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">데이터를 로드하세요</td></tr></tbody></table>
+    <!-- ══════════ 트래픽 ══════════ -->
+    <div class="panel" id="panel-traffic">
+      <div class="cgrid">
+        <div class="cc"><div class="ct">📱 디바이스</div><canvas id="cDevice" height="200"></canvas></div>
+        <div class="cc"><div class="ct">💻 운영체제</div><canvas id="cOS" height="200"></canvas></div>
+        <div class="cc"><div class="ct">🧭 브라우저</div><canvas id="cBrowser" height="200"></canvas></div>
+        <div class="cc"><div class="ct">🔗 유입 경로 유형</div><canvas id="cRefType" height="200"></canvas></div>
       </div>
       <div class="tc">
-        <div class="ct">🔍 검색어 TOP 20</div>
-        <table><thead><tr><th>#</th><th>검색어</th><th>횟수</th></tr></thead>
-        <tbody id="searchBody"><tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--muted);">데이터를 로드하세요</td></tr></tbody></table>
+        <div class="ct">🌍 접속 국가 TOP 10</div>
+        <table><thead><tr><th>#</th><th>국가</th><th>세션</th><th>비율</th></tr></thead><tbody id="countryBody"></tbody></table>
+      </div>
+      <div class="tc">
+        <div class="ct">🔎 유입 출처 (검색/소셜/외부 링크) TOP 10</div>
+        <table><thead><tr><th>#</th><th>출처 도메인</th><th>세션</th></tr></thead><tbody id="refSourceBody"></tbody></table>
       </div>
     </div>
 
-    <!-- 툴 -->
+    <!-- ══════════ 콘텐츠 ══════════ -->
+    <div class="panel" id="panel-content">
+      <div class="tc">
+        <div class="ct">📄 콘텐츠 성과 (계산기 · 꿀팁 게시글 · 액티비티 통합)</div>
+        <table>
+          <thead><tr><th>#</th><th>콘텐츠</th><th>조회수</th><th>순방문자</th><th>평균 체류</th><th>평균 스크롤</th><th>이탈률</th></tr></thead>
+          <tbody id="contentBody"></tbody>
+        </table>
+      </div>
+      <div class="tc">
+        <div class="ct">🔍 사이트 내 검색어 TOP 20</div>
+        <table><thead><tr><th>#</th><th>검색어</th><th>횟수</th></tr></thead><tbody id="searchBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══════════ 툴 ══════════ -->
     <div class="panel" id="panel-tools">
       <div class="cgrid">
-        <div class="cc full"><div class="ct">🔧 툴별 계산 클릭 수 (누적)</div><canvas id="cToolBar" height="80"></canvas></div>
+        <div class="cc"><div class="ct">🔧 툴별 사용 횟수 (TOP 7)</div><canvas id="cToolBar" height="220"></canvas></div>
+        <div class="cc"><div class="ct">🥧 사용 비중 (TOP 5)</div><canvas id="cTools" height="220"></canvas></div>
       </div>
       <div class="tc">
-        <div class="ct">📊 툴 상세 통계</div>
-        <table><thead><tr><th>#</th><th>툴 이름</th><th>누적 사용</th><th>오늘 사용</th><th>마지막 사용</th></tr></thead>
-        <tbody id="toolBody"><tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">데이터를 로드하세요</td></tr></tbody></table>
+        <div class="ct">📋 전체 툴 사용 현황</div>
+        <table><thead><tr><th>#</th><th>툴</th><th>누적 사용</th><th>오늘 사용</th><th>최근 사용</th></tr></thead><tbody id="toolBody"></tbody></table>
       </div>
     </div>
 
-    <!-- 수익 -->
+    <!-- ══════════ 수익 ══════════ -->
     <div class="panel" id="panel-revenue">
-      <div class="notice">💡 수익 수치는 RPM 3,500원 / 전환율 2% / 평균 단가 3,000원 기준 추정값이에요.</div>
       <div class="kpi-grid">
-        <div class="kpi"><div class="kpi-l">광고 노출 합계</div><div class="kpi-v" id="rv-ad">—</div><div class="kpi-s">impressions</div></div>
-        <div class="kpi"><div class="kpi-l">어필리에이트 클릭</div><div class="kpi-v" id="rv-af">—</div><div class="kpi-s">outbound_click</div></div>
-        <div class="kpi"><div class="kpi-l">AdSense 추정</div><div class="kpi-v" id="rv-adsense">—</div><div class="kpi-s">PV × RPM 3,500원</div></div>
-        <div class="kpi"><div class="kpi-l">어필리에이트 추정</div><div class="kpi-v" id="rv-aff-est">—</div><div class="kpi-s">클릭 × 2% × 3,000원</div></div>
-        <div class="kpi"><div class="kpi-l">합계 추정</div><div class="kpi-v" id="rv-total">—</div><div class="kpi-s">AdSense + 어필리에이트</div></div>
-        <div class="kpi"><div class="kpi-l">월 환산 추정</div><div class="kpi-v" id="rv-monthly">—</div><div class="kpi-s">기간 ÷ 일수 × 30</div></div>
+        <div class="kpi"><div class="kpi-l">광고 노출</div><div class="kpi-v" id="rv-ad">—</div></div>
+        <div class="kpi"><div class="kpi-l">광고 클릭</div><div class="kpi-v" id="rv-adclick">—</div></div>
+        <div class="kpi"><div class="kpi-l">광고 CTR</div><div class="kpi-v" id="rv-ctr">—</div></div>
+        <div class="kpi"><div class="kpi-l">어필리에이트 클릭</div><div class="kpi-v" id="rv-af">—</div></div>
       </div>
+      <div class="notice">💡 아래 원화(₩) 추정치는 실제 정산액이 아니라, 페이지뷰·클릭수 기반의 대략적인 참고용 계산입니다. 정확한 수익은 애드센스/쿠팡파트너스 대시보드에서 확인하세요.</div>
       <div class="cgrid">
-        <div class="cc full"><div class="ct">💰 일별 AdSense 추정 수익 (원)</div><canvas id="cRevenue" height="70"></canvas></div>
+        <div class="cc full"><div class="ct">💰 일별 AdSense 노출 추정 원화</div><canvas id="cRevenue" height="80"></canvas></div>
       </div>
       <div class="tc">
-        <div class="ct">🛒 어필리에이트 클릭 도메인</div>
-        <table><thead><tr><th>#</th><th>도메인</th><th>클릭 수</th><th>추정 수익</th></tr></thead>
-        <tbody id="affBody"><tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--muted);">데이터를 로드하세요</td></tr></tbody></table>
+        <div class="ct">📍 광고 위치(슬롯)별 성과</div>
+        <table><thead><tr><th>슬롯</th><th>노출</th><th>클릭</th><th>CTR</th></tr></thead><tbody id="adSlotBody"></tbody></table>
+      </div>
+      <div class="tc">
+        <div class="ct">🛒 어필리에이트 링크 도메인별 클릭</div>
+        <table><thead><tr><th>#</th><th>도메인</th><th>클릭</th><th>추정 수익(₩)</th></tr></thead><tbody id="affBody"></tbody></table>
       </div>
     </div>
 
-    <!-- 원본 데이터 -->
+    <!-- ══════════ 원본 ══════════ -->
     <div class="panel" id="panel-raw">
-      <div class="notice">📋 구글 시트 원본 데이터를 직접 확인하세요.</div>
-      <div class="tc">
-        <div class="ct" style="display:flex;align-items:center;justify-content:space-between;">
-          <span>최근 이벤트 로그 (events 시트)</span>
-          <select id="rawSheetSel" onchange="loadRaw()" style="font-size:12px;padding:4px 8px;border:1px solid var(--g200);border-radius:4px;">
-            <option value="events">events</option>
-            <option value="pageviews">pageviews</option>
-            <option value="daily_summary">daily_summary</option>
-            <option value="tool_stats">tool_stats</option>
-          </select>
-        </div>
-        <div id="rawTable"><p style="text-align:center;padding:2rem;color:var(--muted);">데이터를 로드하세요</p></div>
+      <div class="dbar">
+        <select id="rawSheetSel" onchange="loadRaw()" style="padding:6px 12px;border-radius:8px;border:1.5px solid var(--g200);font-family:inherit;font-size:12px;">
+          <option value="sessions">sessions (세션)</option>
+          <option value="pageviews" selected>pageviews (페이지뷰)</option>
+          <option value="events">events (이벤트)</option>
+        </select>
+        <button class="reload-btn" onclick="loadRaw()">🔄 새로고침</button>
       </div>
+      <div class="tc" id="rawTable"><div class="loading">시트를 선택하세요</div></div>
     </div>
 
-    <!-- 설정 -->
+    <!-- ══════════ 설정 ══════════ -->
     <div class="panel" id="panel-setup">
-      <div style="max-width:640px;">
-        <h2 style="font-size:15px;font-weight:800;margin-bottom:1.25rem;">⚙️ 구글 시트 직접 수집 설정</h2>
+      <div class="tc" style="margin-bottom:1.5rem;">
+        <div class="ct">✅ 연결 상태</div>
+        <div id="cfgStatus" style="font-size:13px;line-height:2;"></div>
+      </div>
 
-        <div class="setup-item">
-          <div class="sn">1</div>
-          <div class="sc">
-            <h4>구글 시트 새로 만들기</h4>
-            <p><a href="https://sheets.google.com" target="_blank">sheets.google.com</a>에서 새 시트 생성.<br>
-            시트 이름은 자유롭게 설정하세요 (아기도구함 Analytics 등).</p>
-          </div>
+      <div class="setup-item">
+        <div class="sn">1</div>
+        <div class="sc">
+          <h4>Apps Script 웹앱 URL 연결</h4>
+          <p>tracker.gs를 배포한 뒤 나온 웹앱 URL을 입력하세요. config.js의 TRACKER_URL과 동일한 값이어야 합니다.</p>
+          <input type="text" id="trackerUrlInput" placeholder="https://script.google.com/macros/s/XXXX/exec"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--g200);border-radius:6px;font-size:12px;margin-top:8px;font-family:inherit;">
+          <button onclick="saveTrackerUrl()" style="margin-top:8px;padding:8px 16px;background:var(--p);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">저장 &amp; 연결 테스트</button>
         </div>
+      </div>
 
-        <div class="setup-item">
-          <div class="sn">2</div>
-          <div class="sc">
-            <h4>Apps Script에 tracker.gs 코드 배포</h4>
-            <p>시트 상단 메뉴 → <strong>확장 프로그램 → Apps Script</strong><br>
-            <code>admin/tracker.gs</code> 파일 내용을 <code>Code.gs</code>에 붙여넣기<br>
-            → <strong>배포 → 새 배포 → 웹 앱</strong><br>
-            → 실행 계정: <strong>나</strong> / 액세스: <strong>모든 사용자</strong><br>
-            → 배포 URL 복사</p>
-          </div>
+      <div class="setup-item">
+        <div class="sn">2</div>
+        <div class="sc">
+          <h4>시트 구조 (v2)</h4>
+          <p>이 버전은 3개의 원본 시트를 사용하고, 나머지 모든 통계는 대시보드 로드 시 그때그때 집계합니다.</p>
+          <pre>sessions   — 세션 단위 (유입경로/기기/국가/체류시간)
+pageviews  — 페이지·게시글·액티비티 열람 단위 (경로/체류시간/스크롤/이탈유형)
+events     — 광고 노출·클릭, 어필리에이트 클릭, 툴 사용, 검색, 에러 등</pre>
         </div>
+      </div>
 
-        <div class="setup-item">
-          <div class="sn">3</div>
-          <div class="sc">
-            <h4>config.js에 TRACKER_URL 입력</h4>
-            <pre>TRACKER_URL: 'https://script.google.com/macros/s/XXXX/exec',</pre>
-          </div>
+      <div class="setup-item">
+        <div class="sn">3</div>
+        <div class="sc">
+          <h4>샘플 데이터로 미리보기</h4>
+          <p>Apps Script 편집기에서 <code>insertSampleData</code> 함수를 선택 후 ▶ 실행하면 데모용 데이터가 3개 시트에 채워집니다. 실제 방문자 데이터가 쌓이기 전에 대시보드 화면을 미리 확인할 때 유용해요.</p>
         </div>
+      </div>
 
-        <div class="setup-item">
-          <div class="sn">4</div>
-          <div class="sc">
-            <h4>시트 자동 생성 확인</h4>
-            <p>사이트에 방문하면 구글 시트에 아래 4개 탭이 자동 생성돼요:</p>
-            <pre>pageviews     — 페이지뷰 로그 (방문자·기기·UTM 등)
-events        — 이벤트 로그 (클릭·스크롤·검색 등)
-daily_summary — 일별 집계 (페이지뷰·툴사용·수익추정)
-tool_stats    — 툴별 누적 사용 통계</pre>
-          </div>
-        </div>
-
-        <div class="setup-item">
-          <div class="sn">5</div>
-          <div class="sc">
-            <h4>Admin 대시보드 연결</h4>
-            <p>아래 입력란에 TRACKER_URL을 입력하면 이 대시보드에서 바로 데이터를 불러올 수 있어요.<br>
-            (config.js에 이미 입력했다면 자동 인식됩니다)</p>
-            <input type="text" id="trackerUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
-              style="width:100%;margin-top:.5rem;padding:8px 12px;border:1.5px solid var(--g200);border-radius:var(--rsm);font-size:12px;font-family:inherit;">
-            <button onclick="saveTrackerUrl()" style="margin-top:6px;padding:7px 14px;background:var(--p);color:#fff;border:none;border-radius:var(--rsm);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">저장 & 연결 테스트</button>
-          </div>
-        </div>
-
-        <!-- 현재 상태 -->
-        <div style="background:var(--bg);border-radius:var(--radius);padding:1rem 1.1rem;box-shadow:var(--shadow);margin-top:1rem;">
-          <div style="font-size:12px;font-weight:700;margin-bottom:.75rem;">현재 설정 상태</div>
-          <div id="cfgStatus" style="font-size:12px;line-height:2.2;"></div>
+      <div class="setup-item">
+        <div class="sn">4</div>
+        <div class="sc">
+          <h4>코드를 고치면 반드시 "새 배포"</h4>
+          <p>tracker.gs 코드를 수정한 뒤에는 배포 → 배포 관리 → 편집(연필) → 버전: 새 버전 → 배포 순으로 다시 배포해야 실제 웹앱에 반영됩니다. URL은 보통 그대로 유지돼요.</p>
         </div>
       </div>
     </div>
@@ -342,6 +351,7 @@ function setDays(d, btn) {
   days = d;
   document.querySelectorAll('.dbar-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
+  loadData();
 }
 
 // ── API 호출 ──────────────────────────────────────────
@@ -350,28 +360,19 @@ async function callTracker(action, extraParams={}) {
 
   const url = `${TRACKER}?action=${action}&days=${days}&${new URLSearchParams(extraParams)}`;
 
-  // Apps Script는 302 리다이렉트를 하므로 redirect: 'follow' 필수
-  // 타임아웃 10초 설정
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 15000);
 
   try {
-    const res = await fetch(url, {
-      method: 'GET',
-      redirect: 'follow',
-      signal: controller.signal,
-    });
+    const res = await fetch(url, { method: 'GET', redirect: 'follow', signal: controller.signal });
     clearTimeout(timeout);
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     const text = await res.text();
-    try {
-      return JSON.parse(text);
-    } catch (_) {
-      throw new Error(`JSON 파싱 실패 — 응답: ${text.slice(0, 100)}`);
-    }
+    try { return JSON.parse(text); }
+    catch (_) { throw new Error(`JSON 파싱 실패 — 응답: ${text.slice(0, 100)}`); }
   } catch (err) {
     clearTimeout(timeout);
-    if (err.name === 'AbortError') throw new Error('요청 시간 초과 (10초). 네트워크 또는 Apps Script URL을 확인하세요.');
+    if (err.name === 'AbortError') throw new Error('요청 시간 초과 (15초). 네트워크 또는 Apps Script URL을 확인하세요.');
     throw err;
   }
 }
@@ -383,39 +384,40 @@ let chartInst = {};
 async function loadData() {
   const btn = document.getElementById('reloadBtn');
   btn.disabled = true; btn.textContent = '⏳ 로드 중...';
-
-  // 배너 초기화
   document.querySelectorAll('.notice,.errbox').forEach(el => el.remove());
 
   if (!TRACKER) {
-    loadDemo();
+    showNotice('📊 TRACKER_URL 미연결 — 설정 탭에서 Apps Script 웹앱 URL을 연결해주세요.');
+    renderAll(emptyStats());
     btn.disabled = false; btn.textContent = '🔄 새로고침';
     return;
   }
 
   try {
     const data = await callTracker('stats');
-
-    // Apps Script가 에러 객체를 200으로 반환하는 경우 처리
     if (data.error) throw new Error(data.error);
-
     cached = data;
     renderAll(data);
     document.getElementById('aiBtn').disabled = false;
-    showNotice('✅ 구글 시트 데이터를 성공적으로 불러왔어요.');
   } catch(err) {
-    // 에러 원인을 화면에 표시 후 데모로 폴백
     const msg = err.message || String(err);
     showErr(`시트 연결 실패: ${msg}`);
     showDebugInfo(msg);
-    loadDemo();
+    renderAll(emptyStats());
   } finally {
     btn.disabled = false; btn.textContent = '🔄 새로고침';
   }
 }
 
+function emptyStats() {
+  return {
+    totals: {}, daily: [], devices: [], os: [], browsers: [], countries: [],
+    referrers: [], ref_sources: [], entry_pages: [], exit_pages: [],
+    content: [], tools: [], ads: { by_slot: [] }, affiliates: [], searches: [], errors: { recent: [] },
+  };
+}
+
 function showDebugInfo(errMsg) {
-  // CORS 에러인지, URL 오류인지 힌트 제공
   const wrap = document.querySelector('.wrap');
   const el = document.createElement('div');
   el.style.cssText = 'background:#f5f0ff;border:1px solid #d5c6f5;border-radius:8px;padding:12px 16px;margin-bottom:1rem;font-size:12px;color:#3c1a8a;line-height:1.9;';
@@ -426,7 +428,6 @@ function showDebugInfo(errMsg) {
 Apps Script 배포 설정을 확인하세요:<br>
 · 액세스 권한: <strong>모든 사용자</strong> (익명 포함)<br>
 · 실행 계정: <strong>나 (본인 계정)</strong><br>
-· 배포 후 URL을 <strong>새 배포의 URL</strong>로 업데이트했는지 확인<br>
 · 코드 수정 후엔 반드시 <strong>새 배포</strong>를 만들어야 해요 (기존 배포 수정 X)`;
   } else if (errMsg.includes('404') || errMsg.includes('not found')) {
     hint = `<strong>🔍 URL 오류</strong><br>TRACKER_URL이 올바른지 확인하세요.<br>config.js의 TRACKER_URL 값: <code>${TRACKER}</code>`;
@@ -436,79 +437,42 @@ Apps Script 배포 설정을 확인하세요:<br>
     hint = `<strong>🔍 현재 TRACKER_URL</strong><br><code style="word-break:break-all">${TRACKER}</code><br><br>
 브라우저 콘솔(F12 → Console)에서 상세 에러를 확인해보세요.`;
   }
-
   el.innerHTML = hint;
   wrap.prepend(el);
-}
-
-// ── 데모 데이터 ───────────────────────────────────────
-function loadDemo() {
-  const d = days;
-  const daily = Array.from({length:d},(_,i)=>{
-    const dt = new Date(); dt.setDate(dt.getDate()-d+i+1);
-    const base = 200+Math.sin(i/2.5)*60+(i/d)*150+Math.random()*40;
-    return {
-      date: dt.toISOString().split('T')[0],
-      pageviews: Math.round(base),
-      sessions:  Math.round(base*0.7),
-      tool_calculates: Math.round(base*0.4),
-      ad_impressions:  Math.round(base*1.8),
-      affiliate_clicks:Math.round(base*0.08),
-      avg_scroll: Math.round(40+Math.random()*30),
-      errors: Math.round(Math.random()*2),
-    };
-  });
-  const tools = [
-    {tool:'해열제계산기',total:4200,today:38,last_used:'2024-01-10'},
-    {tool:'이유식체커',   total:3800,today:32,last_used:'2024-01-10'},
-    {tool:'성장백분위',   total:2900,today:25,last_used:'2024-01-10'},
-    {tool:'임신주수',     total:2400,today:21,last_used:'2024-01-10'},
-    {tool:'지원금계산기', total:2100,today:18,last_used:'2024-01-10'},
-    {tool:'수면계산기',   total:1800,today:15,last_used:'2024-01-09'},
-    {tool:'이유식플래너', total:1200,today:10,last_used:'2024-01-09'},
-  ];
-  const totals = daily.reduce((a,r)=>({
-    pageviews:        (a.pageviews||0)+(r.pageviews||0),
-    sessions:         (a.sessions||0)+(r.sessions||0),
-    tool_calculates:  (a.tool_calculates||0)+(r.tool_calculates||0),
-    ad_impressions:   (a.ad_impressions||0)+(r.ad_impressions||0),
-    affiliate_clicks: (a.affiliate_clicks||0)+(r.affiliate_clicks||0),
-  }),{});
-  cached = {daily, tools, totals};
-  renderAll(cached);
-  document.getElementById('aiBtn').disabled = false;
-  if (!TRACKER) {
-    showNotice('📊 TRACKER_URL 미연결 — 데모 데이터를 표시합니다. 설정 탭에서 연결하세요.');
-  }
-  // URL이 있는데 여기 오면 위의 showErr+showDebugInfo가 이미 표시됨
 }
 
 // ── 렌더링 ──────────────────────────────────────────
 function fmtN(n){ return Math.round(n||0).toLocaleString('ko-KR'); }
 function fmtW(n){ return fmtN(n)+'원'; }
 function fmtDate(s){ return (s||'').slice(5); }
+function fmtSec(s){
+  s = Math.round(s||0);
+  if (s < 60) return s+'초';
+  return Math.floor(s/60)+'분 '+(s%60)+'초';
+}
 
 function renderAll(data) {
   renderKPI(data);
   renderDailyChart(data.daily||[]);
-  renderToolCharts(data.tools||[]);
-  renderDeviceChart();
-  renderPageTable(data);
+  renderEntryExit(data.entry_pages||[], data.exit_pages||[]);
+  renderTrafficCharts(data);
+  renderContentTable(data.content||[]);
   renderSearchTable(data.searches||[]);
+  renderToolCharts(data.tools||[]);
   renderToolTable(data.tools||[]);
-  renderAffTable(data.outbounds||[]);
   renderRevenue(data);
 }
 
 function renderKPI(data) {
   const t = data.totals||{};
-  const d = data.daily||[];
-  const dpv = d.length ? Math.round((t.pageviews||0)/d.length) : 0;
-  setText('kv-pv',  fmtN(t.pageviews));        setText('ks-pv',  `${days}일 합계`);
-  setText('kv-ss',  fmtN(t.sessions));          setText('ks-ss',  `${days}일 합계`);
-  setText('kv-dpv', fmtN(dpv));
+  setText('kv-ss',  fmtN(t.sessions));   setText('ks-ss', `최근 ${days}일`);
+  setText('kv-pv',  fmtN(t.pageviews));  setText('ks-pv', `최근 ${days}일`);
+  setText('kv-dur', fmtSec(t.avg_session_duration));
+  setText('kv-bounce', (t.bounce_rate||0)+'%');
+  setText('kv-pps', t.avg_pages_per_session||0);
   setText('kv-tc',  fmtN(t.tool_calculates));
-  setText('kv-ad',  fmtN(t.ad_impressions));
+  setText('kv-ad',  `${fmtN(t.ad_impressions)} / ${fmtN(t.ad_clicks)}`);
+  setText('ks-ad',  `CTR ${t.ad_ctr||0}%`);
   setText('kv-af',  fmtN(t.affiliate_clicks));
 }
 
@@ -528,124 +492,129 @@ function renderDailyChart(daily) {
   });
 }
 
+function renderEntryExit(entry, exit) {
+  const rowsHtml = (arr) => arr.length
+    ? arr.slice(0,8).map(r=>`<tr><td>${r.label||'—'}</td><td style="text-align:right;font-weight:700;">${fmtN(r.count)}</td></tr>`).join('')
+    : `<tr><td class="empty-row">데이터 없음</td></tr>`;
+  document.getElementById('entryBody').innerHTML = rowsHtml(entry);
+  document.getElementById('exitBody').innerHTML  = rowsHtml(exit);
+}
+
+// ── 트래픽 탭 ──────────────────────────────────────────
+const PALETTE = ['#3d7a5e','#5a9e7e','#c87f1a','#1a5fc8','#6b3dbe','#c53030','#0aa','#e07a5f','#81b29a','#f2cc8f'];
+
+function doughnut(canvasId, key, rows, labelKey='label', valueKey='count') {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if (chartInst[key]) chartInst[key].destroy();
+  const top = rows.slice(0,7);
+  chartInst[key] = new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels: top.length ? top.map(r=>r[labelKey]||'미상') : ['데이터 없음'],
+      datasets:[{
+        data: top.length ? top.map(r=>r[valueKey]||0) : [1],
+        backgroundColor: top.length ? PALETTE : ['#e5e5e0'],
+        borderWidth:2, borderColor:'#fff',
+      }],
+    },
+    options:{responsive:true,plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10}}}}},
+  });
+}
+
+function renderTrafficCharts(data) {
+  doughnut('cDevice',   'device',  data.devices||[]);
+  doughnut('cOS',       'os',      data.os||[]);
+  doughnut('cBrowser',  'browser', data.browsers||[]);
+
+  const refLabelMap = { direct:'직접 방문', search:'검색엔진', social:'소셜/커뮤니티', ad:'광고', internal:'내부 이동', external:'기타 외부' };
+  const refs = (data.referrers||[]).map(r=>({label: refLabelMap[r.label]||r.label, count:r.count}));
+  doughnut('cRefType', 'refType', refs);
+
+  const countries = data.countries||[];
+  const totalC = countries.reduce((s,r)=>s+(r.count||0),0);
+  document.getElementById('countryBody').innerHTML = countries.length
+    ? countries.map((r,i)=>`<tr><td class="rn">${i+1}</td><td>${countryFlag(r.label)} ${r.label||'미상'}</td><td>${fmtN(r.count)}</td><td>${totalC?Math.round(r.count/totalC*100):0}%</td></tr>`).join('')
+    : `<tr><td colspan="4" class="empty-row">데이터 없음</td></tr>`;
+
+  const sources = data.ref_sources||[];
+  document.getElementById('refSourceBody').innerHTML = sources.length
+    ? sources.map((r,i)=>`<tr><td class="rn">${i+1}</td><td>${r.label}</td><td>${fmtN(r.count)}</td></tr>`).join('')
+    : `<tr><td colspan="3" class="empty-row">데이터 없음</td></tr>`;
+}
+
+function countryFlag(code) {
+  if (!code || code.length !== 2) return '🌐';
+  const cc = code.toUpperCase();
+  try { return String.fromCodePoint(...[...cc].map(c=>127397+c.charCodeAt())); } catch(_) { return '🌐'; }
+}
+
+// ── 콘텐츠 탭 ──────────────────────────────────────────
+function renderContentTable(content) {
+  document.getElementById('contentBody').innerHTML = content.length
+    ? content.map((r,i)=>`<tr>
+        <td class="rn">${i+1}</td>
+        <td><strong>${r.name||r.path}</strong><div style="font-size:10px;color:var(--g400)">${r.path||''}</div></td>
+        <td>${fmtN(r.pageviews)}</td>
+        <td>${fmtN(r.unique_sessions)}</td>
+        <td>${fmtSec(r.avg_time_on_page)}</td>
+        <td>${r.avg_scroll||0}%</td>
+        <td>${r.exit_rate||0}%</td>
+      </tr>`).join('')
+    : `<tr><td colspan="7" class="empty-row">데이터 없음 — 트래픽이 쌓이면 표시됩니다</td></tr>`;
+}
+
+function renderSearchTable(searches) {
+  document.getElementById('searchBody').innerHTML = searches.length
+    ? searches.map((r,i)=>`<tr><td class="rn">${i+1}</td><td>${r.label||'—'}</td><td>${fmtN(r.count)}</td></tr>`).join('')
+    : `<tr><td colspan="3" class="empty-row">데이터 없음</td></tr>`;
+}
+
+// ── 툴 탭 ──────────────────────────────────────────────
 function renderToolCharts(tools) {
-  // 가로 막대
   const ctx = document.getElementById('cToolBar').getContext('2d');
   if (chartInst.toolBar) chartInst.toolBar.destroy();
   chartInst.toolBar = new Chart(ctx,{
     type:'bar',
     data:{
-      labels:tools.slice(0,7).map(t=>t.tool),
-      datasets:[{label:'누적 사용',data:tools.slice(0,7).map(t=>t.total||0),backgroundColor:'#3d7a5e',borderRadius:4}],
+      labels: tools.length ? tools.slice(0,7).map(t=>t.tool) : ['데이터 없음'],
+      datasets:[{label:'누적 사용',data: tools.length ? tools.slice(0,7).map(t=>t.total||0) : [0],backgroundColor:'#3d7a5e',borderRadius:4}],
     },
     options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}}},
   });
-  // 도넛 (TOP 5)
   const ctx2 = document.getElementById('cTools').getContext('2d');
   if (chartInst.tools) chartInst.tools.destroy();
   chartInst.tools = new Chart(ctx2,{
     type:'doughnut',
     data:{
-      labels:tools.slice(0,5).map(t=>t.tool),
-      datasets:[{data:tools.slice(0,5).map(t=>t.total||0),backgroundColor:['#3d7a5e','#5a9e7e','#c87f1a','#1a5fc8','#6b3dbe'],borderWidth:2,borderColor:'#fff'}],
+      labels: tools.length ? tools.slice(0,5).map(t=>t.tool) : ['데이터 없음'],
+      datasets:[{data: tools.length ? tools.slice(0,5).map(t=>t.total||0) : [1],backgroundColor: tools.length ? PALETTE : ['#e5e5e0'],borderWidth:2,borderColor:'#fff'}],
     },
     options:{responsive:true,plugins:{legend:{position:'right'}}},
   });
-}
-
-function renderDeviceChart() {
-  // 실제 데이터 없으면 샘플
-  const ctx = document.getElementById('cDevice').getContext('2d');
-  if (chartInst.device) chartInst.device.destroy();
-  chartInst.device = new Chart(ctx,{
-    type:'doughnut',
-    data:{
-      labels:['모바일','데스크톱','태블릿'],
-      datasets:[{data:[62,32,6],backgroundColor:['#3d7a5e','#1a5fc8','#c87f1a'],borderWidth:2,borderColor:'#fff'}],
-    },
-    options:{responsive:true,plugins:{legend:{position:'right'}}},
-  });
-}
-
-function renderPageTable(data) {
-  const pages = data.pages && data.pages.length ? data.pages : [
-    {name:'해열제계산기', path:'/tools/fever-medicine.html', pv:4200},
-    {name:'이유식체커',   path:'/tools/weaning-checker.html',pv:3800},
-    {name:'홈',           path:'/index.html',                pv:3200},
-    {name:'성장백분위',   path:'/tools/growth-percentile.html',pv:2900},
-    {name:'임신주수',     path:'/tools/pregnancy-week.html', pv:2400},
-    {name:'지원금계산기', path:'/tools/subsidy-calculator.html',pv:2100},
-    {name:'꿀팁',         path:'/tips.html',                 pv:1800},
-    {name:'수면계산기',   path:'/tools/sleep-calculator.html',pv:1600},
-    {name:'이유식플래너', path:'/tools/weaning-planner.html',pv:1200},
-    {name:'액티비티',     path:'/play.html',                 pv:900},
-  ];
-  const total = pages.reduce((s,r)=>s+(r.pv||0),0);
-  const max   = pages[0]?.pv || 1;
-  document.getElementById('pageBody').innerHTML = pages.map((r,i)=>`<tr>
-    <td class="rn">${i+1}</td>
-    <td><strong>${r.name||r.path}</strong>
-      <div style="font-size:10px;color:var(--g400)">${r.path||''}</div>
-      <div class="bar" style="width:${Math.round((r.pv||0)/max*100)}%"></div></td>
-    <td>${fmtN(r.pv)}</td>
-    <td>${fmtN(r.pv)}</td>
-    <td>${total?Math.round((r.pv||0)/total*100):0}%</td>
-  </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">데이터 없음</td></tr>';
-}
-
-function renderSearchTable(searches) {
-  const rows = searches && searches.length ? searches : [
-    {label:'이유식 시작',count:42},{label:'타이레놀 용량',count:38},
-    {label:'수면 시간',count:29},{label:'성장 백분위',count:24},{label:'아동수당',count:19},
-  ];
-  document.getElementById('searchBody').innerHTML = rows.map((r,i)=>`<tr>
-    <td class="rn">${i+1}</td><td>${r.label||'—'}</td><td>${fmtN(r.count)}</td>
-  </tr>`).join('') || '<tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--muted);">데이터 없음</td></tr>';
-}
-
-function renderAffTable(outbounds) {
-  const rows = outbounds && outbounds.length ? outbounds : [
-    {label:'coupang.com',count:180},
-    {label:'smartstore.naver.com',count:42},
-    {label:'lego.com',count:15},
-  ];
-  document.getElementById('affBody').innerHTML = rows.map((r,i)=>`<tr>
-    <td class="rn">${i+1}</td>
-    <td>${r.label||'—'}</td>
-    <td>${fmtN(r.count)}</td>
-    <td>${fmtW(Math.round((r.count||0)*0.02*3000))}</td>
-  </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--muted);">데이터 없음</td></tr>';
 }
 
 function renderToolTable(tools) {
-  document.getElementById('toolBody').innerHTML = tools.map((t,i)=>`<tr>
+  document.getElementById('toolBody').innerHTML = tools.length ? tools.map((t,i)=>`<tr>
     <td class="rn">${i+1}</td>
     <td><strong>${t.tool}</strong></td>
     <td>${fmtN(t.total)}</td>
     <td>${fmtN(t.today)}</td>
     <td style="color:var(--muted)">${(t.last_used||'').slice(0,10)}</td>
-  </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">데이터 없음</td></tr>';
+  </tr>`).join('') : `<tr><td colspan="5" class="empty-row">데이터 없음</td></tr>`;
 }
 
+// ── 수익 탭 ──────────────────────────────────────────
 function renderRevenue(data) {
   const t   = data.totals||{};
   const d   = data.daily||[];
-  const pv  = t.pageviews||0;
-  const af  = t.affiliate_clicks||0;
-  const ad  = t.ad_impressions||0;
-  const adsenseEst   = Math.round(pv/1000*3500);
-  const affiliateEst = Math.round(af*0.02*3000);
-  const total = adsenseEst+affiliateEst;
-  const monthly = d.length ? Math.round(total/d.length*30) : 0;
+  const ads = data.ads||{by_slot:[]};
+  const affiliates = data.affiliates||[];
 
-  setText('rv-ad',      fmtN(ad));
-  setText('rv-af',      fmtN(af));
-  setText('rv-adsense', fmtW(adsenseEst));
-  setText('rv-aff-est', fmtW(affiliateEst));
-  setText('rv-total',   fmtW(total));
-  setText('rv-monthly', fmtW(monthly));
+  setText('rv-ad',      fmtN(t.ad_impressions));
+  setText('rv-adclick', fmtN(t.ad_clicks));
+  setText('rv-ctr',     (t.ad_ctr||0)+'%');
+  setText('rv-af',      fmtN(t.affiliate_clicks));
 
-  // 수익 차트
   const ctx = document.getElementById('cRevenue').getContext('2d');
   if (chartInst.rev) chartInst.rev.destroy();
   chartInst.rev = new Chart(ctx,{
@@ -653,7 +622,7 @@ function renderRevenue(data) {
     data:{
       labels:d.map(r=>fmtDate(r.date)),
       datasets:[{
-        label:'AdSense 추정(원)',
+        label:'AdSense 노출 추정(원)',
         data:d.map(r=>Math.round((r.pageviews||0)/1000*3500)),
         backgroundColor:'#3d7a5e',borderRadius:3,
       }],
@@ -661,11 +630,13 @@ function renderRevenue(data) {
     options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true}}},
   });
 
-  // 어필리에이트 테이블 (데모)
-  const affSample=[['coupang.com',180,fmtW(Math.round(180*0.02*3000))],['smartstore.naver.com',42,fmtW(Math.round(42*0.02*2000))],['lego.com',15,fmtW(Math.round(15*0.02*5000))]];
-  document.getElementById('affBody').innerHTML = affSample.map((r,i)=>`<tr>
-    <td class="rn">${i+1}</td><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>
-  </tr>`).join('');
+  document.getElementById('adSlotBody').innerHTML = ads.by_slot.length
+    ? ads.by_slot.map(r=>`<tr><td>${r.slot}</td><td>${fmtN(r.impressions)}</td><td>${fmtN(r.clicks)}</td><td>${r.impressions?Math.round(r.clicks/r.impressions*1000)/10:0}%</td></tr>`).join('')
+    : `<tr><td colspan="4" class="empty-row">데이터 없음</td></tr>`;
+
+  document.getElementById('affBody').innerHTML = affiliates.length
+    ? affiliates.map((r,i)=>`<tr><td class="rn">${i+1}</td><td>${r.domain}</td><td>${fmtN(r.clicks)}</td><td>${fmtW(Math.round((r.clicks||0)*0.02*3000))}</td></tr>`).join('')
+    : `<tr><td colspan="4" class="empty-row">데이터 없음</td></tr>`;
 }
 
 // ── 원본 데이터 탭 ────────────────────────────────────
@@ -673,12 +644,14 @@ async function loadRaw() {
   const sheet = document.getElementById('rawSheetSel').value;
   const wrap  = document.getElementById('rawTable');
   wrap.innerHTML = '<div class="loading"><span class="spin">⏳</span> 로드 중...</div>';
+  if (!TRACKER) { wrap.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--muted);">TRACKER_URL을 먼저 설정 탭에서 연결하세요.</p>'; return; }
   try {
     const data = await callTracker('raw', { sheet, limit: 30 });
-    if (!data.headers || !data.rows) throw new Error('데이터 없음');
+    if (!data.headers || !data.rows) throw new Error(data.error || '데이터 없음');
+    if (!data.rows.length) { wrap.innerHTML = `<p style="text-align:center;padding:2rem;color:var(--muted);">'${sheet}' 시트에 아직 데이터가 없어요.</p>`; return; }
     wrap.innerHTML = `<div style="overflow-x:auto"><table>
       <thead><tr>${data.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-      <tbody>${data.rows.slice(0,30).map(r=>`<tr>${r.map(c=>`<td>${c||''}</td>`).join('')}</tr>`).join('')}</tbody>
+      <tbody>${data.rows.slice(0,30).map(r=>`<tr>${r.map(c=>`<td>${c===''||c===null||c===undefined?'':c}</td>`).join('')}</tr>`).join('')}</tbody>
     </table></div>`;
   } catch(err) {
     wrap.innerHTML = `<p style="text-align:center;padding:2rem;color:var(--muted);">데이터를 불러올 수 없어요: ${err.message}</p>`;
@@ -693,21 +666,28 @@ async function runAI() {
 
   const t = (cached&&cached.totals)||{};
   const tools = ((cached&&cached.tools)||[]).slice(0,3).map(t=>t.tool).join(', ');
+  const devices = ((cached&&cached.devices)||[]).slice(0,3).map(d=>`${d.label}(${d.count})`).join(', ');
+  const countries = ((cached&&cached.countries)||[]).slice(0,3).map(c=>`${c.label}(${c.count})`).join(', ');
+  const refs = ((cached&&cached.referrers)||[]).slice(0,3).map(r=>`${r.label}(${r.count})`).join(', ');
+  const topContent = ((cached&&cached.content)||[]).slice(0,3).map(c=>c.name).join(', ');
+
   const prompt = `육아 웹서비스 '아기도구함' 데이터 분석가로서 아래 데이터를 보고 한국어로 답해주세요.
 
 [기간] 최근 ${days}일
-[페이지뷰] ${fmtN(t.pageviews)}
-[세션] ${fmtN(t.sessions)}
-[툴 사용] ${fmtN(t.tool_calculates)}회
-[광고 노출] ${fmtN(t.ad_impressions)}
-[어필리에이트 클릭] ${fmtN(t.affiliate_clicks)}
+[세션] ${fmtN(t.sessions)} / [페이지뷰] ${fmtN(t.pageviews)}
+[평균 체류] ${fmtSec(t.avg_session_duration)} / [이탈률] ${t.bounce_rate||0}%
+[디바이스 TOP3] ${devices}
+[국가 TOP3] ${countries}
+[유입경로 TOP3] ${refs}
+[인기 콘텐츠 TOP3] ${topContent}
 [인기 툴 TOP3] ${tools}
-[AdSense 추정] ${fmtW(Math.round((t.pageviews||0)/1000*3500))}
+[광고] 노출 ${fmtN(t.ad_impressions)} / 클릭 ${fmtN(t.ad_clicks)} / CTR ${t.ad_ctr||0}%
+[어필리에이트 클릭] ${fmtN(t.affiliate_clicks)}
 
 다음을 간결하게 작성해주세요:
 1. 📊 핵심 인사이트 3가지 (각 1~2줄)
 2. ⚡ 즉시 실행 가능한 액션 2가지
-3. 💰 수익 개선 포인트 1가지`;
+3. 💰 수익(광고·어필리에이트) 개선 포인트 1가지`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages',{
@@ -733,7 +713,6 @@ async function saveTrackerUrl() {
   sessionStorage.setItem('tracker_url', url);
   renderConfigStatus();
 
-  // ping 테스트
   const testBtn = document.querySelector('[onclick="saveTrackerUrl()"]');
   if (testBtn) { testBtn.disabled = true; testBtn.textContent = '연결 테스트 중...'; }
 

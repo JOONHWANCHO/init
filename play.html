@@ -403,6 +403,7 @@
     document.getElementById('detailView').classList.add('hidden');
     document.getElementById('actionBar').classList.add('hidden');
     document.title = '아이 액티비티 추천 | 아기도구함';
+    if (window.BTAnalytics) window.BTAnalytics.trackContentView('', '', '');
     renderCatFilter();
     renderGrid(currentCat);
     renderQuickSections();
@@ -824,12 +825,14 @@
     currentItem = item;
     document.getElementById('listView').classList.add('hidden');
     document.getElementById('detailView').classList.remove('hidden');
-  
+
     if (!item) {
+      if (window.BTAnalytics) window.BTAnalytics.trackContentView('activity', id, '');
       document.getElementById('detailContent').innerHTML = '<div class="empty-state">액티비티를 찾을 수 없어요.</div>';
       document.getElementById('actionBar').classList.add('hidden');
       return;
     }
+    if (window.BTAnalytics) window.BTAnalytics.trackContentView('activity', item.id, item.name || item.title || '');
   
     const cat = item.category || '기타';
     const col = CAT_COLORS[cat] || CAT_COLORS['기타'];
