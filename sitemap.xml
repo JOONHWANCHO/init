@@ -22,6 +22,14 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- 내 아이 성장 기록 (개인화 허브) -->
+  <url>
+    <loc>https://noriya.kr/growth.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- 수유 · 수면 -->
   <url>
     <loc>https://noriya.kr/tools/sleep-calculator.html</loc>

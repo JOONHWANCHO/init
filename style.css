@@ -97,6 +97,45 @@ body{font-family:-apple-system,'Pretendard','Apple SD Gothic Neo','Noto Sans KR'
   .site-nav .back-btn span.back-label{display:none;}
 }
 
+/* ── 내 아이 프로필 뱃지 (네비게이션) ── */
+.nav-baby-badge{display:flex;align-items:center;}
+.baby-badge-link{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:6px 12px;border-radius:99px;white-space:nowrap;transition:.15s;}
+.baby-badge-link:hover{background:rgba(255,255,255,.22);}
+.baby-badge-link.bb-cta{background:rgba(255,255,255,.9);color:var(--primary-dark);}
+.baby-badge-link.bb-cta:hover{background:#fff;}
+.bb-emoji{font-size:13px;}
+.mobile-nav .nav-baby-badge{padding:14px 1.25rem;border-bottom:1px solid var(--gray-100);}
+.mobile-nav .baby-badge-link{width:100%;justify-content:center;background:var(--primary-light);color:var(--primary-dark);padding:12px;font-size:14px;}
+.mobile-nav .baby-badge-link.bb-cta{background:var(--primary);color:#fff;}
+
+/* ── 자동입력 토스트 ── */
+.baby-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--gray-900);color:#fff;font-size:13px;font-weight:600;padding:10px 18px;border-radius:99px;opacity:0;transition:opacity .25s,transform .25s;z-index:2000;box-shadow:0 8px 24px rgba(0,0,0,.2);white-space:nowrap;}
+.baby-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.baby-toast b{color:var(--primary-mid);}
+
+/* ── 홈 대시보드 (오늘의 우리 아이) ── */
+.baby-dash-wrap{max-width:760px;margin:0 auto;padding:0 1rem;}
+.baby-dash-card{background:linear-gradient(135deg,var(--primary-light),#fff);border:1px solid var(--primary-mid);border-radius:16px;padding:1.25rem 1.4rem;margin:1rem 0 1.5rem;}
+.baby-dash-empty{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.bd-emoji{font-size:34px;line-height:1;}
+.bd-empty-text{flex:1;min-width:200px;}
+.bd-empty-title{font-weight:800;font-size:15px;color:var(--text);margin-bottom:2px;}
+.bd-empty-desc{font-size:12.5px;color:var(--text-muted);line-height:1.5;}
+.bd-cta-btn{display:inline-block;background:var(--primary);color:#fff;font-weight:700;font-size:13px;padding:10px 18px;border-radius:99px;text-decoration:none;white-space:nowrap;}
+.bd-cta-btn:hover{background:var(--primary-dark);}
+.bd-cta-full{width:100%;text-align:center;box-sizing:border-box;margin-top:.9rem;}
+.bd-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;}
+.bd-head-emoji{width:42px;height:42px;border-radius:50%;background:var(--primary-mid);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.bd-name{font-weight:800;font-size:15px;color:var(--text);}
+.bd-age{font-size:12.5px;color:var(--text-muted);}
+.bd-streak{margin-left:auto;background:var(--amber-light);color:var(--amber);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:99px;white-space:nowrap;}
+.bd-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.bd-stat{background:#fff;border:1px solid var(--gray-100);border-radius:12px;padding:.7rem .85rem;}
+.bd-stat-label{font-size:11px;color:var(--text-muted);font-weight:700;margin-bottom:4px;}
+.bd-stat-value{font-size:13.5px;font-weight:800;color:var(--text);line-height:1.3;}
+.bd-stat-sub{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+@media (max-width:480px){.bd-stats{grid-template-columns:1fr;}}
+
 /* ── BREADCRUMB ── */
 .breadcrumb{max-width:740px;margin:0 auto;padding:.85rem 1rem .25rem;font-size:12px;color:var(--text-muted);display:flex;flex-wrap:wrap;align-items:center;gap:5px;}
 .breadcrumb a{color:var(--text-muted);text-decoration:none;}

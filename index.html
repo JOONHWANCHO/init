@@ -24,6 +24,7 @@
 <script src="config.js"></script>
 <script src="analytics.js"></script>
 <script src="nav.js" defer></script>
+<script src="baby.js" defer></script>
 <!-- Google AdSense: ca-pub-6517109263592669 를 본인 Publisher ID로 교체하세요 -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6517109263592669" crossorigin="anonymous"></script>
 
@@ -91,13 +92,14 @@ footer a{color:var(--primary);text-decoration:none;}
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "아기도구함", "url": "https://noriya.kr/", "logo": "https://noriya.kr/og-default.png"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "아기도구함 육아 도구 모음", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "아기 수면 사이클 계산기", "url": "https://noriya.kr/tools/sleep-calculator.html"}, {"@type": "ListItem", "position": 2, "name": "수유 간격 타이머 & 일지", "url": "https://noriya.kr/tools/feeding-tracker.html"}, {"@type": "ListItem", "position": 3, "name": "영아산통 체크 & 달래기 가이드", "url": "https://noriya.kr/tools/colic-checker.html"}, {"@type": "ListItem", "position": 4, "name": "이유식 재료 월령 체커", "url": "https://noriya.kr/tools/weaning-checker.html"}, {"@type": "ListItem", "position": 5, "name": "분유 · 수유량 계산기", "url": "https://noriya.kr/tools/milk-calculator.html"}, {"@type": "ListItem", "position": 6, "name": "이유식 스케줄 플래너", "url": "https://noriya.kr/tools/weaning-planner.html"}, {"@type": "ListItem", "position": 7, "name": "아이 성장 백분위수 계산기", "url": "https://noriya.kr/tools/growth-percentile.html"}, {"@type": "ListItem", "position": 8, "name": "발달 마일스톤 체크리스트", "url": "https://noriya.kr/tools/milestone-checker.html"}, {"@type": "ListItem", "position": 9, "name": "유치 발육 시기 체커", "url": "https://noriya.kr/tools/tooth-checker.html"}, {"@type": "ListItem", "position": 10, "name": "소아 해열제 용량 계산기", "url": "https://noriya.kr/tools/fever-medicine.html"}, {"@type": "ListItem", "position": 11, "name": "체온 기록 & 해열제 교차 타이머", "url": "https://noriya.kr/tools/fever-tracker.html"}, {"@type": "ListItem", "position": 12, "name": "소아 약 종류별 복용 가이드", "url": "https://noriya.kr/tools/medicine-guide.html"}, {"@type": "ListItem", "position": 13, "name": "입소·입학 날짜 계산기", "url": "https://noriya.kr/tools/school-date.html"}, {"@type": "ListItem", "position": 14, "name": "육아 지원금 총정리 계산기", "url": "https://noriya.kr/tools/subsidy-calculator.html"}, {"@type": "ListItem", "position": 15, "name": "육아휴직 급여 계산기", "url": "https://noriya.kr/tools/parental-leave.html"}, {"@type": "ListItem", "position": 16, "name": "임신 주수 & 출산 예정일 계산기", "url": "https://noriya.kr/tools/pregnancy-week.html"}, {"@type": "ListItem", "position": 17, "name": "아기 이름 짓기 도우미", "url": "https://noriya.kr/tools/baby-name.html"}, {"@type": "ListItem", "position": 18, "name": "출산 준비물 체크리스트", "url": "https://noriya.kr/tools/birth-checklist.html"}]}</script>
 </head>
-<body>
+<body data-root-prefix="">
 
 <nav class="site-nav">
   <div class="nav-inner">
     <a href="index.html" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">홈</a>
+      <a href="growth.html" class="nav-link">성장기록</a>
       <div class="nav-item">
         <button class="nav-link" id="toolsMenuBtn" type="button" aria-expanded="false" aria-haspopup="true">도구 모음 <span class="caret">▾</span></button>
         <div class="mega-menu" id="toolsMegaMenu" role="menu">
@@ -158,13 +160,16 @@ footer a{color:var(--primary);text-decoration:none;}
       <a href="tips.html" class="nav-link">육아 꿀팁</a>
     </div>
     <div class="nav-spacer"></div>
+    <span class="nav-baby-badge" data-baby-badge></span>
     <button class="nav-search-btn" id="navSearchBtn" type="button" aria-label="도구 검색">🔍</button>
     <button class="nav-toggle" id="navToggleBtn" type="button" aria-label="메뉴 열기">☰</button>
   </div>
 </nav>
 
 <div class="mobile-nav" id="mobileNav">
+  <div class="nav-baby-badge" data-baby-badge></div>
   <a href="index.html" class="mn-link">🏠 홈</a>
+  <a href="growth.html" class="mn-link">📈 성장기록</a>
   <a href="play.html" class="mn-link">🎪 놀이 추천</a>
   <a href="tips.html" class="mn-link">🍯 육아 꿀팁</a>
   <div class="mn-group-title">도구 모음 (18개)</div>
@@ -221,6 +226,10 @@ footer a{color:var(--primary);text-decoration:none;}
   <h1>우리 아이를 위한<br><em>모든 계산기</em></h1>
   <p class="sub">수면부터 이유식, 성장, 건강, 지원금까지.<br>부모가 매일 찾는 도구를 한 곳에서.</p>
   <span class="tool-count">✦ 도구 18개 무료 제공</span>
+</div>
+
+<div class="baby-dash-wrap">
+  <div id="babyDashboard"></div>
 </div>
 
 <div class="search-bar-wrap">

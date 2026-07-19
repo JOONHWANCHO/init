@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://noriya.kr/growth.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://noriya.kr/growth.html">
+<meta property="og:site_name" content="아기도구함">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://noriya.kr/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="내 아이 성장 기록 & 예방접종 D-day | 아기도구함">
+<meta name="twitter:description" content="우리 아이 정보를 등록하면 나이·예방접종 D-day·성장 그래프가 자동으로 계산돼요. 매번 다시 입력할 필요 없이 모든 도구에 자동 반영됩니다.">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<title>내 아이 성장 기록 & 예방접종 D-day | 아기도구함</title>
+<meta name="description" content="우리 아이 정보를 등록하면 나이·예방접종 D-day·성장 그래프가 자동으로 계산돼요. 매번 다시 입력할 필요 없이 모든 도구에 자동 반영됩니다.">
+<meta name="theme-color" content="#3d7a5e">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+<script src="analytics.js"></script>
+<script src="nav.js" defer></script>
+<script src="baby.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://noriya.kr/index.html"}, {"@type": "ListItem", "position": 2, "name": "내 아이 성장 기록", "item": "https://noriya.kr/growth.html"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "내 아이 성장 기록 & 예방접종 D-day", "description": "우리 아이 정보를 등록하면 나이·예방접종 D-day·성장 그래프가 자동으로 계산돼요.", "url": "https://noriya.kr/growth.html", "applicationCategory": "LifestyleApplication", "operatingSystem": "Web", "inLanguage": "ko", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}}</script>
+<style>
+.growth-wrap{max-width:740px;margin:0 auto;padding:1.25rem 1rem 3rem;}
+.section-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;color:var(--text);margin:0 0 .9rem;}
+.section-title .st-icon{font-size:19px;}
+.section-desc{font-size:12.5px;color:var(--text-muted);margin:-.5rem 0 1rem;}
+
+/* 프로필 폼 */
+.profile-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.profile-form-row.full{grid-template-columns:1fr;}
+.privacy-note{display:flex;align-items:flex-start;gap:6px;font-size:11.5px;color:var(--text-muted);background:var(--surface);border-radius:var(--radius-sm);padding:.7rem .85rem;margin-top:1rem;line-height:1.5;}
+.profile-chip-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:1rem;}
+.profile-chip{display:flex;align-items:center;gap:8px;background:var(--primary-light);border:1.5px solid var(--primary-mid);border-radius:99px;padding:8px 14px 8px 10px;}
+.profile-chip .pc-emoji{width:28px;height:28px;border-radius:50%;background:var(--primary-mid);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.profile-chip .pc-name{font-weight:800;font-size:13px;color:var(--primary-dark);}
+.profile-chip .pc-age{font-size:11.5px;color:var(--text-muted);}
+.profile-chip-actions{display:flex;gap:6px;}
+.profile-chip-actions button{border:none;background:none;cursor:pointer;font-size:12px;color:var(--text-muted);text-decoration:underline;font-family:inherit;padding:2px;}
+.profile-chip-actions button:hover{color:var(--red);}
+
+/* 오늘 요약 */
+.today-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.today-card{background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius);padding:1rem 1.1rem;}
+.today-card .tc-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.today-card .tc-value{font-size:1.35rem;font-weight:800;color:var(--primary-dark);line-height:1.25;}
+.today-card .tc-sub{font-size:11.5px;color:var(--text-muted);margin-top:3px;}
+@media (max-width:480px){.today-grid{grid-template-columns:1fr;}}
+
+/* 예방접종 */
+.vac-list{display:flex;flex-direction:column;gap:6px;}
+.vac-row{display:flex;align-items:center;gap:10px;padding:.65rem .8rem;background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius-sm);}
+.vac-row.is-done{opacity:.55;}
+.vac-check{width:20px;height:20px;flex-shrink:0;accent-color:var(--primary);cursor:pointer;}
+.vac-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+.vac-row.is-done .vac-name{text-decoration:line-through;}
+.vac-due{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+details.vac-done-details{margin-top:.6rem;}
+details.vac-done-details summary{font-size:12px;color:var(--text-muted);cursor:pointer;padding:.4rem 0;}
+
+/* 성장기록 */
+.growth-add-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.growth-add-row .full-span{grid-column:1/-1;}
+@media (max-width:560px){.growth-add-row{grid-template-columns:1fr 1fr;}}
+.chart-wrap{position:relative;height:220px;margin:1.1rem 0;}
+.growth-history{display:flex;flex-direction:column;gap:6px;margin-top:.75rem;}
+.gh-row{display:flex;align-items:center;gap:10px;padding:.6rem .8rem;background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius-sm);font-size:12.5px;}
+.gh-date{font-weight:700;color:var(--text);min-width:82px;}
+.gh-vals{flex:1;color:var(--text-muted);}
+.gh-note{color:var(--text-muted);font-style:italic;}
+.gh-del{border:none;background:none;color:var(--gray-400);cursor:pointer;font-size:15px;padding:2px 4px;}
+.gh-del:hover{color:var(--red);}
+.empty-note{font-size:12.5px;color:var(--text-muted);padding:1rem;text-align:center;background:var(--surface);border-radius:var(--radius-sm);}
+
+/* 뱃지 */
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+.badge-item{background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius);padding:1rem .75rem;text-align:center;}
+.badge-item.locked{opacity:.38;filter:grayscale(1);}
+.badge-item .bi-emoji{font-size:28px;line-height:1;margin-bottom:6px;}
+.badge-item .bi-name{font-size:11.5px;font-weight:700;color:var(--text);}
+.badge-item .bi-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+.streak-strip{display:flex;align-items:center;gap:14px;background:var(--amber-light);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1rem;}
+.streak-strip .ss-emoji{font-size:30px;}
+.streak-strip .ss-num{font-size:1.3rem;font-weight:800;color:#7a4d0a;}
+.streak-strip .ss-label{font-size:11.5px;color:#8a5a10;}
+</style>
+</head>
+<body data-root-prefix="">
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">홈</a>
+      <a href="growth.html" class="nav-link is-active">성장기록</a>
+      <div class="nav-item">
+        <button class="nav-link" id="toolsMenuBtn" type="button" aria-expanded="false" aria-haspopup="true">도구 모음 <span class="caret">▾</span></button>
+        <div class="mega-menu" id="toolsMegaMenu" role="menu">
+          <div class="mega-grid">
+        <div class="mega-cat">
+          <a href="index.html#cat-수면수유" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🌙</span>수유 · 수면
+          </a>
+          <a href="tools/sleep-calculator.html">아기 수면 사이클 계산기</a>
+          <a href="tools/feeding-tracker.html">수유 간격 타이머 & 일지</a>
+          <a href="tools/colic-checker.html">영아산통 체크 & 달래기 가이드</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-이유식영양" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🥣</span>이유식 · 영양
+          </a>
+          <a href="tools/weaning-checker.html">이유식 재료 월령 체커</a>
+          <a href="tools/milk-calculator.html">분유 · 수유량 계산기</a>
+          <a href="tools/weaning-planner.html">이유식 스케줄 플래너</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-성장발달" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">📏</span>성장 · 발달
+          </a>
+          <a href="tools/growth-percentile.html">아이 성장 백분위수 계산기</a>
+          <a href="tools/milestone-checker.html">발달 마일스톤 체크리스트</a>
+          <a href="tools/tooth-checker.html">유치 발육 시기 체커</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-건강응급" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">💊</span>건강 · 응급
+          </a>
+          <a href="tools/fever-medicine.html">소아 해열제 용량 계산기</a>
+          <a href="tools/fever-tracker.html">체온 기록 & 해열제 교차 타이머</a>
+          <a href="tools/medicine-guide.html">소아 약 종류별 복용 가이드</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-입학지원금" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🏫</span>입학 · 지원금
+          </a>
+          <a href="tools/school-date.html">입소·입학 날짜 계산기</a>
+          <a href="tools/subsidy-calculator.html">육아 지원금 총정리 계산기</a>
+          <a href="tools/parental-leave.html">육아휴직 급여 계산기</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-임신준비" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🤰</span>임신 · 준비
+          </a>
+          <a href="tools/pregnancy-week.html">임신 주수 & 출산 예정일 계산기</a>
+          <a href="tools/baby-name.html">아기 이름 짓기 도우미</a>
+          <a href="tools/birth-checklist.html">출산 준비물 체크리스트</a>
+        </div>
+          </div>
+          <div class="mega-menu-footer"><a href="index.html#toolHub">전체 도구 18개 한눈에 보기 →</a></div>
+        </div>
+      </div>
+      <a href="play.html" class="nav-link">놀이 추천</a>
+      <a href="tips.html" class="nav-link">육아 꿀팁</a>
+    </div>
+    <div class="nav-spacer"></div>
+    <span class="nav-baby-badge" data-baby-badge></span>
+    <button class="nav-search-btn" id="navSearchBtn" type="button" aria-label="도구 검색">🔍</button>
+    <button class="nav-toggle" id="navToggleBtn" type="button" aria-label="메뉴 열기">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <div class="nav-baby-badge" data-baby-badge></div>
+  <a href="index.html" class="mn-link">🏠 홈</a>
+  <a href="growth.html" class="mn-link">📈 성장기록</a>
+  <a href="play.html" class="mn-link">🎪 놀이 추천</a>
+  <a href="tips.html" class="mn-link">🍯 육아 꿀팁</a>
+  <div class="mn-group-title">도구 모음 (18개)</div>
+        <div class="mn-cat open">
+          <div class="mn-cat-head">🌙 수유 · 수면 <span class="mn-caret">▾</span></div>
+          <a href="tools/sleep-calculator.html">아기 수면 사이클 계산기</a>
+          <a href="tools/feeding-tracker.html">수유 간격 타이머 & 일지</a>
+          <a href="tools/colic-checker.html">영아산통 체크 & 달래기 가이드</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🥣 이유식 · 영양 <span class="mn-caret">▾</span></div>
+          <a href="tools/weaning-checker.html">이유식 재료 월령 체커</a>
+          <a href="tools/milk-calculator.html">분유 · 수유량 계산기</a>
+          <a href="tools/weaning-planner.html">이유식 스케줄 플래너</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">📏 성장 · 발달 <span class="mn-caret">▾</span></div>
+          <a href="tools/growth-percentile.html">아이 성장 백분위수 계산기</a>
+          <a href="tools/milestone-checker.html">발달 마일스톤 체크리스트</a>
+          <a href="tools/tooth-checker.html">유치 발육 시기 체커</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">💊 건강 · 응급 <span class="mn-caret">▾</span></div>
+          <a href="tools/fever-medicine.html">소아 해열제 용량 계산기</a>
+          <a href="tools/fever-tracker.html">체온 기록 & 해열제 교차 타이머</a>
+          <a href="tools/medicine-guide.html">소아 약 종류별 복용 가이드</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🏫 입학 · 지원금 <span class="mn-caret">▾</span></div>
+          <a href="tools/school-date.html">입소·입학 날짜 계산기</a>
+          <a href="tools/subsidy-calculator.html">육아 지원금 총정리 계산기</a>
+          <a href="tools/parental-leave.html">육아휴직 급여 계산기</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🤰 임신 · 준비 <span class="mn-caret">▾</span></div>
+          <a href="tools/pregnancy-week.html">임신 주수 & 출산 예정일 계산기</a>
+          <a href="tools/baby-name.html">아기 이름 짓기 도우미</a>
+          <a href="tools/birth-checklist.html">출산 준비물 체크리스트</a>
+        </div>
+</div>
+
+<div class="nav-search-overlay" id="navSearchOverlay">
+  <div class="nav-search-box">
+    <form id="navSearchForm" action="index.html" method="get">
+      <input type="text" name="q" id="navSearchInput" placeholder="도구 검색 (예: 수면, 해열제, 이유식)" autocomplete="off">
+      <button type="submit">검색</button>
+    </form>
+    <div class="nav-search-hint">Esc 키를 눌러 닫기 · 홈 화면 검색창과 연동돼요</div>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">My Baby</div>
+  <h1>내 아이 성장 기록</h1>
+  <p>생년월일 한 번만 등록하면 나이·예방접종 D-day·이유식 시기를 자동으로 계산하고, 18개 도구에도 바로 반영돼요.</p>
+</div>
+
+<div class="growth-wrap">
+
+  <!-- ── 프로필 ─────────────────────────── -->
+  <div class="card-raised" id="profileSection">
+    <div class="section-title"><span class="st-icon">👶</span>아이 정보</div>
+    <div id="profileDisplay"></div>
+    <form id="profileForm">
+      <div class="profile-form-row">
+        <div class="input-group">
+          <label>이름 (별명 가능)</label>
+          <input type="text" id="pfName" placeholder="예: 민준">
+        </div>
+        <div class="input-group">
+          <label>생년월일 · 출산 예정일</label>
+          <input type="date" id="pfBirthdate">
+        </div>
+      </div>
+      <div class="profile-form-row full">
+        <div class="input-group">
+          <label>성별 (선택)</label>
+          <div class="btn-group" id="pfGenderGroup">
+            <button type="button" class="pill-btn active" data-g="">선택 안 함</button>
+            <button type="button" class="pill-btn" data-g="M">남아</button>
+            <button type="button" class="pill-btn" data-g="F">여아</button>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="calc-btn" id="profileSaveBtn">저장하기</button>
+    </form>
+    <div class="privacy-note">🔒 입력한 정보는 이 브라우저(기기)에만 저장되며, 서버로 전송되거나 외부에 공개되지 않아요.</div>
+  </div>
+
+  <!-- ── 오늘 요약 (프로필 있을 때만) ─────── -->
+  <div id="todaySection" class="section-gap hidden">
+    <div class="section-title"><span class="st-icon">📅</span>오늘의 우리 아이</div>
+    <div class="today-grid">
+      <div class="today-card">
+        <div class="tc-label">🍼 나이</div>
+        <div class="tc-value" id="tcAge">-</div>
+        <div class="tc-sub" id="tcAgeSub"></div>
+      </div>
+      <div class="today-card">
+        <div class="tc-label">🥣 이유식 단계</div>
+        <div class="tc-value" id="tcWeaning">-</div>
+        <div class="tc-sub" id="tcWeaningSub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 연속방문 스트릭 & 뱃지 ───────────── -->
+  <div class="section-gap">
+    <div class="section-title"><span class="st-icon">🔥</span>연속 방문 &amp; 뱃지</div>
+    <div class="streak-strip">
+      <span class="ss-emoji">🔥</span>
+      <div>
+        <div class="ss-num" id="streakCurrent">0일 연속 방문</div>
+        <div class="ss-label" id="streakSub">누적 방문 0회 · 최장 기록 0일</div>
+      </div>
+    </div>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+
+  <!-- ── 예방접종 D-day (프로필 있을 때만) ── -->
+  <div id="vaccineSection" class="section-gap hidden">
+    <div class="section-title"><span class="st-icon">💉</span>예방접종 D-day</div>
+    <div class="section-desc">질병관리청 국가필수예방접종 표준 일정을 간소화한 참고용 정보예요. 정확한 접종 시기와 종류는 소아청소년과 진료 시 꼭 확인하세요.</div>
+    <div class="vac-list" id="vacUpcoming"></div>
+    <details class="vac-done-details">
+      <summary id="vacDoneSummary">완료한 접종 보기</summary>
+      <div class="vac-list" id="vacDone" style="margin-top:.5rem;"></div>
+    </details>
+  </div>
+
+  <!-- ── 성장 기록 (프로필 있을 때만) ─────── -->
+  <div id="growthLogSection" class="section-gap hidden">
+    <div class="section-title"><span class="st-icon">📈</span>성장 기록</div>
+    <div class="section-desc">몸무게·키를 기록하면 변화 추이를 그래프로 볼 수 있어요. 백분위수까지 자세히 보려면 성장 백분위수 계산기를 이용하세요.</div>
+    <form id="growthForm" class="growth-add-row">
+      <div class="input-group"><label>날짜</label><input type="date" id="grDate"></div>
+      <div class="input-group"><label>몸무게(kg)</label><input type="number" step="0.1" id="grWeight" placeholder="예: 8.2"></div>
+      <div class="input-group"><label>키(cm)</label><input type="number" step="0.1" id="grHeight" placeholder="예: 68.5"></div>
+      <div class="input-group full-span"><label>메모 (선택)</label><input type="text" id="grNote" placeholder="예: 정기검진, 감기 회복 후 등"></div>
+      <button type="submit" class="calc-btn full-span">기록 추가</button>
+    </form>
+    <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+    <div class="growth-history" id="growthHistory"></div>
+    <div style="margin-top:.9rem;">
+      <a href="tools/growth-percentile.html" class="bd-cta-btn">성장 백분위수 자세히 보기 →</a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    이 페이지의 모든 정보(아이 정보, 성장 기록, 예방접종 체크, 방문 기록)는 서버로 전송되지 않고 이 브라우저에만 저장됩니다.
+    브라우저 저장공간을 지우거나 다른 기기·브라우저로 접속하면 데이터가 유지되지 않으니 주의하세요.
+    예방접종 일정은 참고용 일반 정보이며, 개별 아동의 건강 상태에 따라 달라질 수 있으므로 반드시 소아청소년과 진료를 통해 확인하시기 바랍니다.
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(function () {
+  function ready(fn) {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  const WEANING_STAGES = [
+    { max: 4, label: '모유·분유 수유기', desc: '이유식은 보통 생후 4~6개월부터 시작해요' },
+    { max: 6, label: '초기 이유식 (미음)', desc: '알레르기 반응을 살피며 한 가지씩 시도' },
+    { max: 9, label: '중기 이유식 (죽)', desc: '덩어리감을 조금씩 늘려가는 시기' },
+    { max: 12, label: '후기 이유식 (진밥)', desc: '스스로 씹는 연습이 중요한 시기' },
+    { max: 999, label: '유아식', desc: '가족 식사에 가까운 진밥·반찬으로 전환' },
+  ];
+  function weaningStage(months) {
+    return WEANING_STAGES.find((s) => months < s.max) || WEANING_STAGES[WEANING_STAGES.length - 1];
+  }
+
+  let chartInstance = null;
+
+  function render() {
+    if (!window.BabyProfile) return;
+    const BP = window.BabyProfile;
+    const profile = BP.getProfile();
+
+    renderProfileDisplay(profile);
+    renderTodaySection(profile);
+    renderStreakAndBadges();
+    renderVaccineSection(profile);
+    renderGrowthSection(profile);
+  }
+
+  function renderProfileDisplay(profile) {
+    const el = document.getElementById('profileDisplay');
+    const genderGroup = document.getElementById('pfGenderGroup');
+    if (profile && profile.birthdate) {
+      const info = window.BabyProfile.ageInfo(profile.birthdate);
+      el.innerHTML =
+        '<div class="profile-chip-row"><div class="profile-chip">' +
+        '<span class="pc-emoji">' + (profile.gender === 'F' ? '👧' : profile.gender === 'M' ? '👦' : '👶') + '</span>' +
+        '<div><div class="pc-name">' + escapeHtml(profile.name || '우리 아이') + '</div>' +
+        '<div class="pc-age">' + (info ? info.text : '') + '</div></div>' +
+        '</div><div class="profile-chip-actions"><button type="button" id="pfResetBtn">정보 삭제</button></div></div>';
+
+      const resetBtn = document.getElementById('pfResetBtn');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          if (confirm('저장된 아이 정보와 성장 기록, 예방접종 체크가 모두 삭제됩니다. 계속할까요?')) {
+            window.BabyProfile.clearProfile();
+            document.getElementById('profileForm').reset();
+            render();
+          }
+        };
+      }
+
+      document.getElementById('pfName').value = profile.name || '';
+      document.getElementById('pfBirthdate').value = profile.birthdate || '';
+      Array.from(genderGroup.children).forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.g === (profile.gender || ''));
+      });
+    } else {
+      el.innerHTML = '';
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('#pfGenderGroup .pill-btn');
+    if (!btn) return;
+    Array.from(btn.parentElement.children).forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+
+  ready(function () {
+    const form = document.getElementById('profileForm');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('pfName').value.trim();
+      const birthdate = document.getElementById('pfBirthdate').value;
+      const genderBtn = document.querySelector('#pfGenderGroup .pill-btn.active');
+      const gender = genderBtn ? genderBtn.dataset.g : '';
+      if (!birthdate) { alert('생년월일(또는 출산 예정일)을 입력해주세요.'); return; }
+      window.BabyProfile.saveProfile({ name: name, birthdate: birthdate, gender: gender });
+      window.BabyProfile.renderNavBadge();
+      if (typeof window.BabyProfile.renderHomeDashboard === 'function') window.BabyProfile.renderHomeDashboard();
+      render();
+    });
+
+    document.getElementById('growthForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const date = document.getElementById('grDate').value || window.BabyProfile.todayStr();
+      const weight = document.getElementById('grWeight').value;
+      const height = document.getElementById('grHeight').value;
+      const note = document.getElementById('grNote').value;
+      if (!weight && !height) { alert('몸무게 또는 키 중 하나는 입력해주세요.'); return; }
+      window.BabyProfile.addRecord({ date: date, weight: weight, height: height, note: note });
+      this.reset();
+      renderStreakAndBadges();
+      renderGrowthSection(window.BabyProfile.getProfile());
+    });
+
+    render();
+  });
+
+  function renderTodaySection(profile) {
+    const section = document.getElementById('todaySection');
+    if (!profile || !profile.birthdate) { section.classList.add('hidden'); return; }
+    const info = window.BabyProfile.ageInfo(profile.birthdate);
+    section.classList.remove('hidden');
+    document.getElementById('tcAge').textContent = info.text;
+    document.getElementById('tcAgeSub').textContent = info.isUnborn ? '아직 만나기 전이에요' : ('생후 ' + info.days + '일째');
+
+    if (info.isUnborn) {
+      document.getElementById('tcWeaning').textContent = '출산 준비 중';
+      document.getElementById('tcWeaningSub').textContent = '출산 준비물 체크리스트를 확인해보세요';
+    } else {
+      const stage = weaningStage(info.months);
+      document.getElementById('tcWeaning').textContent = stage.label;
+      document.getElementById('tcWeaningSub').textContent = stage.desc;
+    }
+  }
+
+  function renderStreakAndBadges() {
+    const streak = window.BabyProfile.getStreak();
+    document.getElementById('streakCurrent').textContent = streak.current + '일 연속 방문';
+    document.getElementById('streakSub').textContent = '누적 방문 ' + (streak.totalDays || 0) + '회 · 최장 기록 ' + (streak.longest || 0) + '일';
+
+    const defs = window.BabyProfile.getBadgeDefs();
+    const grid = document.getElementById('badgeGrid');
+    grid.innerHTML = defs.map((b) => {
+      const earned = streak.badges && streak.badges.indexOf(b.id) !== -1;
+      return '<div class="badge-item' + (earned ? '' : ' locked') + '">' +
+        '<div class="bi-emoji">' + b.emoji + '</div>' +
+        '<div class="bi-name">' + b.name + '</div>' +
+        '<div class="bi-desc">' + b.desc + '</div></div>';
+    }).join('');
+  }
+
+  function renderVaccineSection(profile) {
+    const section = document.getElementById('vaccineSection');
+    if (!profile || !profile.birthdate) { section.classList.add('hidden'); return; }
+    const info = window.BabyProfile.ageInfo(profile.birthdate);
+    if (info.isUnborn) { section.classList.add('hidden'); return; }
+    section.classList.remove('hidden');
+
+    const list = window.BabyProfile.getVaccineList(profile.birthdate);
+    const upcoming = list.filter((v) => !v.done);
+    const done = list.filter((v) => v.done);
+
+    document.getElementById('vacUpcoming').innerHTML = upcoming.length
+      ? upcoming.map(vacRowHtml).join('')
+      : '<div class="empty-note">등록된 예방접종을 모두 완료했어요 🎉</div>';
+    document.getElementById('vacDone').innerHTML = done.map(vacRowHtml).join('');
+    document.getElementById('vacDoneSummary').textContent = '완료한 접종 보기 (' + done.length + ')';
+
+    document.querySelectorAll('.vac-check').forEach((cb) => {
+      cb.addEventListener('change', function () {
+        window.BabyProfile.setVaccineDone(this.dataset.key, this.checked);
+        renderVaccineSection(window.BabyProfile.getProfile());
+      });
+    });
+  }
+
+  function vacRowHtml(v) {
+    let dueBadgeClass = 'chip-gray', dueText = v.dueDate;
+    if (v.done) { dueBadgeClass = 'chip-green'; dueText = '완료'; }
+    else if (v.status === 'overdue') { dueBadgeClass = 'chip-red'; dueText = 'D+' + Math.abs(v.dday) + ' 지남'; }
+    else if (v.status === 'soon') { dueBadgeClass = 'chip-amber'; dueText = 'D-' + v.dday; }
+    else { dueBadgeClass = 'chip-blue'; dueText = v.dueDate; }
+    return '<div class="vac-row' + (v.done ? ' is-done' : '') + '">' +
+      '<input type="checkbox" class="vac-check" data-key="' + v.key + '" ' + (v.done ? 'checked' : '') + '>' +
+      '<span class="vac-name">' + v.name + '</span>' +
+      '<span class="vac-due chip ' + dueBadgeClass + '">' + dueText + '</span></div>';
+  }
+
+  function renderGrowthSection(profile) {
+    const section = document.getElementById('growthLogSection');
+    if (!profile || !profile.birthdate) { section.classList.add('hidden'); return; }
+    section.classList.remove('hidden');
+
+    const records = window.BabyProfile.getRecords();
+    const historyEl = document.getElementById('growthHistory');
+    historyEl.innerHTML = records.length
+      ? records.slice().reverse().map((r) => {
+          const vals = [r.weight ? r.weight + 'kg' : '', r.height ? r.height + 'cm' : ''].filter(Boolean).join(' · ');
+          return '<div class="gh-row"><span class="gh-date">' + r.date + '</span>' +
+            '<span class="gh-vals">' + vals + (r.note ? ' <span class="gh-note">— ' + escapeHtml(r.note) + '</span>' : '') + '</span>' +
+            '<button class="gh-del" data-id="' + r.id + '" aria-label="삭제">✕</button></div>';
+        }).join('')
+      : '<div class="empty-note">아직 기록이 없어요. 위에서 첫 기록을 추가해보세요.</div>';
+
+    historyEl.querySelectorAll('.gh-del').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        window.BabyProfile.deleteRecord(this.dataset.id);
+        renderGrowthSection(window.BabyProfile.getProfile());
+      });
+    });
+
+    drawChart(records);
+  }
+
+  function drawChart(records) {
+    const canvas = document.getElementById('growthChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    const labels = records.map((r) => r.date.slice(5));
+    const weights = records.map((r) => (r.weight != null ? r.weight : null));
+    const heights = records.map((r) => (r.height != null ? r.height : null));
+
+    if (chartInstance) chartInstance.destroy();
+    if (!records.length) return;
+
+    chartInstance = new Chart(canvas.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: '몸무게(kg)', data: weights, yAxisID: 'y', spanGaps: true,
+            borderColor: '#3d7a5e', backgroundColor: '#3d7a5e', tension: .3, pointRadius: 3,
+          },
+          {
+            label: '키(cm)', data: heights, yAxisID: 'y1', spanGaps: true,
+            borderColor: '#c87f1a', backgroundColor: '#c87f1a', tension: .3, pointRadius: 3,
+          },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } },
+        scales: {
+          y: { type: 'linear', position: 'left', title: { display: true, text: 'kg', font: { size: 10 } }, ticks: { font: { size: 10 } } },
+          y1: { type: 'linear', position: 'right', title: { display: true, text: 'cm', font: { size: 10 } }, ticks: { font: { size: 10 } }, grid: { drawOnChartArea: false } },
+          x: { ticks: { font: { size: 10 } } },
+        },
+      },
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+})();
+</script>
+</body>
+</html>

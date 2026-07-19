@@ -23,6 +23,7 @@
 <script src="config.js"></script>
 <script src="analytics.js"></script>
 <script src="nav.js" defer></script>
+<script src="baby.js" defer></script>
 <!-- 카카오맵 SDK는 여기서 미리 로드하지 않습니다.
      config.js의 CONFIG.KAKAO_MAP_KEY로 ensureKakaoSDK()가 필요할 때 동적으로 로드합니다.
      (예전엔 여기서도 다른 하드코딩된 키로 중복 로드하고 있었는데, config.js의 키와
@@ -204,13 +205,14 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://noriya.kr/index.html"}, {"@type": "ListItem", "position": 2, "name": "놀이 추천", "item": "https://noriya.kr/play.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "놀이 꿀팁 모음 | 아기도구함", "description": "실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.", "url": "https://noriya.kr/play.html", "inLanguage": "ko"}</script>
 </head>
-<body>
+<body data-root-prefix="">
 
   <nav class="site-nav">
   <div class="nav-inner">
     <a href="index.html" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">홈</a>
+      <a href="growth.html" class="nav-link">성장기록</a>
       <div class="nav-item">
         <button class="nav-link" id="toolsMenuBtn" type="button" aria-expanded="false" aria-haspopup="true">도구 모음 <span class="caret">▾</span></button>
         <div class="mega-menu" id="toolsMegaMenu" role="menu">
@@ -271,13 +273,16 @@
       <a href="tips.html" class="nav-link">육아 꿀팁</a>
     </div>
     <div class="nav-spacer"></div>
+    <span class="nav-baby-badge" data-baby-badge></span>
     <button class="nav-search-btn" id="navSearchBtn" type="button" aria-label="도구 검색">🔍</button>
     <button class="nav-toggle" id="navToggleBtn" type="button" aria-label="메뉴 열기">☰</button>
   </div>
 </nav>
 
 <div class="mobile-nav" id="mobileNav">
+  <div class="nav-baby-badge" data-baby-badge></div>
   <a href="index.html" class="mn-link">🏠 홈</a>
+  <a href="growth.html" class="mn-link">📈 성장기록</a>
   <a href="play.html" class="mn-link">🎪 놀이 추천</a>
   <a href="tips.html" class="mn-link">🍯 육아 꿀팁</a>
   <div class="mn-group-title">도구 모음 (18개)</div>

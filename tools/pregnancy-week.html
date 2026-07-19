@@ -20,6 +20,7 @@
 <script src="../config.js"></script>
 <script src="../analytics.js"></script>
 <script src="../nav.js" defer></script>
+<script src="../baby.js" defer></script>
 <style>
 .due-date-big{font-size:2rem;font-weight:900;color:var(--primary-dark);}
 .week-card{background:var(--surface);border-radius:var(--radius-sm);padding:1rem 1.1rem;}
@@ -44,12 +45,13 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://noriya.kr/index.html"}, {"@type": "ListItem", "position": 2, "name": "임신 · 준비", "item": "https://noriya.kr/index.html#cat-임신준비"}, {"@type": "ListItem", "position": 3, "name": "임신 주수 & 출산 예정일 계산기", "item": "https://noriya.kr/tools/pregnancy-week.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "임신 주수 & 출산 예정일 계산기 — 주차별 태아 발달 | 아기도구함", "description": "마지막 생리일 또는 초음파 날짜를 입력하면 현재 임신 주수와 출산 예정일, 주차별 태아 발달 정보를 알려드려요.", "url": "https://noriya.kr/tools/pregnancy-week.html", "applicationCategory": "LifestyleApplication", "operatingSystem": "Web", "inLanguage": "ko", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}}</script>
 </head>
-<body>
+<body data-root-prefix="../">
 <nav class="site-nav">
   <div class="nav-inner">
     <a href="../index.html" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>
     <div class="nav-links">
       <a href="../index.html" class="nav-link">홈</a>
+      <a href="../growth.html" class="nav-link">성장기록</a>
       <div class="nav-item">
         <button class="nav-link" id="toolsMenuBtn" type="button" aria-expanded="false" aria-haspopup="true">도구 모음 <span class="caret">▾</span></button>
         <div class="mega-menu" id="toolsMegaMenu" role="menu">
@@ -110,13 +112,16 @@
       <a href="../tips.html" class="nav-link">육아 꿀팁</a>
     </div>
     <div class="nav-spacer"></div>
+    <span class="nav-baby-badge" data-baby-badge></span>
     <button class="nav-search-btn" id="navSearchBtn" type="button" aria-label="도구 검색">🔍</button>
     <button class="nav-toggle" id="navToggleBtn" type="button" aria-label="메뉴 열기">☰</button>
   </div>
 </nav>
 
 <div class="mobile-nav" id="mobileNav">
+  <div class="nav-baby-badge" data-baby-badge></div>
   <a href="../index.html" class="mn-link">🏠 홈</a>
+  <a href="../growth.html" class="mn-link">📈 성장기록</a>
   <a href="../play.html" class="mn-link">🎪 놀이 추천</a>
   <a href="../tips.html" class="mn-link">🍯 육아 꿀팁</a>
   <div class="mn-group-title">도구 모음 (18개)</div>
