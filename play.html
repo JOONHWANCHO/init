@@ -3,12 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://noriya.kr/play.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://noriya.kr/play.html">
+<meta property="og:site_name" content="아기도구함">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://noriya.kr/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="놀이 꿀팁 모음 | 아기도구함">
+<meta name="twitter:description" content="실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com">
+<link rel="preconnect" href="https://dapi.kakao.com">
 <title>놀이 꿀팁 모음 | 아기도구함</title>
 <meta name="description" content="실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.">
 <meta name="theme-color" content="#3d7a5e">
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
 <script src="analytics.js"></script>
+<script src="nav.js" defer></script>
 <!-- 카카오맵 SDK는 여기서 미리 로드하지 않습니다.
      config.js의 CONFIG.KAKAO_MAP_KEY로 ensureKakaoSDK()가 필요할 때 동적으로 로드합니다.
      (예전엔 여기서도 다른 하드코딩된 키로 중복 로드하고 있었는데, config.js의 키와
@@ -187,14 +201,133 @@
 .map-recommend-card .place-name{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:3px;}
 .map-recommend-card .place-distance{font-size:11px;color:var(--text-muted);font-weight:600;}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://noriya.kr/index.html"}, {"@type": "ListItem", "position": 2, "name": "놀이 추천", "item": "https://noriya.kr/play.html"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "놀이 꿀팁 모음 | 아기도구함", "description": "실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.", "url": "https://noriya.kr/play.html", "inLanguage": "ko"}</script>
 </head>
 <body>
 
   <nav class="site-nav">
-    <a href="index.html" class="back-btn">← 홈으로</a>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">홈</a>
+      <div class="nav-item">
+        <button class="nav-link" id="toolsMenuBtn" type="button" aria-expanded="false" aria-haspopup="true">도구 모음 <span class="caret">▾</span></button>
+        <div class="mega-menu" id="toolsMegaMenu" role="menu">
+          <div class="mega-grid">
+        <div class="mega-cat">
+          <a href="index.html#cat-수면수유" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🌙</span>수유 · 수면
+          </a>
+          <a href="tools/sleep-calculator.html">아기 수면 사이클 계산기</a>
+          <a href="tools/feeding-tracker.html">수유 간격 타이머 & 일지</a>
+          <a href="tools/colic-checker.html">영아산통 체크 & 달래기 가이드</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-이유식영양" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🥣</span>이유식 · 영양
+          </a>
+          <a href="tools/weaning-checker.html">이유식 재료 월령 체커</a>
+          <a href="tools/milk-calculator.html">분유 · 수유량 계산기</a>
+          <a href="tools/weaning-planner.html">이유식 스케줄 플래너</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-성장발달" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">📏</span>성장 · 발달
+          </a>
+          <a href="tools/growth-percentile.html">아이 성장 백분위수 계산기</a>
+          <a href="tools/milestone-checker.html">발달 마일스톤 체크리스트</a>
+          <a href="tools/tooth-checker.html">유치 발육 시기 체커</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-건강응급" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">💊</span>건강 · 응급
+          </a>
+          <a href="tools/fever-medicine.html">소아 해열제 용량 계산기</a>
+          <a href="tools/fever-tracker.html">체온 기록 & 해열제 교차 타이머</a>
+          <a href="tools/medicine-guide.html">소아 약 종류별 복용 가이드</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-입학지원금" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🏫</span>입학 · 지원금
+          </a>
+          <a href="tools/school-date.html">입소·입학 날짜 계산기</a>
+          <a href="tools/subsidy-calculator.html">육아 지원금 총정리 계산기</a>
+          <a href="tools/parental-leave.html">육아휴직 급여 계산기</a>
+        </div>
+        <div class="mega-cat">
+          <a href="index.html#cat-임신준비" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🤰</span>임신 · 준비
+          </a>
+          <a href="tools/pregnancy-week.html">임신 주수 & 출산 예정일 계산기</a>
+          <a href="tools/baby-name.html">아기 이름 짓기 도우미</a>
+          <a href="tools/birth-checklist.html">출산 준비물 체크리스트</a>
+        </div>
+          </div>
+          <div class="mega-menu-footer"><a href="index.html#toolHub">전체 도구 18개 한눈에 보기 →</a></div>
+        </div>
+      </div>
+      <a href="play.html" class="nav-link">놀이 추천</a>
+      <a href="tips.html" class="nav-link">육아 꿀팁</a>
+    </div>
     <div class="nav-spacer"></div>
-    <a href="index.html" class="logo">아기도구함</a>
-  </nav>
+    <button class="nav-search-btn" id="navSearchBtn" type="button" aria-label="도구 검색">🔍</button>
+    <button class="nav-toggle" id="navToggleBtn" type="button" aria-label="메뉴 열기">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html" class="mn-link">🏠 홈</a>
+  <a href="play.html" class="mn-link">🎪 놀이 추천</a>
+  <a href="tips.html" class="mn-link">🍯 육아 꿀팁</a>
+  <div class="mn-group-title">도구 모음 (18개)</div>
+        <div class="mn-cat open">
+          <div class="mn-cat-head">🌙 수유 · 수면 <span class="mn-caret">▾</span></div>
+          <a href="tools/sleep-calculator.html">아기 수면 사이클 계산기</a>
+          <a href="tools/feeding-tracker.html">수유 간격 타이머 & 일지</a>
+          <a href="tools/colic-checker.html">영아산통 체크 & 달래기 가이드</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🥣 이유식 · 영양 <span class="mn-caret">▾</span></div>
+          <a href="tools/weaning-checker.html">이유식 재료 월령 체커</a>
+          <a href="tools/milk-calculator.html">분유 · 수유량 계산기</a>
+          <a href="tools/weaning-planner.html">이유식 스케줄 플래너</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">📏 성장 · 발달 <span class="mn-caret">▾</span></div>
+          <a href="tools/growth-percentile.html">아이 성장 백분위수 계산기</a>
+          <a href="tools/milestone-checker.html">발달 마일스톤 체크리스트</a>
+          <a href="tools/tooth-checker.html">유치 발육 시기 체커</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">💊 건강 · 응급 <span class="mn-caret">▾</span></div>
+          <a href="tools/fever-medicine.html">소아 해열제 용량 계산기</a>
+          <a href="tools/fever-tracker.html">체온 기록 & 해열제 교차 타이머</a>
+          <a href="tools/medicine-guide.html">소아 약 종류별 복용 가이드</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🏫 입학 · 지원금 <span class="mn-caret">▾</span></div>
+          <a href="tools/school-date.html">입소·입학 날짜 계산기</a>
+          <a href="tools/subsidy-calculator.html">육아 지원금 총정리 계산기</a>
+          <a href="tools/parental-leave.html">육아휴직 급여 계산기</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🤰 임신 · 준비 <span class="mn-caret">▾</span></div>
+          <a href="tools/pregnancy-week.html">임신 주수 & 출산 예정일 계산기</a>
+          <a href="tools/baby-name.html">아기 이름 짓기 도우미</a>
+          <a href="tools/birth-checklist.html">출산 준비물 체크리스트</a>
+        </div>
+</div>
+
+<div class="nav-search-overlay" id="navSearchOverlay">
+  <div class="nav-search-box">
+    <form id="navSearchForm" action="index.html" method="get">
+      <input type="text" name="q" id="navSearchInput" placeholder="도구 검색 (예: 수면, 해열제, 이유식)" autocomplete="off">
+      <button type="submit">검색</button>
+    </form>
+    <div class="nav-search-hint">Esc 키를 눌러 닫기 · 홈 화면 검색창과 연동돼요</div>
+  </div>
+</div>
   
   <div class="play-hero">
     <div class="eyebrow">Kids Activity</div>
@@ -384,14 +517,56 @@
     else showList();
   }
   
+  // Google Apps Script 웹앱은 콜드 스타트 시 2~5초 이상 걸릴 수 있어요.
+  // localStorage에 결과를 캐시해두고, 캐시가 있으면 즉시 화면을 그린 뒤
+  // 백그라운드에서 최신 데이터로 조용히 갱신합니다(stale-while-revalidate).
+  const PLAY_CACHE_KEY = 'playDataCache_v1';
+  const PLAY_CACHE_FRESH_MS = 5 * 60 * 1000;   // 5분 이내면 재조회 없이 그대로 사용
+  const PLAY_CACHE_MAX_MS = 24 * 60 * 60 * 1000; // 24시간 넘은 캐시는 폐기
+
+  function readPlayCache() {
+    try {
+      const raw = localStorage.getItem(PLAY_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed.items || !parsed.items.length) return null;
+      if (Date.now() - parsed.ts > PLAY_CACHE_MAX_MS) return null;
+      return parsed;
+    } catch { return null; }
+  }
+  function writePlayCache(items) {
+    try { localStorage.setItem(PLAY_CACHE_KEY, JSON.stringify({ items, ts: Date.now() })); } catch {}
+  }
+  async function fetchPlayJSON() {
+    const res = await fetch(PLAY_JSON_URL);
+    const data = await res.json();
+    const items = Array.isArray(data) ? data : (data.activities || data.tips || []);
+    if (!items.length) throw new Error('empty');
+    return items;
+  }
+
   async function loadAllData() {
     if (allItems.length) return;
     if (!PLAY_JSON_URL) { allItems = getSampleData(); return; }
+
+    const cached = readPlayCache();
+    if (cached) {
+      // 1) 캐시를 즉시 사용해 화면을 빠르게 보여줌
+      allItems = cached.items;
+      // 2) 캐시가 살짝 오래됐으면 백그라운드에서만 조용히 갱신 (화면 깜빡임 없음)
+      if (Date.now() - cached.ts > PLAY_CACHE_FRESH_MS) {
+        fetchPlayJSON()
+          .then((items) => { writePlayCache(items); })
+          .catch(() => {});
+      }
+      return;
+    }
+
+    // 캐시가 전혀 없는 최초 방문: 어쩔 수 없이 응답을 기다림
     try {
-      const res = await fetch(PLAY_JSON_URL);
-      const data = await res.json();
-      allItems = Array.isArray(data) ? data : (data.activities || data.tips || []);
-      if (!allItems.length) throw new Error();
+      const items = await fetchPlayJSON();
+      allItems = items;
+      writePlayCache(items);
     } catch { allItems = getSampleData(); }
   }
   
@@ -462,7 +637,7 @@
     renderAgeGrid();
     initLiveRecs();
     renderPriceList();
-    initNearMap();
+    setupNearMapLazyLoad();
   }
 
   function fmtViews(n) {
@@ -675,6 +850,27 @@
     ensureKakaoSDK(() => renderNearLocationMap(allItems));
   }
 
+  // 지도는 무겁고(SDK + 지오코딩 다건 호출) 대부분의 사용자가 스크롤하지 않는 페이지
+  // 하단에 있으므로, 화면 근처에 들어올 때만 로드합니다. 이렇게 하면 첫 화면(랭킹/연령별/
+  // 실시간 추천/최저가)이 카카오맵을 기다리지 않고 훨씬 빠르게 표시됩니다.
+  function setupNearMapLazyLoad() {
+    const section = document.querySelector('.near-map-section');
+    if (!section) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            initNearMap();
+            io.disconnect();
+          }
+        });
+      }, { rootMargin: '400px 0px' }); // 화면에 닿기 전 미리 로드 시작
+      io.observe(section);
+    } else {
+      initNearMap(); // 구형 브라우저는 즉시 로드 (폴백)
+    }
+  }
+
   function goToDetail(id) {
     openDetail({ preventDefault(){} }, id);
   }
@@ -697,8 +893,20 @@
       const userLoc = await getUserLocation();
       const geocoder = new kakao.maps.services.Geocoder();
 
-      // 데이터 내 모든 액티비티의 주소를 위경도로 변환 (거리 계산을 위해 전체 대상)
-      const convertedSpotsPromises = posts.map((spot) => {
+      // 주소 → 위경도 변환 결과를 localStorage에 캐시해서 재방문 시 카카오 지오코딩 API를
+      // 다시 호출하지 않도록 합니다. (매 방문마다 N번의 API 왕복이 발생하던 것이 느린 원인이었음)
+      const GEOCODE_CACHE_KEY = 'kakaoGeocodeCache_v1';
+      const GEOCODE_CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7일 — 주소는 자주 바뀌지 않음
+      let geocodeCache = {};
+      try { geocodeCache = JSON.parse(localStorage.getItem(GEOCODE_CACHE_KEY) || '{}'); } catch {}
+      let cacheDirty = false;
+
+      // 지오코딩 API 호출 건수를 제한해 최초 방문(캐시 미스) 시에도 응답이 늦어지지 않도록 함.
+      // 5개만 보여주면 되므로 충분히 넉넉한 24개까지만 대상으로 삼습니다.
+      const candidates = posts.slice(0, 24);
+
+      // 데이터 내 액티비티의 주소를 위경도로 변환 (캐시 우선, 미스만 실제 API 호출)
+      const convertedSpotsPromises = candidates.map((spot) => {
         return new Promise((resolve) => {
           const keys = Object.keys(spot);
           const addressKey = keys.find(k => k.toLowerCase().includes('address') || k.includes('주소') || k.includes('위치'));
@@ -708,14 +916,19 @@
           const spotAddress = String(spot[addressKey]).trim();
           const spotTitle = titleKey ? spot[titleKey] : (spot.title || spot.name || '추천 장소');
 
+          const cached = geocodeCache[spotAddress];
+          if (cached && (Date.now() - cached.ts) < GEOCODE_CACHE_TTL) {
+            resolve({ ...spot, title: spotTitle, lat: cached.lat, lng: cached.lng });
+            return;
+          }
+
           geocoder.addressSearch(spotAddress, function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
-              resolve({
-                ...spot,
-                title: spotTitle,
-                lat: parseFloat(result[0].y),
-                lng: parseFloat(result[0].x)
-              });
+              const lat = parseFloat(result[0].y);
+              const lng = parseFloat(result[0].x);
+              geocodeCache[spotAddress] = { lat, lng, ts: Date.now() };
+              cacheDirty = true;
+              resolve({ ...spot, title: spotTitle, lat, lng });
             } else {
               resolve(null);
             }
@@ -724,6 +937,9 @@
       });
 
       const geocoded = (await Promise.all(convertedSpotsPromises)).filter(s => s !== null);
+      if (cacheDirty) {
+        try { localStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(geocodeCache)); } catch {}
+      }
       if (geocoded.length === 0) {
         slider.innerHTML = `<div class="map-loading-msg">올바른 주소가 포함된 데이터가 없습니다.</div>`;
         return;

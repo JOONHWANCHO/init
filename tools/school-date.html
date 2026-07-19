@@ -2,11 +2,24 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://noriya.kr/tools/school-date.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://noriya.kr/tools/school-date.html">
+<meta property="og:site_name" content="아기도구함">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://noriya.kr/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="어린이집·유치원·초등학교 입소 날짜 계산기 | 아기도구함">
+<meta name="twitter:description" content="아이 생년월일을 입력하면 어린이집·유치원 입소 가능 날짜와 초등학교 입학 연도를 자동 계산해드려요.">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com">
 <title>어린이집·유치원·초등학교 입소 날짜 계산기 | 아기도구함</title>
 <meta name="description" content="아이 생년월일을 입력하면 어린이집·유치원 입소 가능 날짜와 초등학교 입학 연도를 자동 계산해드려요.">
 <link rel="stylesheet" href="../style.css">
 <script src="../config.js"></script>
 <script src="../analytics.js"></script>
+<script src="../nav.js" defer></script>
 <style>
 .date-result-card{background:var(--bg);border:1.5px solid var(--gray-100);border-radius:var(--radius);padding:1.25rem;margin-bottom:10px;}
 .date-result-card.highlight{border-color:var(--primary);background:var(--primary-light);}
@@ -19,12 +32,138 @@
 .badge-past{background:var(--gray-100);color:var(--gray-500);}
 .badge-now{background:var(--primary);color:#fff;}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://noriya.kr/index.html"}, {"@type": "ListItem", "position": 2, "name": "입학 · 지원금", "item": "https://noriya.kr/index.html#cat-입학지원금"}, {"@type": "ListItem", "position": 3, "name": "입소·입학 날짜 계산기", "item": "https://noriya.kr/tools/school-date.html"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "어린이집·유치원·초등학교 입소 날짜 계산기 | 아기도구함", "description": "아이 생년월일을 입력하면 어린이집·유치원 입소 가능 날짜와 초등학교 입학 연도를 자동 계산해드려요.", "url": "https://noriya.kr/tools/school-date.html", "applicationCategory": "LifestyleApplication", "operatingSystem": "Web", "inLanguage": "ko", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}}</script>
 </head>
 <body>
 <nav class="site-nav">
-  <a href="../index.html" class="back-btn">← 전체 도구</a>
-  <div class="nav-spacer"></div>
-  <a href="../index.html" class="logo">아기도구함</a>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">홈</a>
+      <div class="nav-item">
+        <button class="nav-link" id="toolsMenuBtn" type="button" aria-expanded="false" aria-haspopup="true">도구 모음 <span class="caret">▾</span></button>
+        <div class="mega-menu" id="toolsMegaMenu" role="menu">
+          <div class="mega-grid">
+        <div class="mega-cat">
+          <a href="../index.html#cat-수면수유" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🌙</span>수유 · 수면
+          </a>
+          <a href="../tools/sleep-calculator.html">아기 수면 사이클 계산기</a>
+          <a href="../tools/feeding-tracker.html">수유 간격 타이머 & 일지</a>
+          <a href="../tools/colic-checker.html">영아산통 체크 & 달래기 가이드</a>
+        </div>
+        <div class="mega-cat">
+          <a href="../index.html#cat-이유식영양" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🥣</span>이유식 · 영양
+          </a>
+          <a href="../tools/weaning-checker.html">이유식 재료 월령 체커</a>
+          <a href="../tools/milk-calculator.html">분유 · 수유량 계산기</a>
+          <a href="../tools/weaning-planner.html">이유식 스케줄 플래너</a>
+        </div>
+        <div class="mega-cat">
+          <a href="../index.html#cat-성장발달" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">📏</span>성장 · 발달
+          </a>
+          <a href="../tools/growth-percentile.html">아이 성장 백분위수 계산기</a>
+          <a href="../tools/milestone-checker.html">발달 마일스톤 체크리스트</a>
+          <a href="../tools/tooth-checker.html">유치 발육 시기 체커</a>
+        </div>
+        <div class="mega-cat">
+          <a href="../index.html#cat-건강응급" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">💊</span>건강 · 응급
+          </a>
+          <a href="../tools/fever-medicine.html">소아 해열제 용량 계산기</a>
+          <a href="../tools/fever-tracker.html">체온 기록 & 해열제 교차 타이머</a>
+          <a href="../tools/medicine-guide.html">소아 약 종류별 복용 가이드</a>
+        </div>
+        <div class="mega-cat">
+          <a href="../index.html#cat-입학지원금" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🏫</span>입학 · 지원금
+          </a>
+          <a href="../tools/school-date.html">입소·입학 날짜 계산기</a>
+          <a href="../tools/subsidy-calculator.html">육아 지원금 총정리 계산기</a>
+          <a href="../tools/parental-leave.html">육아휴직 급여 계산기</a>
+        </div>
+        <div class="mega-cat">
+          <a href="../index.html#cat-임신준비" class="mega-cat-title" style="text-decoration:none;">
+            <span class="mc-icon">🤰</span>임신 · 준비
+          </a>
+          <a href="../tools/pregnancy-week.html">임신 주수 & 출산 예정일 계산기</a>
+          <a href="../tools/baby-name.html">아기 이름 짓기 도우미</a>
+          <a href="../tools/birth-checklist.html">출산 준비물 체크리스트</a>
+        </div>
+          </div>
+          <div class="mega-menu-footer"><a href="../index.html#toolHub">전체 도구 18개 한눈에 보기 →</a></div>
+        </div>
+      </div>
+      <a href="../play.html" class="nav-link">놀이 추천</a>
+      <a href="../tips.html" class="nav-link">육아 꿀팁</a>
+    </div>
+    <div class="nav-spacer"></div>
+    <button class="nav-search-btn" id="navSearchBtn" type="button" aria-label="도구 검색">🔍</button>
+    <button class="nav-toggle" id="navToggleBtn" type="button" aria-label="메뉴 열기">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="../index.html" class="mn-link">🏠 홈</a>
+  <a href="../play.html" class="mn-link">🎪 놀이 추천</a>
+  <a href="../tips.html" class="mn-link">🍯 육아 꿀팁</a>
+  <div class="mn-group-title">도구 모음 (18개)</div>
+        <div class="mn-cat open">
+          <div class="mn-cat-head">🌙 수유 · 수면 <span class="mn-caret">▾</span></div>
+          <a href="../tools/sleep-calculator.html">아기 수면 사이클 계산기</a>
+          <a href="../tools/feeding-tracker.html">수유 간격 타이머 & 일지</a>
+          <a href="../tools/colic-checker.html">영아산통 체크 & 달래기 가이드</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🥣 이유식 · 영양 <span class="mn-caret">▾</span></div>
+          <a href="../tools/weaning-checker.html">이유식 재료 월령 체커</a>
+          <a href="../tools/milk-calculator.html">분유 · 수유량 계산기</a>
+          <a href="../tools/weaning-planner.html">이유식 스케줄 플래너</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">📏 성장 · 발달 <span class="mn-caret">▾</span></div>
+          <a href="../tools/growth-percentile.html">아이 성장 백분위수 계산기</a>
+          <a href="../tools/milestone-checker.html">발달 마일스톤 체크리스트</a>
+          <a href="../tools/tooth-checker.html">유치 발육 시기 체커</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">💊 건강 · 응급 <span class="mn-caret">▾</span></div>
+          <a href="../tools/fever-medicine.html">소아 해열제 용량 계산기</a>
+          <a href="../tools/fever-tracker.html">체온 기록 & 해열제 교차 타이머</a>
+          <a href="../tools/medicine-guide.html">소아 약 종류별 복용 가이드</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🏫 입학 · 지원금 <span class="mn-caret">▾</span></div>
+          <a href="../tools/school-date.html">입소·입학 날짜 계산기</a>
+          <a href="../tools/subsidy-calculator.html">육아 지원금 총정리 계산기</a>
+          <a href="../tools/parental-leave.html">육아휴직 급여 계산기</a>
+        </div>
+        <div class="mn-cat">
+          <div class="mn-cat-head">🤰 임신 · 준비 <span class="mn-caret">▾</span></div>
+          <a href="../tools/pregnancy-week.html">임신 주수 & 출산 예정일 계산기</a>
+          <a href="../tools/baby-name.html">아기 이름 짓기 도우미</a>
+          <a href="../tools/birth-checklist.html">출산 준비물 체크리스트</a>
+        </div>
+</div>
+
+<div class="nav-search-overlay" id="navSearchOverlay">
+  <div class="nav-search-box">
+    <form id="navSearchForm" action="../index.html" method="get">
+      <input type="text" name="q" id="navSearchInput" placeholder="도구 검색 (예: 수면, 해열제, 이유식)" autocomplete="off">
+      <button type="submit">검색</button>
+    </form>
+    <div class="nav-search-hint">Esc 키를 눌러 닫기 · 홈 화면 검색창과 연동돼요</div>
+  </div>
+</div>
+<nav class="breadcrumb" aria-label="breadcrumb">
+  <a href="../index.html">홈</a>
+  <span class="bc-sep">›</span>
+  <a href="../index.html#cat-입학지원금">입학 · 지원금</a>
+  <span class="bc-sep">›</span>
+  <span class="bc-current" aria-current="page">입소·입학 날짜 계산기</span>
 </nav>
 <div class="tool-hero">
   <div class="cat-tag">입학 · 지원금</div>
