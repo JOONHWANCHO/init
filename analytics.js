@@ -32,9 +32,9 @@
   if (IS_LOCAL) {
     console.log(
       '%c[아기도구함 Analytics] 🛠 로컬 개발 모드',
-      'background:#3d7a5e;color:#fff;padding:3px 8px;border-radius:4px;font-weight:bold;'
+      'background:#4A7C59;color:#fff;padding:3px 8px;border-radius:4px;font-weight:bold;'
     );
-    console.log('%c이벤트는 콘솔에만 출력됩니다. 배포 환경에서 실제 데이터가 쌓여요.', 'color:#3d7a5e;');
+    console.log('%c이벤트는 콘솔에만 출력됩니다. 배포 환경에서 실제 데이터가 쌓여요.', 'color:#4A7C59;');
   }
 
   // ── 페이지 정보 ─────────────────────────────────────────
@@ -200,10 +200,10 @@
     if (IS_LOCAL) {
       console.groupCollapsed(
         `%c[Analytics] 배치 전송 (${batch.length}개) — 로컬이라 실제 전송 안 함`,
-        'color:#3d7a5e;font-weight:bold;'
+        'color:#4A7C59;font-weight:bold;'
       );
       batch.forEach(function (item) {
-        console.log(`%c${item.event_name || item.type}`, 'color:#c87f1a;font-weight:bold;', item);
+        console.log(`%c${item.event_name || item.type}`, 'color:#E9A825;font-weight:bold;', item);
       });
       console.groupEnd();
       return;

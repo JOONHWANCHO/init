@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://pagead2.googlesyndication.com">
 <title>육아 꿀팁 모음 | 아기도구함</title>
 <meta name="description" content="수면, 이유식, 건강, 발달, 지원금까지 육아 꿀팁을 카테고리별로 모았어요.">
-<meta name="theme-color" content="#3d7a5e">
+<meta name="theme-color" content="#4A7C59">
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
 <script src="analytics.js"></script>
@@ -94,7 +94,7 @@
 .detail-content li{margin-bottom:.4rem;line-height:1.7;}
 .detail-content strong{font-weight:700;color:var(--text);}
 .detail-content blockquote{background:var(--primary-light);border-left:3px solid var(--primary);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:.875rem 1.1rem;margin:1rem 0;font-size:14px;color:var(--primary-dark);}
-.detail-content .tip-box{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin:1rem 0;font-size:13px;color:#7a4d0a;}
+.detail-content .tip-box{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin:1rem 0;font-size:13px;color:#7A5710;}
 .detail-content .warn-box{background:var(--red-light);border:1px solid var(--red-mid);border-radius:var(--radius-sm);padding:.875rem 1rem;margin:1rem 0;font-size:13px;color:#7a1010;}
 
 .detail-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--gray-100);}
@@ -380,8 +380,8 @@ const SHEET_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_JSON_URL :
 // ══════════════════════════════════════════
 
 const CAT_COLORS = {
-  '수면':   {bg:'#f0faf4', color:'#275040'},
-  '이유식': {bg:'#fff8ed', color:'#7a4d0a'},
+  '수면':   {bg:'#EFF7F1', color:'#33573F'},
+  '이유식': {bg:'#FBF4E4', color:'#7A5710'},
   '건강':   {bg:'#fff1f1', color:'#7a1010'},
   '발달':   {bg:'#f0f4ff', color:'#0a2d7a'},
   '지원금': {bg:'#f5f0ff', color:'#3c1a8a'},
@@ -504,6 +504,12 @@ function renderGrid(cat) {
   filteredTips.length > displayCount ? btn.classList.remove('hidden') : btn.classList.add('hidden');
 }
 
+function readTimeLabel(tip) {
+  const chars = (tip.content || tip.summary || '').replace(/<[^>]*>/g, '').length;
+  const mins = Math.max(1, Math.round(chars / 500));
+  return `⏱️ ${mins}분 컷`;
+}
+
 function tipCardHTML(tip) {
   const cat = tip.category || '기타';
   const col = CAT_COLORS[cat] || CAT_COLORS['기타'];
@@ -514,7 +520,7 @@ function tipCardHTML(tip) {
       <div class="tip-cat" style="color:${col.color}">${cat}</div>
       <div class="tip-title">${tip.title}</div>
       <div class="tip-summary">${tip.summary || ''}</div>
-      <div class="tip-date">${tip.date || ''}</div>
+      <div class="tip-date">${readTimeLabel(tip)}${tip.date ? ' · ' + tip.date : ''}</div>
     </div>
   </a>`;
 }
@@ -580,5 +586,12 @@ window.addEventListener('popstate', (e) => {
 
 init();
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body>
 </html>

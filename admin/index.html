@@ -9,8 +9,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --p:#3d7a5e;--pd:#275040;--pl:#f0faf4;--pm:#c6ebd5;
-  --a:#c87f1a;--al:#fff8ed;--r:#c53030;--rl:#fff1f1;--b:#1a5fc8;--bl:#f0f4ff;
+  --p:#4A7C59;--pd:#33573F;--pl:#EFF7F1;--pm:#CFE6D9;
+  --a:#E9A825;--al:#FBF4E4;--r:#c53030;--rl:#fff1f1;--b:#1a5fc8;--bl:#f0f4ff;
   --g50:#f8f8f6;--g100:#ededea;--g200:#d8d8d4;--g400:#a0a09a;--g500:#7a7a74;--g700:#3f3f3b;--g900:#1a1a18;
   --bg:#fff;--tx:#1a1a18;--muted:#6b6b65;--radius:10px;--rsm:6px;--shadow:0 2px 12px rgba(0,0,0,.07);
 }
@@ -93,13 +93,13 @@ tbody tr:hover td{background:var(--g50);}
 .sc p{font-size:12px;color:var(--muted);line-height:1.65;}
 pre{background:var(--g900);color:#e8f5e9;border-radius:var(--rsm);padding:.875rem;font-size:11px;overflow-x:auto;margin-top:.5rem;line-height:1.65;}
 .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;margin-right:4px;}
-.bg{background:var(--pl);color:var(--pd);}.br{background:var(--rl);color:var(--r);}.ba{background:var(--al);color:#7a4d0a;}
+.bg{background:var(--pl);color:var(--pd);}.br{background:var(--rl);color:var(--r);}.ba{background:var(--al);color:#7A5710;}
 
 /* STATES */
 .loading{text-align:center;padding:2.5rem;color:var(--muted);}
 .spin{display:inline-block;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.notice{background:var(--al);border:1px solid #fde8bb;border-radius:var(--rsm);padding:9px 14px;font-size:12px;color:#7a4d0a;margin-bottom:1rem;}
+.notice{background:var(--al);border:1px solid #F7E4B0;border-radius:var(--rsm);padding:9px 14px;font-size:12px;color:#7A5710;margin-bottom:1rem;}
 .errbox{background:var(--rl);border:1px solid #fdd0d0;border-radius:var(--rsm);padding:9px 14px;font-size:12px;color:#7a1010;margin-bottom:1rem;}
 </style>
 </head>
@@ -485,8 +485,8 @@ function renderDailyChart(daily) {
   chartInst.daily = new Chart(ctx,{
     type:'line',
     data:{labels,datasets:[
-      {label:'페이지뷰',data:pvs,borderColor:'#3d7a5e',backgroundColor:'rgba(61,122,94,.08)',tension:.35,fill:true,pointRadius:3},
-      {label:'세션',    data:sess,borderColor:'#c87f1a',backgroundColor:'rgba(200,127,26,.04)',tension:.35,fill:false,pointRadius:3},
+      {label:'페이지뷰',data:pvs,borderColor:'#4A7C59',backgroundColor:'rgba(61,122,94,.08)',tension:.35,fill:true,pointRadius:3},
+      {label:'세션',    data:sess,borderColor:'#E9A825',backgroundColor:'rgba(200,127,26,.04)',tension:.35,fill:false,pointRadius:3},
     ]},
     options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true}}},
   });
@@ -501,7 +501,7 @@ function renderEntryExit(entry, exit) {
 }
 
 // ── 트래픽 탭 ──────────────────────────────────────────
-const PALETTE = ['#3d7a5e','#5a9e7e','#c87f1a','#1a5fc8','#6b3dbe','#c53030','#0aa','#e07a5f','#81b29a','#f2cc8f'];
+const PALETTE = ['#4A7C59','#5a9e7e','#E9A825','#1a5fc8','#6b3dbe','#c53030','#0aa','#e07a5f','#81b29a','#f2cc8f'];
 
 function doughnut(canvasId, key, rows, labelKey='label', valueKey='count') {
   const ctx = document.getElementById(canvasId).getContext('2d');
@@ -577,7 +577,7 @@ function renderToolCharts(tools) {
     type:'bar',
     data:{
       labels: tools.length ? tools.slice(0,7).map(t=>t.tool) : ['데이터 없음'],
-      datasets:[{label:'누적 사용',data: tools.length ? tools.slice(0,7).map(t=>t.total||0) : [0],backgroundColor:'#3d7a5e',borderRadius:4}],
+      datasets:[{label:'누적 사용',data: tools.length ? tools.slice(0,7).map(t=>t.total||0) : [0],backgroundColor:'#4A7C59',borderRadius:4}],
     },
     options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}}},
   });
@@ -624,7 +624,7 @@ function renderRevenue(data) {
       datasets:[{
         label:'AdSense 노출 추정(원)',
         data:d.map(r=>Math.round((r.pageviews||0)/1000*3500)),
-        backgroundColor:'#3d7a5e',borderRadius:3,
+        backgroundColor:'#4A7C59',borderRadius:3,
       }],
     },
     options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true}}},

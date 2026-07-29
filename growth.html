@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <title>내 아이 성장 기록 & 예방접종 D-day | 아기도구함</title>
 <meta name="description" content="우리 아이 정보를 등록하면 나이·예방접종 D-day·성장 그래프가 자동으로 계산돼요. 매번 다시 입력할 필요 없이 모든 도구에 자동 반영됩니다.">
-<meta name="theme-color" content="#3d7a5e">
+<meta name="theme-color" content="#4A7C59">
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
 <script src="analytics.js"></script>
@@ -86,8 +86,8 @@ details.vac-done-details summary{font-size:12px;color:var(--text-muted);cursor:p
 .badge-item .bi-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
 .streak-strip{display:flex;align-items:center;gap:14px;background:var(--amber-light);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1rem;}
 .streak-strip .ss-emoji{font-size:30px;}
-.streak-strip .ss-num{font-size:1.3rem;font-weight:800;color:#7a4d0a;}
-.streak-strip .ss-label{font-size:11.5px;color:#8a5a10;}
+.streak-strip .ss-num{font-size:1.3rem;font-weight:800;color:#7A5710;}
+.streak-strip .ss-label{font-size:11.5px;color:#8A5A10;}
 </style>
 </head>
 <body data-root-prefix="">
@@ -541,11 +541,11 @@ details.vac-done-details summary{font-size:12px;color:var(--text-muted);cursor:p
         datasets: [
           {
             label: '몸무게(kg)', data: weights, yAxisID: 'y', spanGaps: true,
-            borderColor: '#3d7a5e', backgroundColor: '#3d7a5e', tension: .3, pointRadius: 3,
+            borderColor: '#4A7C59', backgroundColor: '#4A7C59', tension: .3, pointRadius: 3,
           },
           {
             label: '키(cm)', data: heights, yAxisID: 'y1', spanGaps: true,
-            borderColor: '#c87f1a', backgroundColor: '#c87f1a', tension: .3, pointRadius: 3,
+            borderColor: '#E9A825', backgroundColor: '#E9A825', tension: .3, pointRadius: 3,
           },
         ],
       },
@@ -567,5 +567,12 @@ details.vac-done-details summary{font-size:12px;color:var(--text-muted);cursor:p
   }
 })();
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body>
 </html>

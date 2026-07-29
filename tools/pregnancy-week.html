@@ -27,9 +27,9 @@
 .week-num{font-size:2.5rem;font-weight:900;color:var(--primary-dark);line-height:1;}
 .week-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
 .trimester-bar{display:flex;height:8px;border-radius:99px;overflow:hidden;margin:1rem 0 .5rem;}
-.t1{background:#c6ebd5;flex:12;}
-.t2{background:#3d7a5e;flex:14;}
-.t3{background:#275040;flex:14;}
+.t1{background:#CFE6D9;flex:12;}
+.t2{background:#4A7C59;flex:14;}
+.t3{background:#33573F;flex:14;}
 .t-labels{display:flex;font-size:10px;color:var(--text-muted);}
 .t-labels span{flex:1;text-align:center;}
 .progress-current{position:relative;}
@@ -232,7 +232,7 @@
       </div>
       <div class="result-box amber">
         <div class="result-label">출산 예정일</div>
-        <div style="font-size:1.2rem;font-weight:900;color:#7a4d0a;" id="dueDate">—</div>
+        <div style="font-size:1.2rem;font-weight:900;color:#7A5710;" id="dueDate">—</div>
         <div class="week-sub" id="dueDays"></div>
       </div>
     </div>
@@ -392,4 +392,11 @@ const today=new Date().toISOString().split('T')[0];
 document.getElementById('lmpDate').max=today;
 document.getElementById('ultraDate').max=today;
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="../index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="../play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="../tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="../growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body></html>

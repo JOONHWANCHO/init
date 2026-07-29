@@ -19,7 +19,7 @@
 <meta name="description" content="수면 계산기, 이유식 재료 체커, 성장 백분위, 해열제 용량, 아동수당 계산기 등 육아에 필요한 모든 도구를 한 곳에서.">
 <meta property="og:title" content="아기도구함 — 육아 필수 계산기 모음">
 <meta property="og:description" content="수면·이유식·성장·해열제·지원금까지. 부모를 위한 스마트 육아 도구 모음.">
-<meta name="theme-color" content="#3d7a5e">
+<meta name="theme-color" content="#4A7C59">
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
 <script src="analytics.js"></script>
@@ -53,7 +53,7 @@
 .tool-card .tc-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:2px;align-self:flex-start;}
 .badge-hot{background:#fff1f0;color:#c53030;}
 .badge-new{background:var(--blue-light);color:var(--blue);}
-.badge-popular{background:#fff8ed;color:var(--amber);}
+.badge-popular{background:#FBF4E4;color:var(--amber);}
 
 .search-bar-wrap{padding:1.5rem 1rem 1.5rem;max-width:760px;margin:0 auto;}
 .search-bar{width:100%;padding:11px 16px 11px 40px;border:1.5px solid var(--gray-200);border-radius:99px;font-size:14px;font-family:inherit;color:var(--text);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7a74' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 14px center;}
@@ -236,6 +236,15 @@ footer a{color:var(--primary);text-decoration:none;}
   <input type="text" class="search-bar" placeholder="도구 검색 (예: 수면, 해열제, 이유식)" id="searchInput" oninput="filterTools()">
 </div>
 
+<div class="cat-chip-scroll" aria-label="카테고리 바로가기">
+  <a href="#cat-수면수유" class="cat-chip">🌙 수유·수면</a>
+  <a href="#cat-이유식영양" class="cat-chip">🥣 이유식</a>
+  <a href="#cat-성장발달" class="cat-chip">📏 성장·발달</a>
+  <a href="#cat-건강응급" class="cat-chip">💊 건강·응급</a>
+  <a href="#cat-입학지원금" class="cat-chip">🏫 입학·지원금</a>
+  <a href="#cat-임신준비" class="cat-chip">🤰 임신·준비</a>
+</div>
+
 <!-- 상단 반응형 배너 광고 -->
 <div style="max-width:760px;margin:0 auto;padding:0 1rem;">
   <div class="ad-slot ad-top">
@@ -255,7 +264,7 @@ footer a{color:var(--primary);text-decoration:none;}
     <!-- 카테고리 1: 수유·수면 -->
     <div class="cat-block" data-cat="수면수유" id="cat-수면수유">
       <div class="cat-header">
-        <div class="cat-icon" style="background:#f0faf4;">🌙</div>
+        <div class="cat-icon" style="background:#EFF7F1;">🌙</div>
         <div>
           <h2>수유 · 수면</h2>
           <div class="cat-desc">하루 몇 번 먹고, 몇 시간 자야 할까</div>
@@ -286,7 +295,7 @@ footer a{color:var(--primary);text-decoration:none;}
     <!-- 카테고리 2: 이유식·영양 -->
     <div class="cat-block" data-cat="이유식영양" id="cat-이유식영양">
       <div class="cat-header">
-        <div class="cat-icon" style="background:#fff8ed;">🥣</div>
+        <div class="cat-icon" style="background:#FBF4E4;">🥣</div>
         <div>
           <h2>이유식 · 영양</h2>
           <div class="cat-desc">월령에 맞는 재료와 영양 가이드</div>
@@ -566,8 +575,8 @@ function filterTools(){
 const TIPS_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_JSON_URL : '';
 
 const CAT_COLORS = {
-  '수면':   {bg:'#f0faf4', color:'#275040'},
-  '이유식': {bg:'#fff8ed', color:'#7a4d0a'},
+  '수면':   {bg:'#EFF7F1', color:'#33573F'},
+  '이유식': {bg:'#FBF4E4', color:'#7A5710'},
   '건강':   {bg:'#fff1f1', color:'#7a1010'},
   '발달':   {bg:'#f0f4ff', color:'#0a2d7a'},
   '지원금': {bg:'#f5f0ff', color:'#3c1a8a'},
@@ -657,8 +666,8 @@ loadTips();
 const PLAY_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.PLAY_SHEET_URL : '';
 const PLAY_CAT_COLORS = {
   '실내놀이':   {bg:'#f0f4ff', color:'#0a2d7a'},
-  '실외놀이':   {bg:'#f0faf4', color:'#275040'},
-  '미술/만들기':{bg:'#fff8ed', color:'#7a4d0a'},
+  '실외놀이':   {bg:'#EFF7F1', color:'#33573F'},
+  '미술/만들기':{bg:'#FBF4E4', color:'#7A5710'},
   '음악/율동':  {bg:'#fef0f5', color:'#8a1a55'},
   '교육/놀이터':{bg:'#f5f0ff', color:'#3c1a8a'},
   '기타':       {bg:'#f8f8f6', color:'#3f3f3b'},
@@ -716,5 +725,12 @@ function getSamplePlay() {
 }
 loadPlay();
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body>
 </html>

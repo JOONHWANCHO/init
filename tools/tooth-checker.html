@@ -267,14 +267,21 @@ function render(m){
   const infoEl=document.getElementById('currentInfo');
   if(currentTeeth.length){
     infoEl.innerHTML=`<div class="result-label">이 시기에 나는 이</div>
-      <div style="font-size:1.1rem;font-weight:800;color:#7a4d0a;margin-bottom:4px;">${currentTeeth.map(t=>t.name).join(', ')}</div>
+      <div style="font-size:1.1rem;font-weight:800;color:#7A5710;margin-bottom:4px;">${currentTeeth.map(t=>t.name).join(', ')}</div>
       <div class="result-sub">지금까지 나온 이: 약 ${totalErupted}개 · 유치 총 20개</div>`;
   } else {
     infoEl.innerHTML=`<div class="result-label">치아 상태</div>
-      <div style="font-size:14px;font-weight:700;color:#7a4d0a;">지금은 이앓이 쉬는 시기예요 😊</div>
+      <div style="font-size:14px;font-weight:700;color:#7A5710;">지금은 이앓이 쉬는 시기예요 😊</div>
       <div class="result-sub">지금까지 나온 이: 약 ${totalErupted}개 · 유치 총 20개</div>`;
   }
   document.getElementById('result').classList.remove('hidden');
 }
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="../index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="../play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="../tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="../growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body></html>

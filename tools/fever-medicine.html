@@ -29,14 +29,15 @@
 .med-sub{font-size:12px;color:var(--text-muted);margin-bottom:.75rem;}
 .dose-row{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;}
 .dose-ml{font-size:2rem;font-weight:900;color:var(--primary-dark);}
-.med-card.brufen .dose-ml{color:#7a4d0a;}
+.med-card.brufen .dose-ml{color:#7A5710;}
 .dose-unit{font-size:14px;color:var(--text-muted);}
 .dose-range{font-size:12px;color:var(--text-muted);}
 .interval-badge{display:inline-block;background:var(--primary-light);color:var(--primary-dark);font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin-top:6px;}
-.med-card.brufen .interval-badge{background:var(--amber-light);color:#7a4d0a;}
+.med-card.brufen .interval-badge{background:var(--amber-light);color:#7A5710;}
 .timer-section{background:var(--surface);border-radius:var(--radius-sm);padding:1rem;margin-top:.75rem;}
 .timer-section .tl{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;}
-.cross-timer{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cross-timer{display:flex;align-items:center;gap:14px;}
+.ct-controls{flex:1;}
 .ct-btn{padding:9px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--text);transition:.15s;}
 .ct-btn:hover{border-color:var(--primary);color:var(--primary);}
 .ct-display{font-size:12px;color:var(--text-muted);margin-top:6px;min-height:18px;}
@@ -222,8 +223,11 @@
       <div class="timer-section">
         <div class="tl">투약 타이머</div>
         <div class="cross-timer">
-          <button class="ct-btn" onclick="startTimer('T')">▶ 지금 먹임</button>
-          <div id="tTimer" class="ct-display" style="display:flex;align-items:center;"></div>
+          <div class="radial-timer" id="tRing"><div class="rt-inner" id="tRingText">대기중</div></div>
+          <div class="ct-controls">
+            <button class="ct-btn" onclick="startTimer('T')">▶ 지금 먹임</button>
+            <div id="tTimer" class="ct-display"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -240,8 +244,11 @@
       <div class="timer-section">
         <div class="tl">투약 타이머</div>
         <div class="cross-timer">
-          <button class="ct-btn" onclick="startTimer('B')">▶ 지금 먹임</button>
-          <div id="bTimer" class="ct-display" style="display:flex;align-items:center;"></div>
+          <div class="radial-timer" id="bRing"><div class="rt-inner" id="bRingText">대기중</div></div>
+          <div class="ct-controls">
+            <button class="ct-btn" onclick="startTimer('B')">▶ 지금 먹임</button>
+            <div id="bTimer" class="ct-display"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -338,19 +345,36 @@ function startTimer(type){
   const start = Date.now();
   const intervalMin = type==='T' ? 240 : 360; // 4h or 6h in minutes
   const el = document.getElementById(type==='T'?'tTimer':'bTimer');
-  timers[id] = setInterval(()=>{
+  const ring = document.getElementById(type==='T'?'tRing':'bRing');
+  const ringText = document.getElementById(type==='T'?'tRingText':'bRingText');
+  function tick(){
     const elapsed = Math.floor((Date.now()-start)/60000);
     const remaining = intervalMin - elapsed;
     if(remaining <= 0){
       clearInterval(timers[id]);
       el.textContent = '✅ 다음 투약 가능';
       el.style.color = 'var(--primary)';
+      if(ring){ ring.style.setProperty('--pct',100); ring.classList.add('done'); }
+      if(ringText) ringText.innerHTML = '✅<br>완료';
     } else {
       const h = Math.floor(remaining/60), m = remaining%60;
       el.textContent = `다음 투약까지 ${h>0?h+'시간 ':''}${m}분`;
+      const pct = Math.min(100, Math.round((elapsed/intervalMin)*100));
+      if(ring) ring.style.setProperty('--pct', pct);
+      if(ringText) ringText.innerHTML = (h>0?h+'시간<br>':'') + '<span class="rt-big">'+m+'분</span>';
     }
-  },5000);
+  }
+  timers[id] = setInterval(tick, 5000);
+  if(ring){ ring.classList.remove('done'); ring.style.setProperty('--pct',0); }
+  tick();
   el.textContent = `지금 투약함 · ${type==='T'?'4시간':'6시간'} 뒤 재투약 가능`;
 }
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="../index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="../play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="../tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="../growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body></html>

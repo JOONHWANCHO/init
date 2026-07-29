@@ -31,7 +31,7 @@
 .dt-name{font-size:13px;font-weight:800;margin-bottom:4px;}
 .dt-time{font-size:1.4rem;font-weight:900;font-variant-numeric:tabular-nums;}
 .ty .dt-time{color:var(--primary-dark);}
-.br .dt-time{color:#7a4d0a;}
+.br .dt-time{color:#7A5710;}
 .dt-status{font-size:11px;color:var(--text-muted);margin-top:3px;}
 .dt-btn{margin-top:8px;padding:7px 14px;border:none;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;}
 .ty .dt-btn{background:var(--primary);color:#fff;}
@@ -347,13 +347,13 @@ function drawChart(temps){
   ctx.beginPath();ctx.moveTo(0,dl);ctx.lineTo(W,dl);ctx.stroke();
   ctx.setLineDash([]);
   // line
-  ctx.strokeStyle='#3d7a5e'; ctx.lineWidth=2.5;
+  ctx.strokeStyle='#4A7C59'; ctx.lineWidth=2.5;
   ctx.beginPath();
   temps.forEach((t,i)=>{i===0?ctx.moveTo(toX(i,temps.length),toY(t)):ctx.lineTo(toX(i,temps.length),toY(t));});
   ctx.stroke();
   // dots
   temps.forEach((t,i)=>{
-    ctx.fillStyle=t>=38.5?'#c53030':t>=37.5?'#c87f1a':'#3d7a5e';
+    ctx.fillStyle=t>=38.5?'#c53030':t>=37.5?'#E9A825':'#4A7C59';
     ctx.beginPath();ctx.arc(toX(i,temps.length),toY(t),4,0,Math.PI*2);ctx.fill();
   });
 }
@@ -389,4 +389,11 @@ setInterval(updateTimers,30000);
 renderLogs();
 updateTimers();
 </script>
+
+<nav class="bottom-nav" aria-label="주요 메뉴">
+  <a href="../index.html" class="bn-item"><span class="bn-icon">🏠</span>홈</a>
+  <a href="../play.html" class="bn-item"><span class="bn-icon">🧸</span>놀이</a>
+  <a href="../tips.html" class="bn-item"><span class="bn-icon">💡</span>꿀팁</a>
+  <a href="../growth.html" class="bn-item"><span class="bn-icon">👶</span>내 아이</a>
+</nav>
 </body></html>

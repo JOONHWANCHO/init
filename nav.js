@@ -66,14 +66,15 @@
       });
     }
 
-    // ── 현재 페이지 강조 ──
+    // ── 현재 페이지 강조 (상단 메뉴 + 하단 탭바) ──
     var path = location.pathname.replace(/\/+$/, '');
-    document.querySelectorAll('.nav-link[href], .mn-link[href]').forEach(function (a) {
+    document.querySelectorAll('.nav-link[href], .mn-link[href], .bn-item[href]').forEach(function (a) {
       var href = a.getAttribute('href');
       if (!href) return;
       var resolved = new URL(href, location.href).pathname.replace(/\/+$/, '');
       if (resolved === path || (resolved.endsWith('/index.html') === false && resolved === path)) {
         a.classList.add('is-active');
+        if (a.classList.contains('bn-item')) a.classList.add('active');
       }
     });
   });

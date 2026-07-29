@@ -294,6 +294,23 @@
     });
   }
 
+  // ── 월령별 오늘의 추천 (홈 히어로 카드 문구) ──
+  var RECO_TABLE = [
+    { max: 1, text: '수유 간격과 신생아 수면 패턴을 확인해보세요', href: 'tools/sleep-calculator.html', emoji: '😴' },
+    { max: 3, text: '영아산통이 의심된다면 체크리스트를 확인해보세요', href: 'tools/colic-checker.html', emoji: '😭' },
+    { max: 6, text: '수유 간격 계산이 필요한 시기예요', href: 'tools/feeding-tracker.html', emoji: '🍼' },
+    { max: 9, text: '이유식을 시작할 때, 재료별 월령을 확인해보세요', href: 'tools/weaning-checker.html', emoji: '🥦' },
+    { max: 13, text: '발달 마일스톤을 체크해볼 시기예요', href: 'tools/milestone-checker.html', emoji: '🧩' },
+    { max: 24, text: '유치 발육 시기가 궁금하다면 확인해보세요', href: 'tools/tooth-checker.html', emoji: '🦷' },
+    { max: 999, text: '입소·입학 준비 일정을 미리 확인해보세요', href: 'tools/school-date.html', emoji: '🏫' },
+  ];
+  function todaysRecommendation(months) {
+    for (var i = 0; i < RECO_TABLE.length; i++) {
+      if (months <= RECO_TABLE[i].max) return RECO_TABLE[i];
+    }
+    return RECO_TABLE[RECO_TABLE.length - 1];
+  }
+
   // ── 홈 대시보드 렌더 (index.html 전용, #babyDashboard 있을 때만) ──
   function renderHomeDashboard() {
     var el = document.getElementById('babyDashboard');
@@ -328,7 +345,16 @@
       ? ('<div class="bd-stat-value">' + lastRecord.date + '</div><div class="bd-stat-sub">' + (lastRecord.weight ? lastRecord.weight + 'kg ' : '') + (lastRecord.height ? lastRecord.height + 'cm' : '') + '</div>')
       : '<div class="bd-stat-value">기록 없음</div><div class="bd-stat-sub">첫 기록을 남겨보세요</div>';
 
+    var reco = info.isUnborn ? null : todaysRecommendation(info.months);
+    var recoHtml = reco
+      ? ('<a href="' + rootPrefix + reco.href + '" class="bd-reco">' +
+         '<span class="bd-reco-emoji">' + reco.emoji + '</span>' +
+         '<span class="bd-reco-text"><b>' + (profile.name || '우리 아이') + '</b>' + reco.text + '</span>' +
+         '<span class="bd-reco-arrow">→</span></a>')
+      : '';
+
     el.innerHTML =
+      recoHtml +
       '<div class="baby-dash-card">' +
       '  <div class="bd-head">' +
       '    <div class="bd-head-emoji">🍼</div>' +
