@@ -531,6 +531,33 @@ function loadMore() {
 }
 
 // ── 상세 화면 ──
+function inlineMd(s) {
+  return String(s)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, '$1<em>$2</em>');
+}
+function mdToHtml(raw) {
+  if (!raw) return '';
+  const text0 = String(raw);
+  if (/<\/?(p|h[1-6]|ul|ol|li|div|blockquote|br)[\s>]/i.test(text0)) return text0; // 이미 HTML
+  const text = text0.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').replace(/\\r/g, '\n').replace(/\r\n/g, '\n');
+  const lines = text.split('\n');
+  let html = '', inList = false;
+  const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+  lines.forEach(line => {
+    const l = line.trim();
+    let m;
+    if (!l) { closeList(); return; }
+    if ((m = l.match(/^###\s+(.*)$/))) { closeList(); html += `<h3>${inlineMd(m[1])}</h3>`; return; }
+    if ((m = l.match(/^##\s+(.*)$/))) { closeList(); html += `<h2>${inlineMd(m[1])}</h2>`; return; }
+    if ((m = l.match(/^[*\-]\s+(.*)$/))) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${inlineMd(m[1])}</li>`; return; }
+    closeList();
+    html += `<p>${inlineMd(l)}</p>`;
+  });
+  closeList();
+  return html;
+}
+
 function openDetail(e, id) {
   e.preventDefault();
   history.pushState({id}, '', `tips.html?id=${id}`);
@@ -566,7 +593,7 @@ function showDetail(id) {
       <span>${tip.date || ''}</span>
       ${tip.summary ? `<span style="color:var(--gray-200)">|</span><span>${tip.summary}</span>` : ''}
     </div>
-    <div class="detail-content">${tip.content || '<p>내용이 없어요.</p>'}</div>
+    <div class="detail-content">${mdToHtml(tip.content) || '<p>내용이 없어요.</p>'}</div>
     ${tags.length ? `<div class="detail-tags">${tags.map(t=>`<span class="tag-chip">#${t}</span>`).join('')}</div>` : ''}
     ${related.length ? `
     <div class="related-section">

@@ -1033,6 +1033,34 @@
     });
   }
 
+  // ── 마크다운 → HTML 변환 (콘텐츠가 이미 HTML이면 그대로 통과) ──
+  function inlineMd(s) {
+    return String(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, '$1<em>$2</em>');
+  }
+  function mdToHtml(raw) {
+    if (!raw) return '';
+    const text0 = String(raw);
+    if (/<\/?(p|h[1-6]|ul|ol|li|div|blockquote|br)[\s>]/i.test(text0)) return text0; // 이미 HTML
+    const text = text0.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').replace(/\\r/g, '\n').replace(/\r\n/g, '\n');
+    const lines = text.split('\n');
+    let html = '', inList = false;
+    const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+    lines.forEach(line => {
+      const l = line.trim();
+      let m;
+      if (!l) { closeList(); return; }
+      if ((m = l.match(/^###\s+(.*)$/))) { closeList(); html += `<h3>${inlineMd(m[1])}</h3>`; return; }
+      if ((m = l.match(/^##\s+(.*)$/))) { closeList(); html += `<h2>${inlineMd(m[1])}</h2>`; return; }
+      if ((m = l.match(/^[*\-]\s+(.*)$/))) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${inlineMd(m[1])}</li>`; return; }
+      closeList();
+      html += `<p>${inlineMd(l)}</p>`;
+    });
+    closeList();
+    return html;
+  }
+
   // ── 상세 화면 ────────────────────────────────
   function openDetail(e, id) {
     e.preventDefault();
@@ -1078,7 +1106,7 @@
           return `<span class="meta-chip">💰 ${pct > 0 ? `<span class="discount-pct">${pct}%</span>` : ''}${hasDiscount ? `<s>${fmtPrice(orig)}</s> ` : ''}${fmtPrice(sale)}</span>`;
         })()}
       </div>
-      <div class="detail-content">${item.content || `<p>${item.summary || '상세 내용이 없어요.'}</p>`}</div>
+      <div class="detail-content">${mdToHtml(item.content) || `<p>${item.summary || '상세 내용이 없어요.'}</p>`}</div>
       ${item.tags ? `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--gray-100);">
         ${item.tags.split(',').map(t=>`<span style="padding:4px 12px;border-radius:99px;background:var(--gray-50);border:1px solid var(--gray-100);font-size:12px;color:var(--text-muted);">#${t.trim()}</span>`).join('')}
       </div>` : ''}
