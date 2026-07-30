@@ -1045,12 +1045,15 @@
     if (/<\/?(p|h[1-6]|ul|ol|li|div|blockquote|br)[\s>]/i.test(text0)) return text0; // 이미 HTML
     const text = text0.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').replace(/\\r/g, '\n').replace(/\r\n/g, '\n');
     const lines = text.split('\n');
-    let html = '', inList = false;
+    let html = '', inList = false, inQuote = false;
     const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+    const closeQuote = () => { if (inQuote) { html += '</blockquote>'; inQuote = false; } };
     lines.forEach(line => {
       const l = line.trim();
       let m;
-      if (!l) { closeList(); return; }
+      if (!l) { closeList(); closeQuote(); return; }
+      if ((m = l.match(/^>\s?(.*)$/))) { closeList(); if (!inQuote) { html += '<blockquote>'; inQuote = true; } html += `<p>${inlineMd(m[1])}</p>`; return; }
+      closeQuote();
       if ((m = l.match(/^###\s+(.*)$/))) { closeList(); html += `<h3>${inlineMd(m[1])}</h3>`; return; }
       if ((m = l.match(/^##\s+(.*)$/))) { closeList(); html += `<h2>${inlineMd(m[1])}</h2>`; return; }
       if ((m = l.match(/^[*\-]\s+(.*)$/))) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${inlineMd(m[1])}</li>`; return; }
@@ -1058,6 +1061,7 @@
       html += `<p>${inlineMd(l)}</p>`;
     });
     closeList();
+    closeQuote();
     return html;
   }
 
