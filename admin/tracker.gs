@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════╗
- * ║        아기도구함 — Analytics Tracker (Apps Script) v2   ║
+ * ║        아이로그 — Analytics Tracker (Apps Script) v2   ║
  * ║                      tracker.gs                          ║
  * ╠══════════════════════════════════════════════════════════╣
  * ║  이 버전은 시트 구조가 완전히 바뀌었습니다 (v1과 호환 X).   ║
@@ -88,7 +88,7 @@ function doGet(e) {
     }
     if (action === 'stats') return buildResponse(getDashboardStats(ss, days));
     if (action === 'raw')   return buildResponse(getRawData(ss, p.sheet || 'events', parseInt(p.limit || '50')));
-    if (action === 'ping')  return buildResponse({ status: 'ok', message: '아기도구함 Analytics Tracker v2', ts: new Date().toISOString() });
+    if (action === 'ping')  return buildResponse({ status: 'ok', message: '아이로그 Analytics Tracker v2', ts: new Date().toISOString() });
     return buildResponse({ error: 'unknown action' });
   } catch (err) {
     return buildResponse({ error: err.message });

@@ -1,5 +1,5 @@
 /**
- * analytics.js — 아기도구함 데이터 수집기 v2
+ * analytics.js — 아이로그 데이터 수집기 v2
  * ─────────────────────────────────────────────────────────
  * 페이지뷰뿐 아니라 유입경로, 기기/브라우저/국가, 사이트 내 이동 경로,
  * 체류시간, 이탈 여부, 광고/어필리에이트 등 수익 관련 이벤트까지 수집합니다.
@@ -31,7 +31,7 @@
 
   if (IS_LOCAL) {
     console.log(
-      '%c[아기도구함 Analytics] 🛠 로컬 개발 모드',
+      '%c[아이로그 Analytics] 🛠 로컬 개발 모드',
       'background:#4A7C59;color:#fff;padding:3px 8px;border-radius:4px;font-weight:bold;'
     );
     console.log('%c이벤트는 콘솔에만 출력됩니다. 배포 환경에서 실제 데이터가 쌓여요.', 'color:#4A7C59;');

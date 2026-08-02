@@ -7,16 +7,16 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://noriya.kr/play.html">
-<meta property="og:site_name" content="아기도구함">
+<meta property="og:site_name" content="아이로그">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://noriya.kr/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="놀이 꿀팁 모음 | 아기도구함">
+<meta name="twitter:title" content="놀이 꿀팁 모음 | 아이로그">
 <meta name="twitter:description" content="실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://pagead2.googlesyndication.com">
 <link rel="preconnect" href="https://dapi.kakao.com">
-<title>놀이 꿀팁 모음 | 아기도구함</title>
+<title>놀이 꿀팁 모음 | 아이로그</title>
 <meta name="description" content="실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.">
 <meta name="theme-color" content="#4A7C59">
 <link rel="stylesheet" href="style.css">
@@ -25,6 +25,7 @@
 <script src="partials.js" defer></script>
 <script src="nav.js" defer></script>
 <script src="baby.js" defer></script>
+<script src="comments.js" defer></script>
 <!-- 카카오맵 SDK는 여기서 미리 로드하지 않습니다.
      config.js의 CONFIG.KAKAO_MAP_KEY로 ensureKakaoSDK()가 필요할 때 동적으로 로드합니다.
      (예전엔 여기서도 다른 하드코딩된 키로 중복 로드하고 있었는데, config.js의 키와
@@ -204,7 +205,7 @@
 .map-recommend-card .place-distance{font-size:11px;color:var(--text-muted);font-weight:600;}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://noriya.kr/index.html"}, {"@type": "ListItem", "position": 2, "name": "놀이 추천", "item": "https://noriya.kr/play.html"}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "놀이 꿀팁 모음 | 아기도구함", "description": "실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.", "url": "https://noriya.kr/play.html", "inLanguage": "ko"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "놀이 꿀팁 모음 | 아이로그", "description": "실내놀이, 실외놀이, 미술, 음악, 교육까지 아이가 좋아할 액티비티를 카테고리별로 모았어요.", "url": "https://noriya.kr/play.html", "inLanguage": "ko"}</script>
 </head>
 <body data-root-prefix="">
 
@@ -342,16 +343,56 @@
   // SpreadsheetApp.getActiveSpreadsheet().getSheets()[1] 로 변경하세요.
   // ══════════════════════════════════════════
   const PLAY_JSON_URL = (typeof CONFIG !== 'undefined') ? CONFIG.PLAY_SHEET_URL : '';
-  
+
+  // 색상은 계열별로 묶어서 재사용합니다 (테마파크 계열=코랄, 워터파크 계열=아쿠아,
+  // 동물/자연 계열=그린, 식물원/정원 계열=올리브, 박물관 계열=퍼플, 클래스 계열=핑크, 기타=블루)
+  const _THEME  = {bg:'#FFF1EC', color:'#8A3A1A'};
+  const _WATER  = {bg:'#E0F2F7', color:'#0B5C7A'};
+  const _NATURE = {bg:'#EFF7F1', color:'#33573F'};
+  const _GARDEN = {bg:'#F3F9E8', color:'#4A6B1A'};
+  const _MUSEUM = {bg:'#f5f0ff', color:'#3c1a8a'};
+  const _CLASS  = {bg:'#fef0f5', color:'#8a1a55'};
+  const _MISC   = {bg:'#f0f4ff', color:'#0a2d7a'};
+
   const CAT_COLORS = {
+    // 예시/폴백 데이터에서 쓰는 구 카테고리 (그대로 유지)
     '실내놀이':   {bg:'#f0f4ff', color:'#0a2d7a'},
     '실외놀이':   {bg:'#EFF7F1', color:'#33573F'},
     '미술/만들기':{bg:'#FBF4E4', color:'#7A5710'},
     '음악/율동':  {bg:'#fef0f5', color:'#8a1a55'},
     '교육/놀이터':{bg:'#f5f0ff', color:'#3c1a8a'},
-    '기타':       {bg:'#f8f8f6', color:'#3f3f3b'},
+    // 실제 구글시트 카테고리 (2026-08 기준)
+    '테마파크': _THEME, '테마파크/동물원': _THEME, '미디어아트/테마파크': _THEME,
+    '미디어파크': _THEME, '키즈파크': _THEME,
+    '물놀이터/파크': _WATER, '워터파크/스파': _WATER, '워터파크': _WATER,
+    '아쿠아리움/동물원': _NATURE, '자연/체험농장': _NATURE, '자연체험관': _NATURE,
+    '자연/목장': _NATURE, '농촌체험': _NATURE, '목장체험': _NATURE, '갯벌체험/자연': _NATURE,
+    '식물원/새정원': _GARDEN, '식물원': _GARDEN, '수목원': _GARDEN, '수목원/자연': _GARDEN,
+    '가드닝클래스': _GARDEN,
+    '과학관/박물관': _MUSEUM, '박물관/체험': _MUSEUM, '박물관/체험관': _MUSEUM,
+    '자연사박물관': _MUSEUM, '과학/항공박물관': _MUSEUM, '박물관/전시관': _MUSEUM,
+    '역사박물관': _MUSEUM, '해양박물관': _MUSEUM, '미술관/건축박물관': _MUSEUM,
+    '어린이박물관': _MUSEUM,
+    '공예클래스': _CLASS, '생태클래스': _CLASS, '수상레저클래스': _CLASS,
+    '쿠킹클래스': _CLASS, 'IT/코딩클래스': _CLASS, '목공클래스': _CLASS, '댄스클래스': _CLASS,
+    '키즈카페/실내놀이터': _MISC, '직업체험': _MISC, '키즈스포츠': _MISC, '레저/캠핑': _MISC,
+    '기타': {bg:'#f8f8f6', color:'#3f3f3b'},
   };
-  const CAT_EMOJI = {'실내놀이':'🏠','실외놀이':'🌳','미술/만들기':'🎨','음악/율동':'🎵','교육/놀이터':'📚','기타':'🎪'};
+  const CAT_EMOJI = {
+    '실내놀이':'🏠','실외놀이':'🌳','미술/만들기':'🎨','음악/율동':'🎵','교육/놀이터':'📚',
+    '테마파크':'🎡','테마파크/동물원':'🐯','미디어아트/테마파크':'🔮','미디어파크':'🌌','키즈파크':'☁️',
+    '물놀이터/파크':'⛲','워터파크/스파':'🏊‍♂️','워터파크':'🏄‍♂️',
+    '아쿠아리움/동물원':'🐠','자연/체험농장':'🐑','자연체험관':'🦎','자연/목장':'🐄',
+    '농촌체험':'🍠','목장체험':'🧀','갯벌체험/자연':'🦀',
+    '식물원/새정원':'🦜','식물원':'🌺','수목원':'🌲','수목원/자연':'🍃','가드닝클래스':'🌱',
+    '과학관/박물관':'🚀','박물관/체험':'💡','박물관/체험관':'🏛️','자연사박물관':'🦴',
+    '과학/항공박물관':'✈️','박물관/전시관':'🎨','역사박물관':'📜','해양박물관':'🐋',
+    '미술관/건축박물관':'📐','어린이박물관':'🎈',
+    '공예클래스':'🏺','생태클래스':'🐚','수상레저클래스':'🚣‍♀️','쿠킹클래스':'🍲',
+    'IT/코딩클래스':'🤖','목공클래스':'🪵','댄스클래스':'🕺',
+    '키즈카페/실내놀이터':'🐧','직업체험':'👩‍🚒','키즈스포츠':'🤸‍♂️','레저/캠핑':'🚃',
+    '기타':'🎪',
+  };
 
   const AGE_BRACKETS = [6, 12, 24, 36, 48, 60].map(n => ({key:String(n), label:`${n}개월`, months:n}));
   let currentAgeKey = '전체';
@@ -455,7 +496,7 @@
     document.getElementById('listView').classList.remove('hidden');
     document.getElementById('detailView').classList.add('hidden');
     document.getElementById('actionBar').classList.add('hidden');
-    document.title = '아이 액티비티 추천 | 아기도구함';
+    document.title = '아이 액티비티 추천 | 아이로그';
     if (window.BTAnalytics) window.BTAnalytics.trackContentView('', '', '');
     renderCatFilter();
     renderGrid(currentCat);
@@ -965,7 +1006,7 @@
     const emoji = item.emoji || CAT_EMOJI[cat] || '🎪';
     const related = allItems.filter(t => t.category === cat && t.id !== item.id).slice(0, 3);
   
-    document.title = `${item.title || item.name} | 아기도구함 액티비티`;
+    document.title = `${item.title || item.name} | 아이로그 액티비티`;
   
     document.getElementById('detailContent').innerHTML = `
       <div class="detail-thumb-big" style="background:${col.bg}">${emoji}</div>
@@ -987,11 +1028,14 @@
       ${item.tags ? `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--gray-100);">
         ${item.tags.split(',').map(t=>`<span style="padding:4px 12px;border-radius:99px;background:var(--gray-50);border:1px solid var(--gray-100);font-size:12px;color:var(--text-muted);">#${t.trim()}</span>`).join('')}
       </div>` : ''}
+      <div id="commentsRoot"></div>
       ${related.length ? `<div class="related-section">
         <h3>비슷한 액티비티</h3>
         <div class="related-grid">${related.map(playCardHTML).join('')}</div>
       </div>` : ''}
     `;
+
+    if (window.NoriyaComments) window.NoriyaComments.mount('commentsRoot', 'play-' + item.id);
   
     // 액션 바 설정
     const actionBar = document.getElementById('actionBar');

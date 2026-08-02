@@ -171,7 +171,7 @@
     return '' +
       '<nav class="site-nav">' +
       '  <div class="nav-inner">' +
-      '    <a href="' + withPrefix(prefix, 'index.html') + '" class="logo"><span class="logo-mark">🍼</span>아기도구함</a>' +
+      '    <a href="' + withPrefix(prefix, 'index.html') + '" class="logo"><span class="logo-mark">🍼</span>아이로그</a>' +
       '    <div class="nav-links">' +
       '      <a href="' + withPrefix(prefix, 'index.html') + '" class="nav-link">홈</a>' +
       '      <a href="' + withPrefix(prefix, 'growth.html') + '" class="nav-link">성장기록</a>' +
@@ -182,7 +182,7 @@
       '          <div class="mega-menu-footer"><a href="' + withPrefix(prefix, 'index.html#toolHub') + '">전체 도구 18개 한눈에 보기 →</a></div>' +
       '        </div>' +
       '      </div>' +
-      // '      <a href="' + withPrefix(prefix, 'play.html') + '" class="nav-link">놀이 추천</a>' +
+      '      <a href="' + withPrefix(prefix, 'play.html') + '" class="nav-link">놀이 추천</a>' +
       '      <a href="' + withPrefix(prefix, 'tips.html') + '" class="nav-link">육아 꿀팁</a>' +
       '    </div>' +
       '    <div class="nav-spacer"></div>' +
@@ -200,7 +200,7 @@
       '  <div class="nav-baby-badge" data-baby-badge></div>' +
       '  <a href="' + withPrefix(prefix, 'index.html') + '" class="mn-link">🏠 홈</a>' +
       '  <a href="' + withPrefix(prefix, 'growth.html') + '" class="mn-link">📈 성장기록</a>' +
-      // '  <a href="' + withPrefix(prefix, 'play.html') + '" class="mn-link">🎪 놀이 추천</a>' +
+      '  <a href="' + withPrefix(prefix, 'play.html') + '" class="mn-link">🎪 놀이 추천</a>' +
       '  <a href="' + withPrefix(prefix, 'tips.html') + '" class="mn-link">🍯 육아 꿀팁</a>' +
       '  <div class="mn-group-title">도구 모음 (18개)</div>' +
       buildMobileCats(prefix) +
@@ -234,7 +234,7 @@
 
   // ── 푸터: 도구 페이지용(짧은 버전) ──
   function buildToolFooter(prefix) {
-    return '<footer>© 2026 아기도구함 · <a href="' + withPrefix(prefix, 'index.html') + '">전체 도구 보기</a></footer>';
+    return '<footer>© 2026 아이로그 · <a href="' + withPrefix(prefix, 'index.html') + '">전체 도구 보기</a></footer>';
   }
 
   // ── 푸터: 사이트 공통(안내문 + 정책 링크) ──
@@ -242,7 +242,7 @@
     var homeLink = homeLabel ? '<a href="' + withPrefix(prefix, 'index.html') + '">' + esc(homeLabel) + '</a> &nbsp;·&nbsp; ' : '';
     return '' +
       '<footer>' +
-      '  <p>© 2026 아기도구함 &nbsp;·&nbsp; 모든 정보는 참고용이며 의료적 조언을 대체하지 않습니다.</p>' +
+      '  <p>© 2026 아이로그 &nbsp;·&nbsp; 모든 정보는 참고용이며 의료적 조언을 대체하지 않습니다.</p>' +
       '  <p style="margin-top:4px;">' + homeLink + '<a href="#">개인정보처리방침</a> &nbsp;·&nbsp; <a href="#">문의하기</a></p>' +
       '</footer>';
   }

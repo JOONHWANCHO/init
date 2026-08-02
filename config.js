@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════╗
- * ║              아기도구함 — 사이트 설정 파일               ║
+ * ║              아이로그 — 사이트 설정 파일               ║
  * ║                      config.js                          ║
  * ╠══════════════════════════════════════════════════════════╣
  * ║  배포 전 이 파일의 값들을 실제 값으로 교체하세요.         ║
@@ -43,6 +43,15 @@ const CONFIG = {
   PLAY_SHEET_URL: 'https://script.google.com/macros/s/AKfycbyfOTb5N-KzVWin-eetANZGPW9fLg0PbzPuYvGjQegcvkJzsml_dHFvtR3sFTTxrJ9e/exec',  // ← Sheet2 Apps Script 배포 URL 로 교체
 
   // ──────────────────────────────────────
+  // 익명 댓글 (Apps Script 웹앱 URL)
+  // 설정 방법: admin/comments.gs 파일 상단 주석 참고
+  // 댓글 원문은 이 스크립트가 암호화해서 별도 구글시트(comments 탭)에 저장하고,
+  // 조회할 때만 복호화해서 돌려줍니다. 비워두면 놀이 상세페이지에
+  // "댓글 기능이 곧 열릴 예정이에요" 안내만 표시되고 오류 없이 동작합니다.
+  // ──────────────────────────────────────
+  COMMENTS_URL: '',  // ← comments.gs 배포 URL (예: 'https://script.google.com/macros/s/AKfy.../exec')
+
+  // ──────────────────────────────────────
   // Google Analytics 4 (선택)
   // https://analytics.google.com 에서 발급
   // ──────────────────────────────────────
@@ -64,7 +73,7 @@ const CONFIG = {
   // ──────────────────────────────────────
   // 사이트 기본 정보
   // ──────────────────────────────────────
-  SITE_NAME:    '아기도구함',
+  SITE_NAME:    '아이로그',
   SITE_URL:     'https://noriya.kr',  // ← 실제 도메인으로 교체
   CONTACT_EMAIL: '',   // ← 문의 이메일 (선택)
 

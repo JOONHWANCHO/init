@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — 아기도구함 대시보드</title>
+<title>Admin — 아이로그 대시보드</title>
 <meta name="robots" content="noindex, nofollow">
 <script src="../config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -109,7 +109,7 @@ pre{background:var(--g900);color:#e8f5e9;border-radius:var(--rsm);padding:.875re
 <div id="loginWrap">
   <div class="login-box">
     <div class="ic">🍼</div>
-    <h1>아기도구함 Admin</h1>
+    <h1>아이로그 Admin</h1>
     <p>관리자 비밀번호를 입력하세요</p>
     <input type="password" id="pwInput" placeholder="비밀번호" onkeydown="if(event.key==='Enter')tryLogin()">
     <button onclick="tryLogin()">로그인</button>
@@ -671,7 +671,7 @@ async function runAI() {
   const refs = ((cached&&cached.referrers)||[]).slice(0,3).map(r=>`${r.label}(${r.count})`).join(', ');
   const topContent = ((cached&&cached.content)||[]).slice(0,3).map(c=>c.name).join(', ');
 
-  const prompt = `육아 웹서비스 '아기도구함' 데이터 분석가로서 아래 데이터를 보고 한국어로 답해주세요.
+  const prompt = `육아 웹서비스 '아이로그' 데이터 분석가로서 아래 데이터를 보고 한국어로 답해주세요.
 
 [기간] 최근 ${days}일
 [세션] ${fmtN(t.sessions)} / [페이지뷰] ${fmtN(t.pageviews)}
