@@ -1,6 +1,6 @@
 # MomCare 육아 게시글 영역 설정 가이드
 
-메인 페이지 하단의 육아 글 카드와 `parenting-posts.html` 전체 목록/상세 페이지는 Google Sheets의 게시글을 읽어서 표시합니다. 데이터는 공개 조회 전용이며, 글 작성과 예약은 Google Sheets에서 관리합니다.
+메인 페이지 하단의 육아 글 카드, `parenting-posts.html` 전체 목록, `parenting-post.html` 상세 페이지는 Google Sheets의 게시글을 읽어서 표시합니다. 데이터는 공개 조회 전용이며, 글 작성과 예약은 Google Sheets에서 관리합니다.
 
 ## 1. Google Sheets 만들기
 
@@ -53,7 +53,7 @@
 API_URL: 'https://script.google.com/macros/s/AKfycbyVwJiZafCdriwZLzcI7VrpZAkNzIVmGfWTl-yXt_yE3zNWJADdu1-rMEpOur_vlnN9Ww/exec'
 ```
 
-7. 수정한 파일을 사이트에 함께 배포합니다. `index.html`, `parenting-posts.html`, `parenting-posts.js`는 같은 사이트 경로에 있어야 합니다.
+7. 수정한 파일을 사이트에 함께 배포합니다. `index.html`, `parenting-posts.html`, `parenting-post.html`, `parenting-posts.js`는 같은 사이트 경로에 있어야 합니다.
 
 API는 공개 사이트가 읽을 수 있도록 게시글 데이터를 반환하므로, **비밀번호·개인정보·공개하면 안 되는 원고를 이 시트에 넣지 마세요.** 이 API에는 시트 수정 기능이 없습니다. 조회는 JSONP 방식으로 처리하여 정적 사이트에서 별도 서버 없이 불러오게 했습니다.
 
@@ -61,7 +61,7 @@ API는 공개 사이트가 읽을 수 있도록 게시글 데이터를 반환하
 
 - 메인 페이지 하단: 언어별 공개 글 카드 20개씩 표시하고, 페이지 아래쪽에 도달하면 다음 20개를 불러옵니다.
 - 전체 글 보기: `parenting-posts.html`에서 같은 방식으로 전체 게시글을 탐색할 수 있습니다.
-- 상세 글: 카드를 누르면 `parenting-posts.html?id=게시글ID&lang=언어`로 이동하고 Markdown 본문이 렌더링됩니다.
+- 상세 글: 메인/전체 목록의 카드 본문, 제목 또는 ‘글 읽기’를 누르면 `parenting-post.html?id=게시글ID&lang=언어`로 이동하고 Markdown 본문이 렌더링됩니다. 기존 `parenting-posts.html?id=...` 링크도 호환됩니다.
 - 검색: 전체 목록 페이지에서 제목·요약·분류·태그·본문 텍스트를 검색할 수 있습니다.
 - 언어: 메인 페이지의 언어 선택이 게시글 영역에도 적용되고 선택값은 페이지 이동 후에도 유지됩니다. 전체 목록/상세 페이지에도 별도 언어 선택기가 있습니다.
 - 안전성: Markdown HTML은 DOMPurify로 정리한 뒤 표시합니다. `link` 열에는 `http://` 또는 `https://` 링크만 허용합니다.

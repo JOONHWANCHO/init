@@ -5,7 +5,7 @@
   'use strict';
 
   const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbwlV0TBfvz1d2d4KB8jn-T3Kq-_QQI4MkCKzkcxfLdA7qSam7wllaVHn6hE1VqmR-Ga-g/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbw6HOvAef0KldIrJ2oWU81G8Ju5cSiqQIvhzcbp55akYUwOZtnsGxxupYG7jAnJnd8mXQ/exec',
     PAGE_SIZE: 20
   };
 
@@ -63,6 +63,7 @@
     observer: null,
     isHome: Boolean(document.getElementById('homeParentingPostsGrid')),
     isPostsPage: Boolean(document.getElementById('allParentingPostsGrid')),
+    isDetailPage: document.body.dataset.postsPage === 'detail',
     postId: new URLSearchParams(window.location.search).get('id') || '',
     searchTerm: ''
   };
@@ -86,7 +87,7 @@
     try { localStorage.setItem('momcare_lang', state.lang); } catch (_error) { /* Storage may be disabled. */ }
     const select = byId('langSelect') || byId('postsLangSelect');
     if (select) select.value = state.lang;
-    if (state.isPostsPage) {
+    if (state.isPostsPage || state.isDetailPage) {
       const params = new URLSearchParams(window.location.search);
       params.set('lang', state.lang);
       const query = params.toString();
@@ -116,7 +117,7 @@
   }
 
   function postUrl(post) {
-    return `parenting-posts.html?id=${encodeURIComponent(post.id)}&lang=${encodeURIComponent(state.lang)}`;
+    return `parenting-post.html?id=${encodeURIComponent(post.id)}&lang=${encodeURIComponent(state.lang)}`;
   }
 
   function formatDate(value) {
@@ -142,7 +143,7 @@
     ).join('');
     const date = formatDate(post.date);
     return `
-      <article class="group flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-100 hover:shadow-lg dark:border-slate-700/80 dark:bg-slate-800 dark:hover:border-indigo-500/50">
+      <article data-post-url="${escapeHtml(postUrl(post))}" class="group flex h-full cursor-pointer flex-col rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-100 hover:shadow-lg dark:border-slate-700/80 dark:bg-slate-800 dark:hover:border-indigo-500/50">
         <div class="mb-4 flex items-start justify-between gap-3">
           <span class="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 dark:bg-indigo-950/70 dark:text-indigo-300"><span>${escapeHtml(post.emoji || '🌱')}</span><span class="truncate">${escapeHtml(categoryName(post))}</span></span>
           ${date ? `<time class="shrink-0 pt-1 text-[11px] text-slate-400" datetime="${escapeHtml(post.date)}">${escapeHtml(date)}</time>` : ''}
@@ -164,7 +165,7 @@
     return source.split(/\n\s*\n/).map((line) => `<p>${escapeHtml(line).replace(/\n/g, '<br>')}</p>`).join('');
   }
 
-  function renderDetail(post) {
+  function renderDetail(post, isError) {
     const target = byId('parentingPostDetail');
     if (!target) return;
     if (!post) {
@@ -173,8 +174,8 @@
       target.innerHTML = `
         <div class="rounded-3xl border border-slate-100 bg-white px-6 py-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div class="mb-4 text-4xl">🌍</div>
-          <h2 class="mb-2 text-xl font-bold text-slate-800 dark:text-slate-100">${escapeHtml(copy().noTranslationTitle)}</h2>
-          <p class="mb-6 text-sm leading-6 text-slate-500 dark:text-slate-400">${escapeHtml(copy().noTranslation)}</p>
+          <h2 class="mb-2 text-xl font-bold text-slate-800 dark:text-slate-100">${escapeHtml(isError ? copy().error : copy().noTranslationTitle)}</h2>
+          <p class="mb-6 text-sm leading-6 text-slate-500 dark:text-slate-400">${escapeHtml(isError ? copy().error : copy().noTranslation)}</p>
           <a href="parenting-posts.html?lang=${encodeURIComponent(state.lang)}" class="inline-flex items-center justify-center rounded-full bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-indigo-600/20 transition hover:bg-indigo-700">${escapeHtml(copy().backAll)}</a>
         </div>`;
       return;
@@ -228,6 +229,21 @@
 
   function renderList(posts, isError) {
     if (state.observer) { state.observer.disconnect(); state.observer = null; }
+
+    // Dedicated article page (and legacy parenting-posts.html?id=... links).
+    if (state.isDetailPage || (state.isPostsPage && state.postId)) {
+      const loading = byId('allParentingPostsLoading');
+      const status = byId('allParentingPostsStatus');
+      const detail = byId('parentingPostDetail');
+      if (loading) loading.hidden = true;
+      if (status) status.hidden = true;
+      if (detail) { detail.hidden = false; detail.classList.remove('hidden'); }
+      const post = state.postId ? posts.find((item) => String(item.id) === String(state.postId)) : null;
+      renderDetail(post || null, Boolean(isError));
+      document.title = post ? `${post.title} | MomCare` : `${isError ? copy().error : copy().noTranslationTitle} | MomCare`;
+      return;
+    }
+
     const grid = state.isHome ? byId('homeParentingPostsGrid') : byId('allParentingPostsGrid');
     const status = state.isHome ? byId('homeParentingPostsStatus') : byId('allParentingPostsStatus');
     const loading = state.isHome ? byId('homeParentingPostsLoading') : byId('allParentingPostsLoading');
@@ -240,26 +256,8 @@
     if (sentinel) sentinel.hidden = true;
     if (loadButton) loadButton.hidden = true;
 
-    if (state.isPostsPage && state.postId) {
-      const post = posts.find((item) => String(item.id) === String(state.postId));
-      const detail = byId('parentingPostDetail');
-      const toolbar = byId('allParentingPostsToolbar');
-      const pageIntro = byId('allParentingPostsIntro');
-      if (grid) grid.hidden = true;
-      if (status) status.hidden = true;
-      if (sentinel) sentinel.hidden = true;
-      if (loadButton) loadButton.hidden = true;
-      if (toolbar) toolbar.hidden = true;
-      if (pageIntro) pageIntro.hidden = true;
-      if (detail) detail.hidden = false;
-      renderDetail(post || null);
-      if (post) document.title = `${post.title} | MomCare`;
-      else document.title = `${copy().noTranslationTitle} | MomCare`;
-      return;
-    }
-
     const detail = byId('parentingPostDetail');
-    if (detail) detail.hidden = true;
+    if (detail) { detail.hidden = true; detail.classList.add('hidden'); }
     if (grid) grid.hidden = false;
     const toolbar = byId('allParentingPostsToolbar');
     const pageIntro = byId('allParentingPostsIntro');
@@ -342,7 +340,7 @@
       if (viewAll) viewAll.href = `parenting-posts.html?lang=${encodeURIComponent(state.lang)}`;
       renderCopy();
     }
-    if (state.isPostsPage) renderCopy();
+    if (state.isPostsPage || state.isDetailPage) renderCopy();
 
     const sequence = ++state.loadSequence;
     const loading = state.isHome ? byId('homeParentingPostsLoading') : byId('allParentingPostsLoading');
@@ -361,7 +359,7 @@
         .filter((post) => !post.lang || String(post.lang).toLowerCase() === requestedLang)
         .filter(isCompleteTranslation);
       if (loading) loading.hidden = true;
-      if (state.isPostsPage && state.postId) {
+      if (state.isDetailPage || (state.isPostsPage && state.postId)) {
         renderList(state.allPosts, false);
       } else {
         applySearch();
@@ -410,7 +408,7 @@
   }
 
   function init() {
-    if (!state.isHome && !state.isPostsPage) return;
+    if (!state.isHome && !state.isPostsPage && !state.isDetailPage) return;
     state.lang = getStoredLanguage();
     const langSelect = byId('langSelect') || byId('postsLangSelect');
     if (langSelect) langSelect.value = state.lang;
@@ -428,11 +426,20 @@
     const moreButton = byId(state.isHome ? 'homeParentingPostsLoadMore' : 'allParentingPostsLoadMore');
     if (moreButton) moreButton.addEventListener('click', loadMore);
 
+    // Clicking anywhere on a card opens the same article as its title/read link.
+    [byId('homeParentingPostsGrid'), byId('allParentingPostsGrid')].filter(Boolean).forEach((grid) => {
+      grid.addEventListener('click', (event) => {
+        if (event.target.closest('a, button, input, select, textarea')) return;
+        const card = event.target.closest('[data-post-url]');
+        if (card && card.dataset.postUrl) window.location.href = card.dataset.postUrl;
+      });
+    });
+
     window.addEventListener('momcare:languagechange', (event) => {
       const eventLang = event && event.detail && event.detail.lang;
       if (eventLang && ['ko', 'ja', 'en'].includes(eventLang) && eventLang !== state.lang) loadPosts(eventLang);
     });
-    if (state.isPostsPage && state.postId) {
+    if (state.isDetailPage || (state.isPostsPage && state.postId)) {
       const grid = byId('allParentingPostsGrid');
       const toolbar = byId('allParentingPostsToolbar');
       const intro = byId('allParentingPostsIntro');
@@ -440,7 +447,7 @@
       if (grid) grid.hidden = true;
       if (toolbar) toolbar.hidden = true;
       if (intro) intro.hidden = true;
-      if (detail) detail.hidden = false;
+      if (detail) { detail.hidden = false; detail.classList.remove('hidden'); }
     }
     loadPosts(state.lang);
   }
