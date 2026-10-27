@@ -5,7 +5,7 @@
   'use strict';
 
   const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbyVwJiZafCdriwZLzcI7VrpZAkNzIVmGfWTl-yXt_yE3zNWJADdu1-rMEpOur_vlnN9Ww/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbwlV0TBfvz1d2d4KB8jn-T3Kq-_QQI4MkCKzkcxfLdA7qSam7wllaVHn6hE1VqmR-Ga-g/exec',
     PAGE_SIZE: 20
   };
 
@@ -323,7 +323,7 @@
         if (payload && payload.ok) resolve(payload);
         else reject(new Error((payload && payload.error) || 'The API returned an error.'));
       };
-      script.onerror = () => { cleanup(); reject(new Error('Unable to load Google Sheets API')); };
+      script.onerror = () => { cleanup(); reject(new Error('Google Apps Script endpoint was blocked or returned a non-JavaScript response. Check Web app deployment access (anonymous users allowed), Execute as: me, and the current /exec URL.')); };
       script.src = `${apiUrl}${apiUrl.includes('?') ? '&' : '?'}action=posts&lang=${encodeURIComponent(lang)}&callback=${encodeURIComponent(callbackName)}&_=${Date.now()}`;
       timeoutId = window.setTimeout(() => { cleanup(); reject(new Error('Google Sheets API timed out')); }, 15000);
       document.head.appendChild(script);

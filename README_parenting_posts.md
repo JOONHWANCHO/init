@@ -50,7 +50,7 @@
 6. `parenting-posts.js` 상단의 다음 설정값을 방금 복사한 실제 URL로 바꿉니다.
 
 ```js
-API_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'
+API_URL: 'https://script.google.com/macros/s/AKfycbyVwJiZafCdriwZLzcI7VrpZAkNzIVmGfWTl-yXt_yE3zNWJADdu1-rMEpOur_vlnN9Ww/exec'
 ```
 
 7. 수정한 파일을 사이트에 함께 배포합니다. `index.html`, `parenting-posts.html`, `parenting-posts.js`는 같은 사이트 경로에 있어야 합니다.
@@ -74,3 +74,15 @@ API는 공개 사이트가 읽을 수 있도록 게시글 데이터를 반환하
 4. 한 언어의 테스트 글을 `status=published`, `publish_at` 공란으로 입력해 메인과 전체 목록에 보이는지 확인합니다.
 5. 같은 `id`로 `ja` 또는 `en` 행을 추가해 해당 언어에서만 보이는지 확인합니다.
 6. 예약 테스트는 `status=scheduled`, 미래의 `publish_at`으로 저장한 뒤, 시각이 지난 후 새로고침해 확인합니다.
+
+## 6. 403 / `nosniff` 오류 해결
+
+브라우저에서 `/exec` 요청이 `403`을 반환하고, `Content-Type is not a script MIME type` 또는 `X-Content-Type-Options: nosniff`가 표시되면 프런트엔드의 JSONP 문법보다 먼저 Apps Script 웹 앱 접근 권한을 확인하세요. 서버가 JavaScript 대신 403 오류 페이지(HTML)를 반환하면 브라우저가 콜백 스크립트를 실행하지 못합니다.
+
+1. Apps Script 편집기에서 **배포 → 배포 관리**로 이동해 현재 웹 앱 배포를 편집하거나 새 배포를 만듭니다.
+2. 유형은 **웹 앱**, 실행 사용자는 **나(배포자)**, 접근 권한은 **로그인하지 않은 사용자도 접근 가능한 옵션(Anyone / 모든 사용자)** 으로 설정합니다. **Google 계정이 있는 사용자만** 허용하는 설정이면 공개 사이트의 익명 방문자는 실패할 수 있습니다.
+3. 저장 후 새 버전으로 배포하고, 배포 화면에 표시된 활성 `/exec` URL을 `parenting-posts.js`의 `API_URL`과 일치시킵니다. `/dev` URL은 공개 운영용으로 사용하지 마세요.
+4. URL을 시크릿 창에서 열어 확인합니다. 정상인 경우 JSON 텍스트가 보이거나, `?action=posts&lang=ko`를 붙였을 때 `ok: true`와 `posts` 배열이 반환됩니다.
+5. 소유자 로그인 상태에서는 열리지만 시크릿 창에서 계속 403이면 Google Workspace 관리자의 외부/익명 접근 정책을 확인하거나, 정책상 공개 배포가 가능한 계정으로 배포해 보세요. 여러 Google 계정이 동시에 로그인된 브라우저에서도 다른 시크릿 창/브라우저로 재검증하세요.
+
+현재 프런트엔드는 사용자께서 제공한 `/exec` URL을 설정해 두었습니다. 단, 해당 URL의 서버 권한이 403을 반환하는 상태라면 배포 접근 권한을 수정해야 실제 게시글이 로드됩니다.
