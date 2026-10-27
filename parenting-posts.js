@@ -5,7 +5,7 @@
   'use strict';
 
   const CONFIG = {
-    API_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL',
+    API_URL: 'https://script.google.com/macros/s/AKfycbyVwJiZafCdriwZLzcI7VrpZAkNzIVmGfWTl-yXt_yE3zNWJADdu1-rMEpOur_vlnN9Ww/exec',
     PAGE_SIZE: 20
   };
 
