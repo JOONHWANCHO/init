@@ -149,4 +149,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <!-- 육아 게시글 전체 목록 -->
+  <url>
+    <loc>https://noriya.kr/parenting-posts.html</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
